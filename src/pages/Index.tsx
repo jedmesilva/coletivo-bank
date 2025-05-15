@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu, Home, User, ArrowUp } from 'lucide-react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import FundCard from '@/components/FundCard';
@@ -54,6 +54,7 @@ const Index: React.FC = () => {
       <div className="max-w-md mx-auto p-4 pb-28">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
+          <SidebarTrigger className="mr-2" />
           <div>
             <h1 className="text-2xl font-bold">Olá, <span className="text-primary">Lucas</span>!</h1>
             <p className="text-sm text-gray-500 mt-1">Bem-vindo ao Coletivo Bank</p>
