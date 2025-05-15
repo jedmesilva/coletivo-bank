@@ -47,9 +47,7 @@ const BottomNavigation: React.FC = () => {
             }`}
             onClick={handleAccountClick}
           >
-            <Avatar className={`w-8 h-8 ${
-              activeScreen === 'account' ? 'ring-4 ring-primary/10' : ''
-            }`}>
+            <Avatar className="w-8 h-8">
               <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
               <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
             </Avatar>
