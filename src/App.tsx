@@ -17,11 +17,11 @@ const App = () => {
       <AppProvider>
         <BrowserRouter>
           <SidebarProvider>
-            <div className="flex">
+            <div className="flex justify-center">
               <Sidebar variant="sidebar" collapsible="icon">
                 <SidebarCategories />
               </Sidebar>
-              <main className="flex-1">
+              <main className="flex-1 max-w-[1200px]">
                 <Index />
               </main>
             </div>
