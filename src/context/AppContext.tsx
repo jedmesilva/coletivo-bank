@@ -145,8 +145,6 @@ interface AppContextType {
   payFundDebt: (fundId: string, debtId: string, amount: number) => void;
 }
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
-
 const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
