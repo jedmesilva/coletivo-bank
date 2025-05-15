@@ -21,8 +21,8 @@ const FundDetail: React.FC = () => {
   if (!selectedFund) return null;
 
   const tabs = [
-    { id: 'history', label: 'Histórico' },
     { id: 'approvals', label: 'Aprovações' },
+    { id: 'history', label: 'Histórico' },
     { id: 'members', label: 'Membros' }
   ];
 
