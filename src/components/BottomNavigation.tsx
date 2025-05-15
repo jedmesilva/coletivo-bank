@@ -18,13 +18,15 @@ const BottomNavigation: React.FC = () => {
       <div className="bg-white border-t border-gray-200 px-4 relative shadow-lg">
         <div className="flex justify-between items-end max-w-md mx-auto relative">
           <button 
-            className={`flex flex-col items-center px-4 py-4 ${
+            className={`flex flex-col items-center px-4 py-4 h-16 ${
               activeScreen === 'home' ? 'text-primary font-semibold' : 'text-gray-600'
             }`}
             onClick={handleBackClick}
           >
             <Home size={24} />
-            <span className="text-xs mt-1">Fundos</span>
+            {activeScreen === 'home' && (
+              <span className="text-xs mt-1 opacity-0 animate-[fade-in_0.3s_ease-in-out_forwards]">Fundos</span>
+            )}
           </button>
           
           <div className="transform -translate-y-4">
@@ -43,11 +45,15 @@ const BottomNavigation: React.FC = () => {
             }`}
             onClick={handleAccountClick}
           >
-            <Avatar className="w-6 h-6">
+            <Avatar className={`w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-200 hover:scale-110 border-2 ${
+              activeScreen === 'account' ? 'border-primary ring-2 ring-primary/20' : 'border-white'
+            } shadow-sm`}>
               <AvatarImage src={currentUser.profileImage} alt={currentUser.name} />
               <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
             </Avatar>
-            <span className="text-xs mt-1">Conta</span>
+            {activeScreen === 'account' && (
+              <span className="text-xs mt-1 opacity-0 animate-[fade-in_0.3s_ease-in-out_forwards]">Conta</span>
+            )}
           </button>
         </div>
       </div>
