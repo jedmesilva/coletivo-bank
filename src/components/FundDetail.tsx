@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ArrowUp, ArrowDownCircle, CreditCard, Check, X } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useApp } from '@/context/AppContext';
 import SummaryCard from './SummaryCard';
 import TabNavigation from './TabNavigation';
@@ -160,8 +161,12 @@ const FundDetail: React.FC = () => {
         {fundTab === 'members' && (
           <div>
             {selectedFund.members.map((member) => (
-              <div key={member.id} className="py-3 border-b border-gray-100 last:border-0 flex justify-between items-center">
-                <div>
+              <div key={member.id} className="py-3 border-b border-gray-100 last:border-0 flex items-center">
+                <Avatar className="w-10 h-10 mr-3">
+                  <AvatarImage src={member.profileImage} alt={member.name} className="object-cover" />
+                  <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
                   <p className="font-semibold">{member.name}</p>
                   <p className="text-gray-500 text-sm">Desde {member.joined}</p>
                 </div>
