@@ -1,25 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
-import { ReactNode } from 'react';
-
-type Fund = {
-  id: string;
-  name: string;
-  description: string;
-  balance: number;
-  image: string;
-};
-
-type Debt = {
-  id: string;
-  fundId: string;
-  fundName: string;
-  amount: number;
-  description: string;
-  dueDate: string;
-};
+import { Debt, Fund } from '@/types';
 
 interface AppContextType {
-  // Modal states
   isDepositModalOpen: boolean;
   setIsDepositModalOpen: (open: boolean) => void;
   isCapitalRequestOpen: boolean;
@@ -28,22 +10,20 @@ interface AppContextType {
   setIsDebtPaymentOpen: (open: boolean) => void;
   isFundCreationOpen: boolean;
   setIsFundCreationOpen: (open: boolean) => void;
-
-  // Selected fund states
   selectedFundIdForDeposit: string | null;
   setSelectedFundIdForDeposit: (id: string | null) => void;
   selectedFundIdForCapitalRequest: string | null;
   setSelectedFundIdForCapitalRequest: (id: string | null) => void;
   selectedFundIdForDebtPayment: string | null;
   setSelectedFundIdForDebtPayment: (id: string | null) => void;
-
-  // Data and actions
   funds: Fund[];
+  setFunds: (funds: Fund[]) => void;
   userDebts: Debt[];
+  setUserDebts: (debts: Debt[]) => void;
   depositToFund: (fundId: string, amount: number, description: string) => void;
   requestCapitalFromFund: (fundId: string, amount: number, description: string, repaymentDate: Date) => void;
   payFundDebt: (fundId: string, debtId: string, amount: number) => void;
-  createFund: (fund: Omit<Fund, 'id' | 'balance'> & { members: string[] }) => void;
+  createFund: (fund: Omit<Fund, 'id' | 'balance'>) => void;
   hideValues: boolean;
   setHideValues: React.Dispatch<React.SetStateAction<boolean>>;
   activeScreen: string;
@@ -67,14 +47,11 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export function AppProvider({ children }: { children: ReactNode }) {
-  // Modal states
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [isCapitalRequestOpen, setIsCapitalRequestOpen] = useState(false);
   const [isDebtPaymentOpen, setIsDebtPaymentOpen] = useState(false);
   const [isFundCreationOpen, setIsFundCreationOpen] = useState(false);
-
-  // Selected fund states
   const [selectedFundIdForDeposit, setSelectedFundIdForDeposit] = useState<string | null>(null);
   const [selectedFundIdForCapitalRequest, setSelectedFundIdForCapitalRequest] = useState<string | null>(null);
   const [selectedFundIdForDebtPayment, setSelectedFundIdForDebtPayment] = useState<string | null>(null);
@@ -83,54 +60,46 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [selectedFund, setSelectedFund] = useState<Fund | null>(null);
   const [fundTab, setFundTab] = useState<string>('history');
   const [accountTab, setAccountTab] = useState<string>('debts');
+  const [funds, setFunds] = useState<Fund[]>([]);
+  const [userDebts, setUserDebts] = useState<Debt[]>([]);
 
-  // Mock data - replace with actual data fetching
-  const [funds, setFunds] = useState<Fund[]>([
-    {
-      id: '1',
-      name: 'Fundo Exemplo',
-      description: 'Um fundo de exemplo',
-      balance: 1000,
-      image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7'
-    }
-  ]);
-
-  const [userDebts, setUserDebts] = useState<Debt[]>([
-    {
-      id: '1',
-      fundId: '1',
-      fundName: 'Fundo Exemplo',
-      amount: 100,
-      description: 'Dívida de exemplo',
-      dueDate: '2024-01-01'
-    }
-  ]);
-
-  // Actions
   const depositToFund = (fundId: string, amount: number, description: string) => {
-    setFunds(funds.map(fund =>
-      fund.id === fundId
-        ? { ...fund, balance: fund.balance + amount }
-        : fund
-    ));
+    setFunds(currentFunds =>
+      currentFunds.map(fund =>
+        fund.id === fundId
+          ? { ...fund, balance: fund.balance + amount }
+          : fund
+      )
+    );
   };
 
   const requestCapitalFromFund = (fundId: string, amount: number, description: string, repaymentDate: Date) => {
-    // Implement capital request logic
-    console.log('Capital requested:', { fundId, amount, description, repaymentDate });
+    // Simular criação de dívida
+    const newDebt: Debt = {
+      id: Math.random().toString(36).substr(2, 9),
+      fundId,
+      fundName: funds.find(f => f.id === fundId)?.name || '',
+      amount,
+      description,
+      dueDate: repaymentDate.toLocaleDateString(),
+      status: 'pending'
+    };
+
+    setUserDebts(prev => [...prev, newDebt]);
   };
 
   const payFundDebt = (fundId: string, debtId: string, amount: number) => {
-    setUserDebts(userDebts.filter(debt => debt.id !== debtId));
+    setUserDebts(prev => prev.filter(debt => debt.id !== debtId));
   };
 
-  const createFund = (fundData: Omit<Fund, 'id' | 'balance'> & { members: string[] }) => {
+  const createFund = (fundData: Omit<Fund, 'id' | 'balance'>) => {
     const newFund: Fund = {
+      id: Math.random().toString(36).substr(2, 9),
       ...fundData,
-      id: Date.now().toString(),
       balance: 0
     };
-    setFunds([...funds, newFund]);
+
+    setFunds(prev => [...prev, newFund]);
   };
 
   const handleFundClick = (fundId: string) => {
@@ -190,9 +159,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const getTotalMembers = (): number => {
     // Count unique members across all funds (a member can be in multiple funds)
     const uniqueMemberIds = new Set();
-    funds.forEach(fund => {
-      fund.members.forEach(member => uniqueMemberIds.add(member.id));
-    });
+    if(funds){
+      funds.forEach(fund => {
+        if(fund.members){
+          fund.members.forEach(member => uniqueMemberIds.add(member));
+        }
+      });
+    }
     return uniqueMemberIds.size;
   };
 
@@ -219,7 +192,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       selectedFundIdForDebtPayment,
       setSelectedFundIdForDebtPayment,
       funds,
+      setFunds,
       userDebts,
+      setUserDebts,
       depositToFund,
       requestCapitalFromFund,
       payFundDebt,
@@ -247,7 +222,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       {children}
     </AppContext.Provider>
   );
-}
+};
 
 export const useApp = () => {
   const context = useContext(AppContext);
