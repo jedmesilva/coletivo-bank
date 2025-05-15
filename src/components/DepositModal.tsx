@@ -95,7 +95,14 @@ const DepositModal: React.FC = () => {
 
   return (
     <Sheet open={isDepositModalOpen} onOpenChange={setIsDepositModalOpen}>
-      <SheetContent side="bottom" className="h-[95vh] p-0 rounded-t-xl">
+      <SheetContent 
+        side="bottom" 
+        className="h-[95vh] p-0 rounded-t-xl"
+        aria-describedby="deposit-modal-description"
+      >
+        <div id="deposit-modal-description" className="sr-only">
+          Modal para realizar aportes em fundos coletivos
+        </div>
         <div className="h-full flex flex-col">
           {/* Header */}
           <SheetHeader className="p-4 border-b">
@@ -114,39 +121,53 @@ const DepositModal: React.FC = () => {
           {/* Content */}
           <div className="flex-1 overflow-y-auto p-4">
             {step === 'select-fund' ? (
-              <div className="space-y-3">
+              <div className="space-y-3 mt-2">
+                <p className="text-sm text-gray-500 mb-4">Selecione um fundo para realizar o aporte:</p>
                 {funds.map((fund) => (
                   <div
                     key={fund.id}
-                    className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+                    className="flex items-center p-4 border border-gray-200 rounded-xl cursor-pointer 
+                              hover:border-primary/30 hover:bg-primary/5 transition-all"
                     onClick={() => handleSelectFund(fund.id)}
                   >
-                    <img 
-                      src={fund.image} 
-                      alt={fund.name} 
-                      className="w-12 h-12 rounded-lg object-cover mr-3" 
-                    />
-                    <div>
-                      <p className="font-medium">{fund.name}</p>
-                      <p className="text-sm text-gray-600">{fund.description}</p>
+                    <div className="relative mr-3">
+                      <img 
+                        src={fund.image} 
+                        alt={fund.name} 
+                        className="w-14 h-14 rounded-lg object-cover shadow-sm ring-1 ring-gray-200" 
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900">{fund.name}</p>
+                      <p className="text-sm text-gray-600 line-clamp-1">{fund.description}</p>
+                      <div className="flex items-center text-xs text-gray-500 mt-1">
+                        <span>{fund.members.length} membros</span>
+                        <span className="mx-2">•</span>
+                        <span>Desde {fund.date}</span>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="space-y-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">Fundo selecionado</p>
-                  <p className="font-medium">{selectedFundName}</p>
+                <div className="bg-primary/5 p-5 rounded-xl border border-primary/20">
+                  <p className="text-xs text-gray-500 uppercase font-medium tracking-wide mb-1">Fundo selecionado</p>
+                  <div className="flex items-center">
+                    <p className="font-bold text-primary text-lg">{selectedFundName}</p>
+                  </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium" htmlFor="deposit-amount">Valor do aporte</label>
+                  <label className="text-sm font-medium flex items-center" htmlFor="deposit-amount">
+                    Valor do aporte
+                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
+                  </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">R$</span>
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">R$</span>
                     <Input 
                       id="deposit-amount"
-                      className="pl-8" 
+                      className="pl-8 text-lg font-semibold" 
                       placeholder="0,00" 
                       type="number"
                       inputMode="decimal"
@@ -162,31 +183,53 @@ const DepositModal: React.FC = () => {
                       }}
                     />
                   </div>
+                  <p className="text-xs text-gray-500 mt-1">Insira o valor que deseja depositar no fundo</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium" htmlFor="deposit-description">Descrição</label>
+                  <label className="text-sm font-medium flex items-center" htmlFor="deposit-description">
+                    Descrição
+                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
+                  </label>
                   <Input 
                     id="deposit-description"
+                    className="bg-white" 
                     placeholder="Ex: Aporte mensal" 
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
+                  <p className="text-xs text-gray-500 mt-1">Identifique o propósito deste aporte</p>
                 </div>
               </div>
             )}
           </div>
           
           {/* Footer */}
-          <div className="border-t p-4">
+          <div className="border-t p-4 bg-gray-50/50">
             {step === 'select-fund' ? (
-              <Button variant="outline" className="w-full" onClick={handleClose}>
+              <Button 
+                variant="outline" 
+                className="w-full font-medium hover:bg-gray-100" 
+                onClick={handleClose}
+              >
                 Cancelar
               </Button>
             ) : (
-              <Button onClick={handleDeposit} className="w-full">
-                Concluir aporte
-              </Button>
+              <div className="space-y-3">
+                <Button 
+                  onClick={handleDeposit} 
+                  className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                >
+                  Concluir aporte
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={handleClose}
+                >
+                  Cancelar
+                </Button>
+              </div>
             )}
           </div>
         </div>
