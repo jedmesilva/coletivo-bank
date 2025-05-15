@@ -24,8 +24,10 @@ const BottomNavigation: React.FC = () => {
             onClick={handleBackClick}
           >
             <Home size={24} />
-            {activeScreen === 'home' && (
+            {activeScreen === 'home' ? (
               <span className="text-xs mt-1 opacity-0 animate-[fade-in_0.3s_ease-in-out_forwards]">Fundos</span>
+            ) : (
+              <span className="text-xs mt-1 opacity-0 h-4">&nbsp;</span>
             )}
           </button>
           
@@ -40,7 +42,7 @@ const BottomNavigation: React.FC = () => {
           </div>
           
           <button 
-            className={`flex flex-col items-center px-4 py-4 ${
+            className={`flex flex-col items-center px-4 py-4 h-16 ${
               activeScreen === 'account' ? 'text-primary font-semibold' : 'text-gray-600'
             }`}
             onClick={handleAccountClick}
@@ -51,8 +53,10 @@ const BottomNavigation: React.FC = () => {
               <AvatarImage src={currentUser.profileImage} alt={currentUser.name} />
               <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
             </Avatar>
-            {activeScreen === 'account' && (
+            {activeScreen === 'account' ? (
               <span className="text-xs mt-1 opacity-0 animate-[fade-in_0.3s_ease-in-out_forwards]">Conta</span>
+            ) : (
+              <span className="text-xs mt-1 opacity-0 h-4">&nbsp;</span>
             )}
           </button>
         </div>
