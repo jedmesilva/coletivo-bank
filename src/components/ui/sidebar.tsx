@@ -1,7 +1,8 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
-import { PanelLeft } from "lucide-react"
+import { PanelLeft, Home, User, MapPin, CreditCard, Bell, Lock, Shield, Palette } from "lucide-react"
+import { useApp } from "@/context/AppContext"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -734,26 +735,50 @@ const SidebarMenuSubButton = React.forwardRef<
 SidebarMenuSubButton.displayName = "SidebarMenuSubButton"
 
 const SidebarCategories = () => {
+  const { setActiveScreen } = useApp();
+
   return (
     <SidebarContent>
+      <SidebarHeader>
+        <h2 className="text-lg font-semibold px-2">Coletivo Bank</h2>
+      </SidebarHeader>
+
+      {/* Menu Principal */}
+      <SidebarGroup>
+        <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton onClick={() => setActiveScreen('home')}>
+                <Home className="w-4 h-4" />
+                <span>Página Inicial</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
       {/* Categoria: Dados Pessoais */}
       <SidebarGroup>
         <SidebarGroupLabel>Dados Pessoais</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton>
-                Meu Perfil
+              <SidebarMenuButton onClick={() => setActiveScreen('account')}>
+                <User className="w-4 h-4" />
+                <span>Meu Perfil</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton>
-                Endereço
+                <MapPin className="w-4 h-4" />
+                <span>Endereço</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton>
-                Dados Bancários
+                <CreditCard className="w-4 h-4" />
+                <span>Dados Bancários</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -767,22 +792,26 @@ const SidebarCategories = () => {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton>
-                Notificações
+                <Bell className="w-4 h-4" />
+                <span>Notificações</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton>
-                Privacidade
+                <Lock className="w-4 h-4" />
+                <span>Privacidade</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton>
-                Segurança
+                <Shield className="w-4 h-4" />
+                <span>Segurança</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton>
-                Tema
+                <Palette className="w-4 h-4" />
+                <span>Tema</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
