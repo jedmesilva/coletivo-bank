@@ -24,31 +24,33 @@ const FundCard: React.FC<FundCardProps> = ({ fund, onClick }) => {
                  hover:scale-[1.01] ease-out"
       onClick={onClick}
     >
-      <div className="flex items-start mb-4">
-        <div className="mr-4 relative">
-          <div className="relative">
-            <img 
-              src={fund.image} 
-              alt={fund.name} 
-              className="w-16 h-16 rounded-lg object-cover shadow-sm ring-1 ring-gray-200" 
-            />
-            <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-1 shadow-sm">
-              <Badge variant="outline" className={`${isPositiveGrowth ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'} flex items-center px-1.5 py-0.5 text-xs font-medium`}>
-                <TrendingUp className={`${isPositiveGrowth ? '' : 'rotate-180'} mr-0.5`} size={12} />
-                {hideValues ? "***%" : formatPercentage(fund.growth, hideValues)}
-              </Badge>
-            </div>
+      <div className="mb-4">
+        <div className="flex gap-3 mb-3">
+          <img 
+            src={fund.image} 
+            alt={fund.name} 
+            className="w-16 h-16 rounded-lg object-cover shadow-sm ring-1 ring-gray-200" 
+          />
+          <div className="flex-1 self-center">
+            <h3 className="text-xl font-bold mb-1 line-clamp-1">{fund.name}</h3>
+            <p className="text-gray-600 text-sm line-clamp-2">{fund.description}</p>
           </div>
         </div>
-        <div className="flex-1">
-          <h3 className="text-xl font-bold mb-1 line-clamp-1">{fund.name}</h3>
-          <p className="text-gray-600 mb-3 text-sm line-clamp-2">{fund.description}</p>
+        
+        {/* Horizontal row of stats */}
+        <div className="flex items-center gap-2 mt-3">
+          <Badge variant="outline" className={`${isPositiveGrowth ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'} flex items-center px-2 py-1 text-xs font-medium shadow-sm`}>
+            <TrendingUp className={`${isPositiveGrowth ? '' : 'rotate-180'} mr-1`} size={12} />
+            {hideValues ? "***%" : formatPercentage(fund.growth, hideValues)}
+          </Badge>
           
-          <div className="flex items-center text-sm mt-1 text-gray-600">
-            <Users size={14} className="mr-1 opacity-70" />
-            <span className="font-medium">{fund.members.length} Membros</span>
-            <span className="mx-2 text-gray-300">•</span>
-            <span className="text-gray-500">Desde {fund.date}</span>
+          <div className="flex items-center text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
+            <Users size={12} className="mr-1 opacity-70" />
+            <span>{fund.members.length} Membros</span>
+          </div>
+          
+          <div className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded-full">
+            Desde {fund.date}
           </div>
         </div>
       </div>

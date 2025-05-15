@@ -151,7 +151,14 @@ const CapitalRequestSheet = () => {
 
   return (
     <Sheet open={isCapitalRequestOpen} onOpenChange={setIsCapitalRequestOpen}>
-      <SheetContent side="bottom" className="h-[90vh] overflow-y-auto p-0">
+      <SheetContent 
+        side="bottom" 
+        className="h-[90vh] overflow-y-auto p-0 rounded-t-xl"
+        aria-describedby="capital-request-description"
+      >
+        <div id="capital-request-description" className="sr-only">
+          Modal para solicitar capital de fundos coletivos
+        </div>
         <div className="p-6">
           <SheetHeader className="mb-6">
             <SheetTitle className="text-2xl">Solicitar Capital</SheetTitle>
@@ -164,23 +171,33 @@ const CapitalRequestSheet = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {step === 1 && (
                 <div className="space-y-4">
-                  <h3 className="font-medium text-lg">Selecione um fundo</h3>
+                  <h3 className="font-medium text-lg mb-2">Selecione um fundo</h3>
+                  <p className="text-sm text-gray-500 mb-4">Escolha um fundo para solicitar capital:</p>
                   <div className="grid grid-cols-1 gap-3">
                     {funds.map((fund) => (
                       <button
                         key={fund.id}
                         type="button"
-                        className="flex items-center p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                        className="flex items-center p-4 border border-gray-200 rounded-xl 
+                                  hover:border-primary/30 hover:bg-primary/5 transition-all"
                         onClick={() => handleFundSelect(fund.id)}
                       >
-                        <img 
-                          src={fund.image} 
-                          alt={fund.name}
-                          className="w-12 h-12 rounded-md object-cover mr-3" 
-                        />
-                        <div className="text-left">
-                          <p className="font-medium">{fund.name}</p>
-                          <p className="text-sm text-gray-500">Saldo: {formatCurrency(fund.balance)}</p>
+                        <div className="relative mr-3">
+                          <img 
+                            src={fund.image} 
+                            alt={fund.name}
+                            className="w-14 h-14 rounded-lg object-cover shadow-sm ring-1 ring-gray-200" 
+                          />
+                        </div>
+                        <div className="text-left flex-1">
+                          <p className="font-medium text-gray-900">{fund.name}</p>
+                          <p className="text-sm text-gray-600 line-clamp-1">{fund.description}</p>
+                          <div className="flex justify-between items-center mt-1">
+                            <p className="text-xs text-gray-500">Membros: {fund.members.length}</p>
+                            <p className="text-sm font-semibold text-primary">
+                              {formatCurrency(fund.balance)}
+                            </p>
+                          </div>
                         </div>
                       </button>
                     ))}
@@ -192,15 +209,22 @@ const CapitalRequestSheet = () => {
                 <div className="space-y-6">
                   {/* Fund display for step 2 */}
                   {selectedFund && (
-                    <div className="flex items-center p-4 border rounded-lg bg-gray-50">
-                      <img 
-                        src={selectedFund.image} 
-                        alt={selectedFund.name}
-                        className="w-12 h-12 rounded-md object-cover mr-3" 
-                      />
+                    <div className="flex items-center p-5 border border-primary/20 rounded-xl bg-primary/5 shadow-sm">
+                      <div className="relative mr-4">
+                        <img 
+                          src={selectedFund.image} 
+                          alt={selectedFund.name}
+                          className="w-16 h-16 rounded-lg object-cover shadow-sm ring-1 ring-primary/20" 
+                        />
+                      </div>
                       <div>
-                        <p className="font-medium">{selectedFund.name}</p>
-                        <p className="text-sm text-gray-500">Saldo: {formatCurrency(selectedFund.balance)}</p>
+                        <p className="text-xs uppercase tracking-wider text-gray-500 font-medium mb-1">Fundo selecionado</p>
+                        <p className="font-bold text-lg text-gray-900">{selectedFund.name}</p>
+                        <div className="flex items-center mt-1">
+                          <p className="text-sm font-medium text-primary">
+                            Saldo disponível: {formatCurrency(selectedFund.balance)}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -211,20 +235,24 @@ const CapitalRequestSheet = () => {
                     name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Valor solicitado</FormLabel>
+                        <FormLabel className="flex items-center">
+                          Valor solicitado 
+                          <span className="text-xs text-gray-500 ml-1.5">(obrigatório)</span>
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                              <span className="text-gray-500">R$</span>
+                              <span className="text-gray-600 font-medium">R$</span>
                             </div>
                             <Input 
                               placeholder="0,00" 
                               {...field} 
-                              className="pl-10" 
+                              className="pl-10 text-lg font-semibold" 
                               inputMode="numeric" 
                             />
                           </div>
                         </FormControl>
+                        <p className="text-xs text-gray-500 mt-1">Insira o valor que deseja solicitar do fundo</p>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -236,13 +264,18 @@ const CapitalRequestSheet = () => {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Descrição da solicitação</FormLabel>
+                        <FormLabel className="flex items-center">
+                          Descrição da solicitação
+                          <span className="text-xs text-gray-500 ml-1.5">(obrigatório)</span>
+                        </FormLabel>
                         <FormControl>
                           <Textarea 
                             placeholder="Descreva o motivo da solicitação de capital..." 
                             {...field} 
+                            className="resize-none min-h-[100px]"
                           />
                         </FormControl>
+                        <p className="text-xs text-gray-500 mt-1">Explique detalhadamente o propósito e como o recurso será utilizado</p>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -254,7 +287,11 @@ const CapitalRequestSheet = () => {
                     name="repaymentOption"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Prazo de pagamento</FormLabel>
+                        <FormLabel className="flex items-center">
+                          Prazo de pagamento
+                          <span className="text-xs text-gray-500 ml-1.5">(obrigatório)</span>
+                        </FormLabel>
+                        <p className="text-xs text-gray-500 mb-3">Selecione quando pretende pagar esta solicitação de capital</p>
                         <FormControl>
                           <RadioGroup
                             onValueChange={(value) => {
@@ -262,37 +299,71 @@ const CapitalRequestSheet = () => {
                               handleRepaymentOptionChange(value);
                             }}
                             defaultValue={field.value}
-                            className="grid grid-cols-2 gap-2"
+                            className="grid grid-cols-2 gap-3"
                           >
-                            <FormItem className="flex items-center space-x-2 space-y-0">
+                            <FormItem className="space-y-0 m-0">
                               <FormControl>
-                                <RadioGroupItem value="week" />
+                                <label className={`flex flex-col items-center justify-center h-16 border rounded-lg 
+                                                 transition-all cursor-pointer px-3 py-4
+                                                 ${field.value === 'week' ? 
+                                                 'border-primary bg-primary/5 shadow-sm' : 
+                                                 'border-gray-200 hover:border-gray-300'}`}>
+                                  <RadioGroupItem value="week" className="sr-only" />
+                                  <span className="font-semibold">1 semana</span>
+                                  <span className="text-xs text-gray-500">Curto prazo</span>
+                                </label>
                               </FormControl>
-                              <FormLabel className="font-normal">1 semana</FormLabel>
                             </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0">
+                            <FormItem className="space-y-0 m-0">
                               <FormControl>
-                                <RadioGroupItem value="30days" />
+                                <label className={`flex flex-col items-center justify-center h-16 border rounded-lg 
+                                                 transition-all cursor-pointer px-3 py-4
+                                                 ${field.value === '30days' ? 
+                                                 'border-primary bg-primary/5 shadow-sm' : 
+                                                 'border-gray-200 hover:border-gray-300'}`}>
+                                  <RadioGroupItem value="30days" className="sr-only" />
+                                  <span className="font-semibold">30 dias</span>
+                                  <span className="text-xs text-gray-500">1 mês</span>
+                                </label>
                               </FormControl>
-                              <FormLabel className="font-normal">30 dias</FormLabel>
                             </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0">
+                            <FormItem className="space-y-0 m-0">
                               <FormControl>
-                                <RadioGroupItem value="60days" />
+                                <label className={`flex flex-col items-center justify-center h-16 border rounded-lg 
+                                                 transition-all cursor-pointer px-3 py-4
+                                                 ${field.value === '60days' ? 
+                                                 'border-primary bg-primary/5 shadow-sm' : 
+                                                 'border-gray-200 hover:border-gray-300'}`}>
+                                  <RadioGroupItem value="60days" className="sr-only" />
+                                  <span className="font-semibold">60 dias</span>
+                                  <span className="text-xs text-gray-500">2 meses</span>
+                                </label>
                               </FormControl>
-                              <FormLabel className="font-normal">60 dias</FormLabel>
                             </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0">
+                            <FormItem className="space-y-0 m-0">
                               <FormControl>
-                                <RadioGroupItem value="90days" />
+                                <label className={`flex flex-col items-center justify-center h-16 border rounded-lg 
+                                                 transition-all cursor-pointer px-3 py-4
+                                                 ${field.value === '90days' ? 
+                                                 'border-primary bg-primary/5 shadow-sm' : 
+                                                 'border-gray-200 hover:border-gray-300'}`}>
+                                  <RadioGroupItem value="90days" className="sr-only" />
+                                  <span className="font-semibold">90 dias</span>
+                                  <span className="text-xs text-gray-500">3 meses</span>
+                                </label>
                               </FormControl>
-                              <FormLabel className="font-normal">90 dias</FormLabel>
                             </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0 col-span-2">
+                            <FormItem className="space-y-0 m-0 col-span-2">
                               <FormControl>
-                                <RadioGroupItem value="custom" />
+                                <label className={`flex items-center justify-center h-12 border rounded-lg 
+                                                 transition-all cursor-pointer px-3 py-3
+                                                 ${field.value === 'custom' ? 
+                                                 'border-primary bg-primary/5 shadow-sm' : 
+                                                 'border-gray-200 hover:border-gray-300'}`}>
+                                  <RadioGroupItem value="custom" className="sr-only" />
+                                  <span className="font-semibold">Data personalizada</span>
+                                </label>
                               </FormControl>
-                              <FormLabel className="font-normal">Data personalizada</FormLabel>
                             </FormItem>
                           </RadioGroup>
                         </FormControl>
@@ -346,24 +417,40 @@ const CapitalRequestSheet = () => {
                   )}
 
                   {/* Interest rate info */}
-                  <div className="rounded-lg bg-blue-50 p-4 text-blue-800">
-                    <h4 className="font-medium mb-1">Taxa de juros</h4>
-                    <p className="text-sm">Este fundo cobra {interestRate}% de juros sobre o valor solicitado.</p>
+                  <div className="rounded-xl border border-blue-100 bg-blue-50 p-5 text-blue-800">
+                    <div className="flex items-start">
+                      <div className="mr-3 text-blue-600 mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="M12 16v-4"></path>
+                          <path d="M12 8h.01"></path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-1 text-blue-900">Informações de pagamento</h4>
+                        <p className="text-sm leading-relaxed">
+                          Este fundo cobra uma taxa de <span className="font-semibold">{interestRate}%</span> de juros 
+                          sobre o valor solicitado. O valor total a ser devolvido será o solicitado 
+                          mais a taxa de juros.
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Form actions */}
-                  <div className="flex justify-between pt-4">
+                  <div className="flex flex-col space-y-3 pt-4">
+                    <Button 
+                      type="submit"
+                      className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                    >
+                      Enviar solicitação
+                    </Button>
                     <Button 
                       type="button" 
                       variant="outline" 
                       onClick={handleCancel}
                     >
                       Cancelar
-                    </Button>
-                    <Button 
-                      type="submit"
-                    >
-                      Enviar solicitação
                     </Button>
                   </div>
                 </div>

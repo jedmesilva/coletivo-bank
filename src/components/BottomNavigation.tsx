@@ -15,25 +15,21 @@ const BottomNavigation: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0">
-      <div className="bg-white border-t border-gray-200 px-4 relative shadow-lg">
-        <div className="flex justify-between items-end max-w-md mx-auto relative">
+      <div className="bg-white border-t border-gray-200 px-4 shadow-lg">
+        <div className="flex justify-between items-center max-w-md mx-auto h-16">
           <button 
-            className={`flex flex-col items-center px-4 py-4 h-16 ${
+            className={`flex flex-col items-center p-4 ${
               activeScreen === 'home' ? 'text-primary font-semibold' : 'text-gray-600'
             }`}
             onClick={handleBackClick}
           >
-            <Home size={24} />
-            {activeScreen === 'home' ? (
-              <span className="text-xs mt-1 opacity-0 animate-[fade-in_0.3s_ease-in-out_forwards]">Fundos</span>
-            ) : (
-              <span className="text-xs mt-1 opacity-0 h-4">&nbsp;</span>
-            )}
+            <Home size={28} />
           </button>
           
-          <div className="transform -translate-y-4">
+          {/* Center deposit button */}
+          <div className="flex items-center h-full">
             <button 
-              className="bg-primary text-white px-6 py-3 rounded-full flex items-center shadow-lg hover:bg-primary/90 transition-colors"
+              className="bg-primary text-white px-6 py-3 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors"
               onClick={() => handleDepositClick()}
             >
               <ArrowUp className="mr-2" size={18} />
@@ -42,22 +38,17 @@ const BottomNavigation: React.FC = () => {
           </div>
           
           <button 
-            className={`flex flex-col items-center px-4 py-4 h-16 ${
+            className={`flex flex-col items-center p-4 ${
               activeScreen === 'account' ? 'text-primary font-semibold' : 'text-gray-600'
             }`}
             onClick={handleAccountClick}
           >
-            <Avatar className={`w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-200 hover:scale-110 border-2 ${
+            <Avatar className={`w-9 h-9 border-2 ${
               activeScreen === 'account' ? 'border-primary ring-2 ring-primary/20' : 'border-white'
             } shadow-sm`}>
-              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} />
+              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
               <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
             </Avatar>
-            {activeScreen === 'account' ? (
-              <span className="text-xs mt-1 opacity-0 animate-[fade-in_0.3s_ease-in-out_forwards]">Conta</span>
-            ) : (
-              <span className="text-xs mt-1 opacity-0 h-4">&nbsp;</span>
-            )}
           </button>
         </div>
       </div>

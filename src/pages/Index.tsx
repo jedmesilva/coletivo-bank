@@ -24,10 +24,8 @@ const Index: React.FC = () => {
     return (
       <div className="bg-gray-50 min-h-screen font-sans">
         <div className="max-w-md mx-auto p-4 pb-28">
-          {/* Header */}
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Minha Conta</h1>
-          </div>
+          {/* Removed header as per request */}
+          <div className="h-2"></div>
           
           <Account />
         </div>
@@ -41,10 +39,8 @@ const Index: React.FC = () => {
     return (
       <div className="bg-gray-50 min-h-screen font-sans">
         <div className="max-w-md mx-auto p-4 pb-28">
-          {/* Header */}
-          <div className="flex items-center mb-6">
-            <h1 className="text-2xl font-bold">Detalhes do Fundo</h1>
-          </div>
+          {/* Removed header as per request */}
+          <div className="h-2"></div>
           
           <FundDetail />
         </div>
