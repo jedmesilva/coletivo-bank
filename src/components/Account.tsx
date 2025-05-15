@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { CreditCard, Check, X } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from './SummaryCard';
 import TabNavigation from './TabNavigation';
 import { formatCurrency } from '@/utils/formatCurrency';
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 const Account: React.FC = () => {
   const { 
