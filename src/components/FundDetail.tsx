@@ -40,7 +40,7 @@ const FundDetail: React.FC = () => {
           className="w-16 h-16 rounded-lg object-cover mr-4 shadow-sm"
         />
         <div>
-          <h2 className="text-xl font-bold">{selectedFund.name}</h2>
+          <h2 className="text-xl md:text-2xl font-bold">{selectedFund.name}</h2>
           <p className="text-gray-600">{selectedFund.description}</p>
         </div>
       </div>
@@ -56,23 +56,23 @@ const FundDetail: React.FC = () => {
       />
 
       {/* Action Buttons */}
-      <div className="flex justify-between mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
         <button 
-          className="bg-primary text-white px-4 py-3 rounded-xl flex flex-col items-center flex-1 mr-2 shadow-sm hover:bg-primary/90 transition-colors"
+          className="bg-primary text-white px-4 py-3 rounded-xl flex flex-col items-center justify-center shadow-sm hover:bg-primary/90 transition-colors"
           onClick={() => handleDepositClick(selectedFund.id)}
         >
           <ArrowUp size={20} className="mb-1" />
           <span className="font-medium">Aportar capital</span>
         </button>
         <button 
-          className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 mx-2 shadow-sm hover:bg-gray-50 transition-colors"
+          className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center justify-center shadow-sm hover:bg-gray-50 transition-colors"
           onClick={() => handleCapitalRequestClick(selectedFund.id)}
         >
           <ArrowDownCircle size={20} className="mb-1" />
           <span className="font-medium">Solicitar capital</span>
         </button>
         <button 
-          className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 ml-2 shadow-sm hover:bg-gray-50 transition-colors"
+          className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center justify-center shadow-sm hover:bg-gray-50 transition-colors"
           onClick={() => handleDebtPaymentClick(selectedFund.id)}
         >
           <CreditCard size={20} className="mb-1" />
@@ -88,7 +88,7 @@ const FundDetail: React.FC = () => {
       />
 
       {/* Tab Content */}
-      <div className="bg-white rounded-xl p-4 shadow-sm">
+      <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm">
         {/* History Tab */}
         {fundTab === 'history' && (
           <div>

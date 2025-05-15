@@ -59,10 +59,12 @@ const Index: React.FC = () => {
         <div className="max-w-3xl mx-auto pb-28">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
-            <SidebarTrigger className="mr-2" />
-            <div>
-              <h1 className="text-2xl font-bold">Olá, <span className="text-primary">Lucas</span>!</h1>
-              <p className="text-sm text-gray-500 mt-1">Bem-vindo ao Coletivo Bank</p>
+            <div className="flex items-center">
+              <SidebarTrigger className="mr-3" />
+              <div>
+                <h1 className="text-2xl font-bold">Olá, <span className="text-primary">Lucas</span>!</h1>
+                <p className="text-sm text-gray-500 mt-1">Bem-vindo ao Coletivo Bank</p>
+              </div>
             </div>
           </div>
 

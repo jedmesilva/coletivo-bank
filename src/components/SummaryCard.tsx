@@ -33,7 +33,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
     <div className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
-          <h2 className="text-xl font-bold">{title}</h2>
+          <h2 className="text-xl md:text-2xl font-bold">{title}</h2>
           {showGrowth && (
             <Badge 
               variant="outline" 
@@ -59,7 +59,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       </div>
       
       <div className="mb-6">
-        <p className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+        <p className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
           {formatCurrency(balance, hideValues)}
         </p>
       </div>
