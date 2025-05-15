@@ -72,7 +72,7 @@ const FundCard: React.FC<FundCardProps> = ({ fund, onClick }) => {
                 handleDepositClick(fund.id);
               }}
             >
-              Depositar
+              Aportar
             </button>
           </div>
         </div>
