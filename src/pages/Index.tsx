@@ -23,7 +23,7 @@ const Index: React.FC = () => {
     return (
       <div className="bg-gray-50 min-h-screen font-sans">
         <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto pb-28">
+          <div className="max-w-6xl mx-auto pb-28">
             {/* Removed header as per request */}
             <div className="h-2"></div>
 
@@ -40,7 +40,7 @@ const Index: React.FC = () => {
     return (
       <div className="bg-gray-50 min-h-screen font-sans">
         <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto pb-28">
+          <div className="max-w-6xl mx-auto pb-28">
             {/* Removed header as per request */}
             <div className="h-2"></div>
 
@@ -56,7 +56,7 @@ const Index: React.FC = () => {
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
       <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto pb-28">
+        <div className="max-w-6xl mx-auto pb-28">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center">
@@ -96,7 +96,7 @@ const Index: React.FC = () => {
           </div>
 
           {/* Fund Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {funds.map(fund => (
               <FundCard
                 key={fund.id}
