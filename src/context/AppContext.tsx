@@ -148,8 +148,8 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [funds] = useState<Fund[]>(mockFunds);
-  const [userDebtsState] = useState<DebtItem[]>(userDebts);
+  const [funds, setFunds] = useState<Fund[]>(mockFunds);
+  const [userDebtsState, setUserDebts] = useState<DebtItem[]>(userDebts);
   const [hideValues, setHideValues] = useState<boolean>(false);
   const [activeScreen, setActiveScreen] = useState<Screen>('home');
   const [selectedFund, setSelectedFund] = useState<Fund | null>(null);
@@ -388,7 +388,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       .reduce((sum, movement) => sum + movement.value, 0);
   };
 
-  const value = {
+  const value: AppContextType = {
     funds,
     userDebts: userDebtsState,
     userMovements,
