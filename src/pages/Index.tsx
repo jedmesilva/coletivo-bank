@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Menu, Home, User, ArrowUp } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -26,7 +25,7 @@ const Index: React.FC = () => {
         <div className="max-w-md mx-auto p-4 pb-28">
           {/* Removed header as per request */}
           <div className="h-2"></div>
-          
+
           <Account />
         </div>
         <BottomNavigation />
@@ -41,7 +40,7 @@ const Index: React.FC = () => {
         <div className="max-w-md mx-auto p-4 pb-28">
           {/* Removed header as per request */}
           <div className="h-2"></div>
-          
+
           <FundDetail />
         </div>
         <BottomNavigation />
