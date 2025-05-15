@@ -1,173 +1,137 @@
+import React, { createContext, useContext, useState } from 'react';
+import { ReactNode } from 'react';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Fund, Screen, FundTab, AccountTab, DebtItem, HistoryItem, ApprovalItem } from '@/types';
+type Fund = {
+  id: string;
+  name: string;
+  description: string;
+  balance: number;
+  image: string;
+};
 
-// Update types.ts to include fundName field for these items
-interface UserHistoryItem extends HistoryItem {
+type Debt = {
+  id: string;
+  fundId: string;
   fundName: string;
-}
-
-interface UserApprovalItem extends ApprovalItem {
-  fundName: string;
-}
-
-// Mock data
-const mockFunds: Fund[] = [
-  {
-    id: '1',
-    name: 'Amigos do futebol de sexta',
-    description: 'Grana para locação de equipamentos',
-    balance: 5000,
-    growth: 268,
-    date: '10/04/2023',
-    image: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?q=80&w=200&h=200',
-    members: [
-      { id: '1', name: 'Lucas', role: 'Admin', joined: '10/04/2023' },
-      { id: '2', name: 'João', role: 'Membro', joined: '10/04/2023' },
-      { id: '3', name: 'Maria', role: 'Membro', joined: '15/04/2023' },
-      { id: '4', name: 'Carlos', role: 'Membro', joined: '20/04/2023' },
-      { id: '5', name: 'Ana', role: 'Membro', joined: '25/04/2023' },
-      { id: '6', name: 'Pedro', role: 'Membro', joined: '30/04/2023' },
-      { id: '7', name: 'Paula', role: 'Membro', joined: '05/05/2023' }
-    ],
-    history: [
-      { id: '1', date: '12/05/2023', description: 'Aporte de João', value: 500, type: 'deposit' },
-      { id: '2', date: '05/05/2023', description: 'Pagamento quadra', value: -200, type: 'withdrawal' },
-      { id: '3', date: '01/05/2023', description: 'Aporte de Maria', value: 500, type: 'deposit' }
-    ],
-    approvals: [
-      { id: '1', date: '15/05/2023', description: 'Compra de bolas', value: 350, status: 'pending' }
-    ]
-  },
-  {
-    id: '2',
-    name: 'Amigo secreto TI',
-    description: 'Compra de presentes para o final de ano',
-    balance: 500,
-    growth: 27,
-    date: '15/03/2023',
-    image: 'https://images.unsplash.com/photo-1608116518432-ec97a1b7e8b0?q=80&w=200&h=200',
-    members: [
-      { id: '1', name: 'Lucas', role: 'Admin', joined: '15/03/2023' },
-      { id: '8', name: 'Carlos', role: 'Membro', joined: '16/03/2023' },
-      { id: '9', name: 'Ana', role: 'Membro', joined: '17/03/2023' },
-      { id: '10', name: 'Rafael', role: 'Membro', joined: '18/03/2023' },
-      { id: '11', name: 'Juliana', role: 'Membro', joined: '19/03/2023' },
-      { id: '12', name: 'Marcos', role: 'Membro', joined: '20/03/2023' }
-    ],
-    history: [
-      { id: '4', date: '10/05/2023', description: 'Aporte de Carlos', value: 100, type: 'deposit' },
-      { id: '5', date: '01/05/2023', description: 'Aporte de Ana', value: 100, type: 'deposit' }
-    ],
-    approvals: []
-  }
-];
-
-const userDebts: DebtItem[] = [
-  { 
-    id: '1', 
-    fundId: '1',
-    fundName: 'Amigos do futebol de sexta', 
-    amount: 1200, 
-    dueDate: '30/05/2023', 
-    description: 'Empréstimo para equipamentos' 
-  },
-  { 
-    id: '2', 
-    fundId: '2',
-    fundName: 'Amigo secreto TI', 
-    amount: 300, 
-    dueDate: '15/06/2023', 
-    description: 'Adiantamento para presente' 
-  }
-];
-
-const userMovements: UserHistoryItem[] = [
-  { id: '6', date: '12/05/2023', fundName: 'Amigos do futebol de sexta', description: 'Aporte', value: 500, type: 'deposit' },
-  { id: '7', date: '10/05/2023', fundName: 'Amigo secreto TI', description: 'Aporte', value: 200, type: 'deposit' },
-  { id: '8', date: '05/05/2023', fundName: 'Amigos do futebol de sexta', description: 'Saque', value: -150, type: 'withdrawal' },
-  { id: '9', date: '01/05/2023', fundName: 'Amigo secreto TI', description: 'Aporte', value: 100, type: 'deposit' },
-  { id: '10', date: '28/04/2023', fundName: 'Amigos do futebol de sexta', description: 'Pagamento de dívida', value: 300, type: 'debt-payment' }
-] as UserHistoryItem[];
-
-const userApprovals: UserApprovalItem[] = [
-  { id: '2', date: '15/05/2023', fundName: 'Amigos do futebol de sexta', description: 'Solicitação de empréstimo - João', value: 1000, status: 'pending' },
-  { id: '3', date: '12/05/2023', fundName: 'Amigo secreto TI', description: 'Alteração de regras do fundo', value: null, status: 'pending' }
-] as UserApprovalItem[];
+  amount: number;
+  description: string;
+  dueDate: string;
+};
 
 interface AppContextType {
+  // Modal states
+  isDepositModalOpen: boolean;
+  setIsDepositModalOpen: (open: boolean) => void;
+  isCapitalRequestOpen: boolean;
+  setIsCapitalRequestOpen: (open: boolean) => void;
+  isDebtPaymentOpen: boolean;
+  setIsDebtPaymentOpen: (open: boolean) => void;
+  isFundCreationOpen: boolean;
+  setIsFundCreationOpen: (open: boolean) => void;
+
+  // Selected fund states
+  selectedFundIdForDeposit: string | null;
+  setSelectedFundIdForDeposit: (id: string | null) => void;
+  selectedFundIdForCapitalRequest: string | null;
+  setSelectedFundIdForCapitalRequest: (id: string | null) => void;
+  selectedFundIdForDebtPayment: string | null;
+  setSelectedFundIdForDebtPayment: (id: string | null) => void;
+
+  // Data and actions
   funds: Fund[];
-  userDebts: DebtItem[];
-  userMovements: UserHistoryItem[];
-  userApprovals: UserApprovalItem[];
+  userDebts: Debt[];
+  depositToFund: (fundId: string, amount: number, description: string) => void;
+  requestCapitalFromFund: (fundId: string, amount: number, description: string, repaymentDate: Date) => void;
+  payFundDebt: (fundId: string, debtId: string, amount: number) => void;
+  createFund: (fund: Omit<Fund, 'id' | 'balance'> & { members: string[] }) => void;
   hideValues: boolean;
   setHideValues: React.Dispatch<React.SetStateAction<boolean>>;
-  activeScreen: Screen;
-  setActiveScreen: React.Dispatch<React.SetStateAction<Screen>>;
+  activeScreen: string;
+  setActiveScreen: React.Dispatch<React.SetStateAction<string>>;
   selectedFund: Fund | null;
   setSelectedFund: React.Dispatch<React.SetStateAction<Fund | null>>;
-  fundTab: FundTab;
-  setFundTab: React.Dispatch<React.SetStateAction<FundTab>>;
-  accountTab: AccountTab;
-  setAccountTab: React.Dispatch<React.SetStateAction<AccountTab>>;
+  fundTab: string;
+  setFundTab: React.Dispatch<React.SetStateAction<string>>;
+  accountTab: string;
+  setAccountTab: React.Dispatch<React.SetStateAction<string>>;
   handleFundClick: (fundId: string) => void;
   handleBackClick: () => void;
   handleAccountClick: () => void;
   getTotalBalance: () => number;
   getTotalMembers: () => number;
   getTotalUserDeposits: () => number;
-  
-  // Fund creation and deposit features
-  isFundCreationOpen: boolean;
-  setIsFundCreationOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isDepositModalOpen: boolean;
-  setIsDepositModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedFundIdForDeposit: string | null;
-  setSelectedFundIdForDeposit: React.Dispatch<React.SetStateAction<string | null>>;
-  createFund: (fundData: { name: string; description: string; image: string; members: string[] }) => void;
-  depositToFund: (fundId: string, amount: number, description: string) => void;
   handleDepositClick: (fundId?: string) => void;
-  
-  // Capital request features
-  isCapitalRequestOpen: boolean;
-  setIsCapitalRequestOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedFundIdForCapitalRequest: string | null;
-  setSelectedFundIdForCapitalRequest: React.Dispatch<React.SetStateAction<string | null>>;
   handleCapitalRequestClick: (fundId?: string) => void;
-  requestCapitalFromFund: (fundId: string, amount: number, description: string, repaymentDate: Date) => void;
-  
-  // Debt payment features
-  isDebtPaymentOpen: boolean;
-  setIsDebtPaymentOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedFundIdForDebtPayment: string | null;
-  setSelectedFundIdForDebtPayment: React.Dispatch<React.SetStateAction<string | null>>;
   handleDebtPaymentClick: (fundId?: string) => void;
-  payFundDebt: (fundId: string, debtId: string, amount: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [funds, setFunds] = useState<Fund[]>(mockFunds);
-  const [userDebtsState, setUserDebts] = useState<DebtItem[]>(userDebts);
-  const [hideValues, setHideValues] = useState<boolean>(false);
-  const [activeScreen, setActiveScreen] = useState<Screen>('home');
-  const [selectedFund, setSelectedFund] = useState<Fund | null>(null);
-  const [fundTab, setFundTab] = useState<FundTab>('history');
-  const [accountTab, setAccountTab] = useState<AccountTab>('debts');
-  
-  // Fund creation and deposit features
-  const [isFundCreationOpen, setIsFundCreationOpen] = useState<boolean>(false);
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState<boolean>(false);
+export function AppProvider({ children }: { children: ReactNode }) {
+  // Modal states
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [isCapitalRequestOpen, setIsCapitalRequestOpen] = useState(false);
+  const [isDebtPaymentOpen, setIsDebtPaymentOpen] = useState(false);
+  const [isFundCreationOpen, setIsFundCreationOpen] = useState(false);
+
+  // Selected fund states
   const [selectedFundIdForDeposit, setSelectedFundIdForDeposit] = useState<string | null>(null);
-  
-  // Capital request features
-  const [isCapitalRequestOpen, setIsCapitalRequestOpen] = useState<boolean>(false);
   const [selectedFundIdForCapitalRequest, setSelectedFundIdForCapitalRequest] = useState<string | null>(null);
-  
-  // Debt payment features
-  const [isDebtPaymentOpen, setIsDebtPaymentOpen] = useState<boolean>(false);
   const [selectedFundIdForDebtPayment, setSelectedFundIdForDebtPayment] = useState<string | null>(null);
+  const [hideValues, setHideValues] = useState<boolean>(false);
+  const [activeScreen, setActiveScreen] = useState<string>('home');
+  const [selectedFund, setSelectedFund] = useState<Fund | null>(null);
+  const [fundTab, setFundTab] = useState<string>('history');
+  const [accountTab, setAccountTab] = useState<string>('debts');
+
+  // Mock data - replace with actual data fetching
+  const [funds, setFunds] = useState<Fund[]>([
+    {
+      id: '1',
+      name: 'Fundo Exemplo',
+      description: 'Um fundo de exemplo',
+      balance: 1000,
+      image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7'
+    }
+  ]);
+
+  const [userDebts, setUserDebts] = useState<Debt[]>([
+    {
+      id: '1',
+      fundId: '1',
+      fundName: 'Fundo Exemplo',
+      amount: 100,
+      description: 'Dívida de exemplo',
+      dueDate: '2024-01-01'
+    }
+  ]);
+
+  // Actions
+  const depositToFund = (fundId: string, amount: number, description: string) => {
+    setFunds(funds.map(fund =>
+      fund.id === fundId
+        ? { ...fund, balance: fund.balance + amount }
+        : fund
+    ));
+  };
+
+  const requestCapitalFromFund = (fundId: string, amount: number, description: string, repaymentDate: Date) => {
+    // Implement capital request logic
+    console.log('Capital requested:', { fundId, amount, description, repaymentDate });
+  };
+
+  const payFundDebt = (fundId: string, debtId: string, amount: number) => {
+    setUserDebts(userDebts.filter(debt => debt.id !== debtId));
+  };
+
+  const createFund = (fundData: Omit<Fund, 'id' | 'balance'> & { members: string[] }) => {
+    const newFund: Fund = {
+      ...fundData,
+      id: Date.now().toString(),
+      balance: 0
+    };
+    setFunds([...funds, newFund]);
+  };
 
   const handleFundClick = (fundId: string) => {
     const fund = funds.find(f => f.id === fundId);
@@ -219,156 +183,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
   };
 
-  const createFund = (fundData: { name: string; description: string; image: string; members: string[] }) => {
-    const newFund: Fund = {
-      id: `${funds.length + 1}`,
-      name: fundData.name,
-      description: fundData.description,
-      balance: 0,
-      growth: 0,
-      date: formatDate(),
-      image: fundData.image,
-      members: [
-        { id: '1', name: 'Lucas', role: 'Admin', joined: formatDate() },
-        ...fundData.members.map((memberName, index) => ({
-          id: `new-member-${index}`,
-          name: memberName,
-          role: 'Membro' as 'Membro',
-          joined: formatDate()
-        }))
-      ],
-      history: [],
-      approvals: []
-    };
-    
-    setFunds([...funds, newFund]);
-  };
-
-  const depositToFund = (fundId: string, amount: number, description: string) => {
-    const date = formatDate();
-    
-    // Update fund balance and add to history
-    setFunds(prevFunds => prevFunds.map(fund => {
-      if (fund.id === fundId) {
-        const updatedBalance = fund.balance + amount;
-        const newHistoryItem = {
-          id: `hist-${Date.now()}`,
-          date,
-          description: `${description} - Lucas`,
-          value: amount,
-          type: 'deposit' as 'deposit'
-        };
-        
-        return {
-          ...fund,
-          balance: updatedBalance,
-          history: [newHistoryItem, ...fund.history]
-        };
-      }
-      return fund;
-    }));
-    
-    // Add to user movements
-    const fundName = funds.find(f => f.id === fundId)?.name || '';
-    const newMovement = {
-      id: `mov-${Date.now()}`,
-      date,
-      fundName,
-      description: description,
-      value: amount,
-      type: 'deposit' as 'deposit'
-    };
-    
-    // We'd update userMovements here if it wasn't a mock
-    console.log('New user movement:', newMovement);
-  };
-  
-  const requestCapitalFromFund = (fundId: string, amount: number, description: string, repaymentDate: Date) => {
-    const date = formatDate();
-    
-    // Format the repayment date string
-    const formattedRepaymentDate = repaymentDate.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-    
-    // Create a new approval request in the fund
-    setFunds(prevFunds => prevFunds.map(fund => {
-      if (fund.id === fundId) {
-        const newApprovalItem: ApprovalItem = {
-          id: `apr-${Date.now()}`,
-          date,
-          description: `Solicitação de empréstimo - Lucas - Pagamento em ${formattedRepaymentDate}`,
-          value: amount,
-          status: 'pending',
-          requesterId: '1' // Lucas's ID
-        };
-        
-        return {
-          ...fund,
-          approvals: [newApprovalItem, ...fund.approvals]
-        };
-      }
-      return fund;
-    }));
-    
-    // Add to user approvals
-    const fundName = funds.find(f => f.id === fundId)?.name || '';
-    const newApproval: UserApprovalItem = {
-      id: `apr-${Date.now()}`,
-      date,
-      fundName,
-      description: `Solicitação de empréstimo - ${description}`,
-      value: amount,
-      status: 'pending',
-      requesterId: '1' // Lucas's ID
-    };
-    
-    // We'd update userApprovals here if it wasn't a mock
-    console.log('New user approval:', newApproval);
-  };
-  
-  const payFundDebt = (fundId: string, debtId: string, amount: number) => {
-    const date = formatDate();
-    
-    // Remove the debt from user's debts
-    setUserDebts(prevDebts => prevDebts.filter(debt => debt.id !== debtId));
-    
-    // Add payment to the fund's history
-    setFunds(prevFunds => prevFunds.map(fund => {
-      if (fund.id === fundId) {
-        const newHistoryItem = {
-          id: `hist-${Date.now()}`,
-          date,
-          description: `Pagamento de dívida - Lucas`,
-          value: amount,
-          type: 'debt-payment' as 'debt-payment'
-        };
-        
-        return {
-          ...fund,
-          history: [newHistoryItem, ...fund.history]
-        };
-      }
-      return fund;
-    }));
-    
-    // Add to user movements
-    const fundName = funds.find(f => f.id === fundId)?.name || '';
-    const newMovement = {
-      id: `mov-${Date.now()}`,
-      date,
-      fundName,
-      description: 'Pagamento de dívida',
-      value: amount,
-      type: 'debt-payment' as 'debt-payment'
-    };
-    
-    // We'd update userMovements here if it wasn't a mock
-    console.log('New debt payment movement:', newMovement);
-  };
-
   const getTotalBalance = (): number => {
     return funds.reduce((sum, fund) => sum + fund.balance, 0);
   };
@@ -383,65 +197,59 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const getTotalUserDeposits = (): number => {
-    return userMovements
-      .filter(movement => movement.type === 'deposit')
-      .reduce((sum, movement) => sum + movement.value, 0);
+    return userDebts
+      .filter(debt => debt.fundId === '1') // Assuming user deposits are related to fund with id '1'
+      .reduce((sum, debt) => sum + debt.amount, 0);
   };
 
-  const value = {
-    funds,
-    userDebts: userDebtsState,
-    userMovements,
-    userApprovals,
-    hideValues,
-    setHideValues,
-    activeScreen,
-    setActiveScreen,
-    selectedFund,
-    setSelectedFund,
-    fundTab,
-    setFundTab,
-    accountTab,
-    setAccountTab,
-    handleFundClick,
-    handleBackClick,
-    handleAccountClick,
-    getTotalBalance,
-    getTotalMembers,
-    getTotalUserDeposits,
-    
-    // Fund creation and deposit features
-    isFundCreationOpen,
-    setIsFundCreationOpen,
-    isDepositModalOpen,
-    setIsDepositModalOpen,
-    selectedFundIdForDeposit,
-    setSelectedFundIdForDeposit,
-    createFund,
-    depositToFund,
-    handleDepositClick,
-    
-    // Capital request features
-    isCapitalRequestOpen,
-    setIsCapitalRequestOpen,
-    selectedFundIdForCapitalRequest,
-    setSelectedFundIdForCapitalRequest,
-    handleCapitalRequestClick,
-    requestCapitalFromFund,
-    
-    // Debt payment features
-    isDebtPaymentOpen,
-    setIsDebtPaymentOpen,
-    selectedFundIdForDebtPayment,
-    setSelectedFundIdForDebtPayment,
-    handleDebtPaymentClick,
-    payFundDebt
-  };
+  return (
+    <AppContext.Provider value={{
+      isDepositModalOpen,
+      setIsDepositModalOpen,
+      isCapitalRequestOpen,
+      setIsCapitalRequestOpen,
+      isDebtPaymentOpen,
+      setIsDebtPaymentOpen,
+      isFundCreationOpen,
+      setIsFundCreationOpen,
+      selectedFundIdForDeposit,
+      setSelectedFundIdForDeposit,
+      selectedFundIdForCapitalRequest,
+      setSelectedFundIdForCapitalRequest,
+      selectedFundIdForDebtPayment,
+      setSelectedFundIdForDebtPayment,
+      funds,
+      userDebts,
+      depositToFund,
+      requestCapitalFromFund,
+      payFundDebt,
+      createFund,
+      hideValues,
+      setHideValues,
+      activeScreen,
+      setActiveScreen,
+      selectedFund,
+      setSelectedFund,
+      fundTab,
+      setFundTab,
+      accountTab,
+      setAccountTab,
+      handleFundClick,
+      handleBackClick,
+      handleAccountClick,
+      getTotalBalance,
+      getTotalMembers,
+      getTotalUserDeposits,
+      handleDepositClick,
+      handleCapitalRequestClick,
+      handleDebtPaymentClick,
+    }}>
+      {children}
+    </AppContext.Provider>
+  );
+}
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
-};
-
-export const useApp = (): AppContextType => {
+export const useApp = () => {
   const context = useContext(AppContext);
   if (context === undefined) {
     throw new Error('useApp must be used within an AppProvider');
