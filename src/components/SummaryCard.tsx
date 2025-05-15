@@ -67,15 +67,19 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       <div className="flex justify-between border-t border-gray-100 pt-4">
         {(leftLabel && leftValue !== undefined) && (
           <div>
-            <p className="text-xs text-gray-500 uppercase font-medium tracking-wide mb-1">{leftLabel}</p>
-            <p className="text-lg font-bold">{leftValue}</p>
+            <p className="text-lg font-bold flex items-center gap-2">
+              <span>{leftValue}</span>
+              <span className="text-xs text-gray-500 uppercase font-medium tracking-wide">{leftLabel}</span>
+            </p>
           </div>
         )}
         
         {(!showGrowth && rightLabel && rightValue !== undefined) && (
           <div className="text-right">
-            <p className="text-xs text-gray-500 uppercase font-medium tracking-wide mb-1">{rightLabel}</p>
-            <p className="text-lg font-bold">{rightValue}</p>
+            <p className="text-lg font-bold flex items-center gap-2 justify-end">
+              <span>{rightValue}</span>
+              <span className="text-xs text-gray-500 uppercase font-medium tracking-wide">{rightLabel}</span>
+            </p>
           </div>
         )}
       </div>
