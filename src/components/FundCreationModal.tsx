@@ -131,22 +131,47 @@ const FundCreationModal: React.FC = () => {
             
             <div className="space-y-2">
               <label className="text-sm font-medium">Imagem</label>
-              <div className="grid grid-cols-3 gap-3">
-                {images.map((image, index) => (
-                  <div 
-                    key={index}
-                    className={`cursor-pointer rounded-lg overflow-hidden h-20 border-2 ${
-                      fundData.image === image ? 'border-primary' : 'border-transparent'
-                    }`}
-                    onClick={() => selectImage(image)}
-                  >
-                    <img 
-                      src={image} 
-                      alt={`Option ${index + 1}`} 
-                      className="w-full h-full object-cover"
+              <div className="grid grid-cols-1 gap-4">
+                <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-colors">
+                  <label className="flex flex-col items-center justify-center cursor-pointer">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const imageUrl = URL.createObjectURL(file);
+                          setFundData({...fundData, image: imageUrl});
+                        }
+                      }}
                     />
-                  </div>
-                ))}
+                    <div className="flex flex-col items-center">
+                      <Plus size={24} className="text-gray-400 mb-2" />
+                      <span className="text-sm text-gray-500">Fazer upload de imagem</span>
+                    </div>
+                  </label>
+                </div>
+                
+                <p className="text-sm text-gray-500 mb-2">Ou escolha uma das opções abaixo:</p>
+                
+                <div className="grid grid-cols-3 gap-3">
+                  {images.map((image, index) => (
+                    <div 
+                      key={index}
+                      className={`cursor-pointer rounded-lg overflow-hidden h-20 border-2 ${
+                        fundData.image === image ? 'border-primary' : 'border-transparent'
+                      }`}
+                      onClick={() => selectImage(image)}
+                    >
+                      <img 
+                        src={image} 
+                        alt={`Option ${index + 1}`} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
