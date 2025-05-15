@@ -148,11 +148,20 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [funds, setFunds] = useState<Fund[]>(mockFunds);
-  const [userDebtsState, setUserDebts] = useState<DebtItem[]>(userDebts);
+  const [funds, setFunds] = useState<Fund[]>(() => mockFunds);
+  const [userDebtsState, setUserDebts] = useState<DebtItem[]>(() => userDebts);
   const [hideValues, setHideValues] = useState<boolean>(false);
   const [activeScreen, setActiveScreen] = useState<Screen>('home');
   const [selectedFund, setSelectedFund] = useState<Fund | null>(null);
+  const [fundTab, setFundTab] = useState<FundTab>('history');
+  const [accountTab, setAccountTab] = useState<AccountTab>('debts');
+  const [isFundCreationOpen, setIsFundCreationOpen] = useState(false);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [selectedFundIdForDeposit, setSelectedFundIdForDeposit] = useState<string | null>(null);
+  const [isCapitalRequestOpen, setIsCapitalRequestOpen] = useState(false);
+  const [selectedFundIdForCapitalRequest, setSelectedFundIdForCapitalRequest] = useState<string | null>(null);
+  const [isDebtPaymentOpen, setIsDebtPaymentOpen] = useState(false);
+  const [selectedFundIdForDebtPayment, setSelectedFundIdForDebtPayment] = useState<string | null>(null);
   const [fundTab, setFundTab] = useState<FundTab>('history');
   const [accountTab, setAccountTab] = useState<AccountTab>('debts');
   
