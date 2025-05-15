@@ -58,7 +58,7 @@ const Index: React.FC = () => {
     <div className="bg-gray-50 min-h-screen font-sans">
       <div className="max-w-md mx-auto p-4 pb-28">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-8">
           <Sheet>
             <SheetTrigger asChild>
               <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
@@ -67,25 +67,28 @@ const Index: React.FC = () => {
             </SheetTrigger>
             <SheetContent side="left" className="w-[300px]">
               <SheetHeader>
-                <SheetTitle>Coletivo Bank</SheetTitle>
+                <SheetTitle className="text-primary text-xl">Coletivo Bank</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4 mt-6">
                 <button className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <Home size={20} />
+                  <Home size={20} className="text-primary" />
                   <span>Página Inicial</span>
                 </button>
                 <button className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <User size={20} />
+                  <User size={20} className="text-primary" />
                   <span>Minha Conta</span>
                 </button>
                 <button className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowUp size={20} />
+                  <ArrowUp size={20} className="text-primary" />
                   <span>Fazer Aporte</span>
                 </button>
               </div>
             </SheetContent>
           </Sheet>
-          <h1 className="text-2xl font-bold">Olá, Lucas!</h1>
+          <div>
+            <h1 className="text-2xl font-bold">Olá, <span className="text-primary">Lucas</span>!</h1>
+            <p className="text-sm text-gray-500 mt-1">Bem-vindo ao Coletivo Bank</p>
+          </div>
         </div>
 
         {/* Summary Card */}
@@ -99,10 +102,16 @@ const Index: React.FC = () => {
         />
 
         {/* Collective Fund Section */}
-        <div className="flex justify-between items-center mb-4 mt-8">
-          <h2 className="text-2xl font-bold">Fundo coletivo</h2>
+        <div className="flex justify-between items-center mb-5 mt-8">
+          <h2 className="text-2xl font-bold flex items-center">
+            Fundo coletivo
+            <span className="ml-2 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
+              {funds.length}
+            </span>
+          </h2>
           <button 
-            className="bg-primary text-white px-4 py-2 rounded-full shadow-sm hover:bg-primary/90 transition-colors"
+            className="bg-primary text-white px-4 py-2 rounded-full shadow-sm hover:bg-primary/90 
+                      transition-all duration-200 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
             onClick={() => setIsFundCreationOpen(true)}
           >
             + Novo fundo
