@@ -18,10 +18,10 @@ const BottomNavigation: React.FC = () => {
       <div className="bg-white border-t border-gray-200 px-4 shadow-lg">
         <div className="flex justify-between items-center max-w-md mx-auto h-16">
           <button 
-            className={`flex flex-col items-center p-3 rounded-full transition-all ${
+            className={`flex flex-col items-center p-3 relative transition-all ${
               activeScreen === 'home' 
-                ? 'text-primary font-semibold bg-primary/10 shadow-sm' 
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'text-primary font-semibold after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-6 after:h-0.5 after:bg-primary' 
+                : 'text-gray-600'
             }`}
             onClick={handleBackClick}
           >
@@ -40,10 +40,10 @@ const BottomNavigation: React.FC = () => {
           </div>
           
           <button 
-            className={`flex flex-col items-center p-3 rounded-full transition-all ${
+            className={`flex flex-col items-center p-3 relative transition-all ${
               activeScreen === 'account' 
-                ? 'text-primary font-semibold bg-primary/10 shadow-sm' 
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'text-primary font-semibold after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-6 after:h-0.5 after:bg-primary' 
+                : 'text-gray-600'
             }`}
             onClick={handleAccountClick}
           >
