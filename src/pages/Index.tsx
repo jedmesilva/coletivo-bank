@@ -67,7 +67,7 @@ const Index: React.FC = () => {
             </SheetTrigger>
             <SheetContent side="left" className="w-[300px]">
               <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
+                <SheetTitle>Coletivo Bank</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4 mt-6">
                 <button className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors">
