@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Home, ArrowUp } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -20,14 +19,14 @@ const BottomNavigation: React.FC = () => {
           <button 
             className={`flex flex-col items-center p-3 relative transition-all ${
               activeScreen === 'home' 
-                ? 'text-primary font-semibold after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-6 after:h-0.5 after:bg-primary' 
+                ? 'text-primary font-semibold after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-6 after:h-0.5 after:bg-primary after:rounded-full' 
                 : 'text-gray-600'
             }`}
             onClick={handleBackClick}
           >
             <Home size={28} />
           </button>
-          
+
           {/* Center deposit button */}
           <div className="flex items-center h-full">
             <button 
@@ -38,11 +37,11 @@ const BottomNavigation: React.FC = () => {
               <span className="font-medium">Fazer Aporte</span>
             </button>
           </div>
-          
+
           <button 
             className={`flex flex-col items-center p-3 relative transition-all ${
               activeScreen === 'account' 
-                ? 'text-primary font-semibold after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-6 after:h-0.5 after:bg-primary' 
+                ? 'text-primary font-semibold after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-6 after:h-0.5 after:bg-primary after:rounded-full'
                 : 'text-gray-600'
             }`}
             onClick={handleAccountClick}
