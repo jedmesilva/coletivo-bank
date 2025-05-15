@@ -47,7 +47,7 @@ const Account: React.FC = () => {
       />
 
       {/* Tab Content */}
-      <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm">
+      <div className="bg-white rounded-xl p-4 shadow-sm">
         {/* Debts Tab */}
         {accountTab === 'debts' && (
           <div>
