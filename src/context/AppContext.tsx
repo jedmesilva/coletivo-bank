@@ -2,6 +2,13 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Fund, Screen, FundTab, AccountTab, DebtItem, HistoryItem, ApprovalItem } from '@/types';
 
+// Informações do usuário atual
+const currentUser = {
+  id: '1',
+  name: 'Lucas',
+  profileImage: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=200&h=200'
+};
+
 // Update types.ts to include fundName field for these items
 interface UserHistoryItem extends HistoryItem {
   fundName: string;
@@ -96,6 +103,12 @@ const userApprovals: UserApprovalItem[] = [
 ] as UserApprovalItem[];
 
 interface AppContextType {
+  // User information
+  currentUser: {
+    id: string;
+    name: string;
+    profileImage: string;
+  };
   funds: Fund[];
   userDebts: DebtItem[];
   userMovements: UserHistoryItem[];
@@ -389,6 +402,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const value = {
+    // User info
+    currentUser,
     funds,
     userDebts: userDebtsState,
     userMovements,

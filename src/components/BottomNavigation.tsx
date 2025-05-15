@@ -1,10 +1,17 @@
 
 import React from 'react';
-import { Home, ArrowUp, User } from 'lucide-react';
+import { Home, ArrowUp } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const BottomNavigation: React.FC = () => {
-  const { activeScreen, handleBackClick, handleAccountClick, handleDepositClick } = useApp();
+  const { 
+    activeScreen, 
+    handleBackClick, 
+    handleAccountClick, 
+    handleDepositClick,
+    currentUser
+  } = useApp();
 
   return (
     <div className="fixed bottom-0 left-0 right-0">
@@ -36,7 +43,10 @@ const BottomNavigation: React.FC = () => {
             }`}
             onClick={handleAccountClick}
           >
-            <User size={24} />
+            <Avatar className="w-6 h-6">
+              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} />
+              <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
+            </Avatar>
             <span className="text-xs mt-1">Conta</span>
           </button>
         </div>
