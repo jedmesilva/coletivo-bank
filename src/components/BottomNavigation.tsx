@@ -18,7 +18,7 @@ const BottomNavigation: React.FC = () => {
       <div className="bg-white border-t border-gray-200 px-4 shadow-lg">
         <div className="flex justify-between items-center max-w-md mx-auto h-16">
           <button 
-            className={`flex flex-col items-center p-3 rounded-xl transition-all ${
+            className={`flex flex-col items-center p-3 rounded-full transition-all ${
               activeScreen === 'home' 
                 ? 'text-primary font-semibold bg-primary/10 shadow-sm' 
                 : 'text-gray-600 hover:bg-gray-50'
@@ -40,7 +40,7 @@ const BottomNavigation: React.FC = () => {
           </div>
           
           <button 
-            className={`flex flex-col items-center p-3 rounded-xl transition-all ${
+            className={`flex flex-col items-center p-3 rounded-full transition-all ${
               activeScreen === 'account' 
                 ? 'text-primary font-semibold bg-primary/10 shadow-sm' 
                 : 'text-gray-600 hover:bg-gray-50'
