@@ -8,13 +8,13 @@ const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <AppProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <AppProvider>
         <BrowserRouter>
           <Index />
         </BrowserRouter>
-      </QueryClientProvider>
-    </AppProvider>
+      </AppProvider>
+    </QueryClientProvider>
   );
 };
 
