@@ -1,40 +1,46 @@
-
 import React, { useState } from 'react';
-import { ArrowLeft, Plus } from 'lucide-react';
-import { useApp } from '@/context/AppContext';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useApp } from '@/context/AppContext';
 import { toast } from '@/hooks/use-toast';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 type FundCreationStep = 'details' | 'members';
 
 const FundCreationModal: React.FC = () => {
   const { isFundCreationOpen, setIsFundCreationOpen, createFund } = useApp();
-  
   const [step, setStep] = useState<FundCreationStep>('details');
-  const [fundName, setFundName] = useState('');
-  const [fundDescription, setFundDescription] = useState('');
-  const [fundImage, setFundImage] = useState('https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?q=80&w=200&h=200');
+  const [fundData, setFundData] = useState({
+    name: '',
+    description: '',
+    image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?q=80&w=200&h=200'
+  });
   const [members, setMembers] = useState<string[]>([]);
-  const [newMember, setNewMember] = useState('');
+  const [memberInput, setMemberInput] = useState('');
+
+  const images = [
+    'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=200&h=200'
+  ];
 
   const handleClose = () => {
     setIsFundCreationOpen(false);
-    resetForm();
-  };
-
-  const resetForm = () => {
     setStep('details');
-    setFundName('');
-    setFundDescription('');
-    setFundImage('https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?q=80&w=200&h=200');
+    setFundData({
+      name: '',
+      description: '',
+      image: images[0]
+    });
     setMembers([]);
-    setNewMember('');
+    setMemberInput('');
   };
 
   const handleNextStep = () => {
-    if (!fundName.trim()) {
+    if (!fundData.name.trim()) {
       toast({
         title: "Nome obrigatório",
         description: "Por favor, insira um nome para o fundo.",
@@ -43,7 +49,7 @@ const FundCreationModal: React.FC = () => {
       return;
     }
 
-    if (!fundDescription.trim()) {
+    if (!fundData.description.trim()) {
       toast({
         title: "Descrição obrigatória",
         description: "Por favor, insira uma descrição para o fundo.",
@@ -55,180 +61,140 @@ const FundCreationModal: React.FC = () => {
     setStep('members');
   };
 
-  const handlePreviousStep = () => {
-    setStep('details');
-  };
-
   const handleAddMember = () => {
-    if (!newMember.trim()) return;
-    
-    if (members.includes(newMember)) {
-      toast({
-        title: "Membro já adicionado",
-        description: "Este membro já foi adicionado à lista.",
-        variant: "destructive"
-      });
-      return;
+    if (memberInput.trim() && !members.includes(memberInput.trim())) {
+      setMembers([...members, memberInput.trim()]);
+      setMemberInput('');
     }
-    
-    setMembers([...members, newMember]);
-    setNewMember('');
   };
 
-  const handleRemoveMember = (index: number) => {
-    setMembers(members.filter((_, i) => i !== index));
+  const handleRemoveMember = (member: string) => {
+    setMembers(members.filter(m => m !== member));
   };
 
   const handleCreateFund = () => {
     createFund({
-      name: fundName,
-      description: fundDescription,
-      image: fundImage,
-      members
+      ...fundData,
+      members: members
     });
-    
+
     toast({
       title: "Fundo criado com sucesso!",
-      description: `O fundo "${fundName}" foi criado.`
+      description: `O fundo "${fundData.name}" foi criado.`
     });
-    
+
     handleClose();
   };
 
+  const selectImage = (image: string) => {
+    setFundData({...fundData, image});
+  };
+
   return (
-    <Sheet open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
-      <SheetContent side="bottom" className="h-[95vh] p-0 rounded-t-xl">
-        <div className="h-full flex flex-col">
-          {/* Header */}
-          <SheetHeader className="p-4 border-b">
-            <div className="flex items-center">
-              {step === 'members' && (
-                <Button variant="ghost" size="icon" onClick={handlePreviousStep} className="mr-2">
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-              )}
-              <SheetTitle className="text-xl">
-                {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
-              </SheetTitle>
+    <Dialog open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-xl">
+            {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
+          </DialogTitle>
+        </DialogHeader>
+
+        {step === 'details' ? (
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium" htmlFor="fund-name">Nome do fundo</label>
+              <Input 
+                id="fund-name"
+                placeholder="Ex: Amigos do futebol" 
+                value={fundData.name}
+                onChange={(e) => setFundData({...fundData, name: e.target.value})}
+              />
             </div>
-          </SheetHeader>
-          
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto p-4">
-            {step === 'details' ? (
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Imagem do fundo</label>
-                  <div className="flex items-center space-x-4">
-                    <img 
-                      src={fundImage} 
-                      alt="Fund preview"
-                      className="w-20 h-20 rounded-lg object-cover border"
-                    />
-                    <div>
-                      <p className="text-sm text-gray-500 mb-1">Insira a URL de uma imagem</p>
-                      <Input
-                        placeholder="URL da imagem"
-                        value={fundImage}
-                        onChange={(e) => setFundImage(e.target.value)}
-                      />
-                    </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium" htmlFor="fund-description">Descrição</label>
+              <Input 
+                id="fund-description"
+                placeholder="Ex: Para custos de aluguel de quadra" 
+                value={fundData.description}
+                onChange={(e) => setFundData({...fundData, description: e.target.value})}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Imagem</label>
+              <div className="grid grid-cols-3 gap-3">
+                {images.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`relative aspect-square cursor-pointer rounded-lg overflow-hidden border-2 ${
+                      fundData.image === image ? 'border-primary' : 'border-transparent'
+                    }`}
+                    onClick={() => selectImage(image)}
+                  >
+                    <img src={image} alt={`Option ${index + 1}`} className="w-full h-full object-cover" />
                   </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Nome do fundo</label>
-                  <Input
-                    placeholder="Ex: Fundo família Silva"
-                    value={fundName}
-                    onChange={(e) => setFundName(e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Descrição</label>
-                  <Input
-                    placeholder="Ex: Para emergências e objetivos familiares"
-                    value={fundDescription}
-                    onChange={(e) => setFundDescription(e.target.value)}
-                  />
-                </div>
+                ))}
               </div>
-            ) : (
-              <div className="space-y-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-medium mb-1">{fundName}</h3>
-                  <p className="text-sm text-gray-600">{fundDescription}</p>
-                </div>
-                
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Adicionar membros</label>
+              <div className="flex space-x-2">
+                <Input
+                  placeholder="Nome do membro"
+                  value={memberInput}
+                  onChange={(e) => setMemberInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddMember();
+                    }
+                  }}
+                />
+                <Button onClick={handleAddMember}>Adicionar</Button>
+              </div>
+            </div>
+
+            {members.length > 0 && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Membros adicionados</label>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Adicionar membros</label>
-                  <div className="flex space-x-2">
-                    <Input
-                      placeholder="Nome do membro"
-                      value={newMember}
-                      onChange={(e) => setNewMember(e.target.value)}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') handleAddMember();
-                      }}
-                    />
-                    <Button onClick={handleAddMember} type="button">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                {members.length > 0 ? (
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Membros adicionados</label>
-                    <div className="space-y-2">
-                      {members.map((member, index) => (
-                        <div key={index} className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
-                          <span>{member}</span>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => handleRemoveMember(index)}
-                          >
-                            Remover
-                          </Button>
-                        </div>
-                      ))}
+                  {members.map((member, index) => (
+                    <div key={index} className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                      <span>{member}</span>
+                      <Button variant="ghost" onClick={() => handleRemoveMember(member)}>
+                        Remover
+                      </Button>
                     </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500">
-                    Nenhum membro adicionado. Você também poderá adicionar membros depois.
-                  </p>
-                )}
-                
-                <p className="text-sm text-gray-500">
-                  Você será automaticamente adicionado como administrador do fundo.
-                </p>
+                  ))}
+                </div>
               </div>
             )}
           </div>
-          
-          {/* Footer */}
-          <div className="border-t p-4">
-            {step === 'details' ? (
-              <div className="flex space-x-2">
-                <Button variant="outline" className="w-1/2" onClick={handleClose}>
-                  Cancelar
-                </Button>
-                <Button className="w-1/2" onClick={handleNextStep}>
-                  Próximo
-                </Button>
-              </div>
-            ) : (
-              <Button className="w-full" onClick={handleCreateFund}>
+        )}
+
+        <DialogFooter>
+          {step === 'details' ? (
+            <div className="flex w-full justify-end space-x-2">
+              <Button variant="outline" onClick={handleClose}>Cancelar</Button>
+              <Button onClick={handleNextStep}>Próximo</Button>
+            </div>
+          ) : (
+            <div className="flex w-full justify-between">
+              <Button variant="outline" onClick={() => setStep('details')}>
+                Voltar
+              </Button>
+              <Button onClick={handleCreateFund}>
                 Criar fundo
               </Button>
-            )}
-          </div>
-        </div>
-      </SheetContent>
-    </Sheet>
+            </div>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
