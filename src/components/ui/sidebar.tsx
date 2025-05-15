@@ -733,6 +733,65 @@ const SidebarMenuSubButton = React.forwardRef<
 })
 SidebarMenuSubButton.displayName = "SidebarMenuSubButton"
 
+const SidebarCategories = () => {
+  return (
+    <SidebarContent>
+      {/* Categoria: Dados Pessoais */}
+      <SidebarGroup>
+        <SidebarGroupLabel>Dados Pessoais</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                Meu Perfil
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                Endereço
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                Dados Bancários
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      {/* Categoria: Configurações */}
+      <SidebarGroup>
+        <SidebarGroupLabel>Configurações</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                Notificações
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                Privacidade
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                Segurança
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                Tema
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </SidebarContent>
+  );
+};
+
 export {
   Sidebar,
   SidebarContent,
@@ -758,4 +817,5 @@ export {
   SidebarSeparator,
   SidebarTrigger,
   useSidebar,
+  SidebarCategories,
 }
