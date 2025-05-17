@@ -1,12 +1,12 @@
 import React from 'react';
 import { Menu } from 'lucide-react';
-import { useApp } from '@/context/AppContext';
-import { Button } from '@/components/ui/button';
+import { useApp } from '../context/AppContext';
+import { Button } from '../components/ui/button';
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
-} from '@/components/ui/sheet';
+} from '../components/ui/sheet';
 import { Home, User, MapPin, CreditCard, Bell, Lock, Shield, Palette } from 'lucide-react';
 
 const MobileHeader: React.FC = () => {

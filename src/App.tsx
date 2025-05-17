@@ -8,7 +8,6 @@ import CapitalRequestSheet from "./components/CapitalRequestSheet";
 import DebtPaymentSheet from "./components/DebtPaymentSheet";
 import { Toaster } from "@/components/ui/sonner";
 import BottomNavigation from "./components/BottomNavigation";
-import MobileHeader from "./components/MobileHeader";
 
 const queryClient = new QueryClient();
 
@@ -18,7 +17,6 @@ const App = () => {
       <AppProvider>
         <BrowserRouter>
           <div className="flex flex-col min-h-screen bg-gray-50">
-            <MobileHeader />
             <main className="flex-1 w-full max-w-lg mx-auto px-4 pb-20">
               <Index />
             </main>
