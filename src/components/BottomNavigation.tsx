@@ -34,16 +34,7 @@ const BottomNavigation: React.FC = () => {
               className="bg-primary text-white px-6 py-3 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors"
               onClick={() => handleDepositClick()}
             >
-              <div className="relative h-[18px] w-[18px] mr-2 overflow-hidden">
-                <ArrowUp 
-                  size={18}
-                  className="absolute animate-slide-up"
-                />
-                <DollarSign 
-                  size={18}
-                  className="absolute animate-slide-up-delayed"
-                />
-              </div>
+              <IconScroller />
               <span className="font-medium">Fazer Aporte</span>
             </button>
           </div>
