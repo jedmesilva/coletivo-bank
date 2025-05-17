@@ -19,9 +19,9 @@ const AccountPage: React.FC = () => {
   } = useApp();
 
   const tabs = [
+    { id: 'approvals', label: 'Aprovações' },
     { id: 'debts', label: 'Dívidas' },
-    { id: 'movements', label: 'Movimentações' },
-    { id: 'approvals', label: 'Aprovações' }
+    { id: 'movements', label: 'Movimentações' }
   ];
 
   const handleTabChange = (tabId: string) => {
