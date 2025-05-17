@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Home, ArrowUp, DollarSign } from 'lucide-react';
+import IconScroller from './IconScroller';
 import { useApp } from '@/context/AppContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
