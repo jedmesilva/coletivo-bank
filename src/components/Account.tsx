@@ -28,7 +28,7 @@ const Account: React.FC = () => {
   };
 
   return (
-    <div className="w-full px-4 pb-20">
+    <div className="w-full pb-20">
       {/* Account Summary Card */}
       <SummaryCard 
         title="Meus Aportes" 
