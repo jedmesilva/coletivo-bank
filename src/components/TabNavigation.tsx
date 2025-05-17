@@ -30,7 +30,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   onTabChange,
 }) => {
   return (
-    <div className="flex border-b border-gray-300 mb-4">
+    <div className="flex border-b border-gray-300 mb-4 w-full">
       {tabs.map(tab => (
         <Tab
           key={tab.id}

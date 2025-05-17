@@ -28,7 +28,7 @@ const Account: React.FC = () => {
   };
 
   return (
-    <div className="fade-in">
+    <div className="fade-in w-full">
       {/* Account Summary Card */}
       <SummaryCard 
         title="Meus Aportes" 
