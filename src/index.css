@@ -7,32 +7,19 @@
 @keyframes slideUp {
   0% {
     transform: translateY(0);
-    opacity: 1;
-  }
-  45% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  50% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  55% {
-    transform: translateY(100%);
-    opacity: 0;
   }
   100% {
-    transform: translateY(0);
-    opacity: 1;
+    transform: translateY(-100%);
   }
 }
 
 .animate-slide-up {
-  animation: slideUp 4s infinite;
+  animation: slideUp 2s infinite linear;
 }
 
 .animate-slide-up-delayed {
-  animation: slideUp 4s infinite reverse;
+  animation: slideUp 2s infinite linear;
+  transform: translateY(100%);
 }
 
 @layer base {

@@ -37,17 +37,11 @@ const BottomNavigation: React.FC = () => {
               <div className="relative h-[18px] w-[18px] mr-2 overflow-hidden">
                 <ArrowUp 
                   size={18}
-                  className={cn(
-                    "absolute transition-transform duration-500 ease-in-out",
-                    "animate-slide-up"
-                  )}
+                  className="absolute animate-slide-up"
                 />
                 <DollarSign 
                   size={18}
-                  className={cn(
-                    "absolute transition-transform duration-500 ease-in-out",
-                    "animate-slide-up-delayed"
-                  )}
+                  className="absolute animate-slide-up-delayed"
                 />
               </div>
               <span className="font-medium">Fazer Aporte</span>
