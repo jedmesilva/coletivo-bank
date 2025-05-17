@@ -5,29 +5,34 @@
 @tailwind utilities;
 
 @keyframes slideUp {
-  0%, 50% {
+  0% {
     transform: translateY(0);
+    opacity: 1;
+  }
+  45% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  55% {
+    transform: translateY(100%);
+    opacity: 0;
   }
   100% {
-    transform: translateY(-100%);
-  }
-}
-
-@keyframes slideUpDelayed {
-  0% {
-    transform: translateY(100%);
-  }
-  50%, 100% {
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
 .animate-slide-up {
-  animation: slideUp 2s infinite;
+  animation: slideUp 4s infinite;
 }
 
 .animate-slide-up-delayed {
-  animation: slideUpDelayed 2s infinite;
+  animation: slideUp 4s infinite reverse;
 }
 
 @layer base {
