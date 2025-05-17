@@ -29,9 +29,9 @@ const AccountPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans">
-      <div className="w-full max-w-md mx-auto pb-24 px-4 sm:px-6">
-        <div className="fade-in pt-4 sm:pt-6">
+    <div className="bg-gray-50 min-h-screen font-sans w-full">
+      <div className="w-full max-w-md mx-auto pb-20 px-3">
+        <div className="fade-in pt-3">
           {/* Account Summary Card */}
           <SummaryCard 
             title="Meus Aportes" 
