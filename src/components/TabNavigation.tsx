@@ -9,12 +9,12 @@ interface TabProps {
 
 const Tab: React.FC<TabProps> = ({ label, isActive, onClick }) => (
   <button 
-    className={`px-2 py-2 text-sm sm:text-base sm:px-4 ${
-      isActive ? 'border-b-2 border-primary font-bold' : 'text-gray-600'
+    className={`px-2 py-2 text-sm sm:text-base sm:px-4 flex-1 text-center border-b-2 ${
+      isActive ? 'border-primary font-bold' : 'border-transparent text-gray-600'
     }`}
     onClick={onClick}
   >
-    {label}
+    <span className="font-medium">{label}</span>
   </button>
 );
 
@@ -30,7 +30,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   onTabChange,
 }) => {
   return (
-    <div className="flex justify-between border-b border-gray-300 mb-4 overflow-x-auto max-w-full">
+    <div className="flex border-b border-gray-300 mb-4 w-full overflow-hidden">
       {tabs.map(tab => (
         <Tab
           key={tab.id}
