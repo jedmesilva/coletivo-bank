@@ -16,15 +16,15 @@ export default function IconScroller() {
       const container = containerRef.current;
       if (!container) return;
 
-      container.style.transition = "transform 0.5s cubic-bezier(0.37, 0, 0.63, 1)";
+      container.style.transition = "transform 1.2s cubic-bezier(0.37, 0, 0.63, 1)";
       container.style.transform = "translateY(-100%)";
 
       setTimeout(() => {
         container.style.transition = "none";
         container.style.transform = "translateY(0)";
         setCurrentIndex((prev) => (prev + 1) % icons.length);
-      }, 500);
-    }, 5000);
+      }, 1200);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [icons.length]);
