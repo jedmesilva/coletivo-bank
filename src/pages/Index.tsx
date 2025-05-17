@@ -22,7 +22,10 @@ const Index: React.FC = () => {
   if (activeScreen === 'account') {
     return (
       <div className="bg-gray-50 min-h-screen font-sans">
-        <div className="w-full max-w-md mx-auto pb-28">
+        <div className="max-w-md mx-auto p-4 pb-28">
+          {/* Removed header as per request */}
+          <div className="h-2"></div>
+
           <Account />
         </div>
         <BottomNavigation />
@@ -34,7 +37,7 @@ const Index: React.FC = () => {
   if (activeScreen === 'fund-detail') {
     return (
       <div className="bg-gray-50 min-h-screen font-sans">
-        <div className="max-w-md mx-auto pb-28">
+        <div className="max-w-md mx-auto p-4 pb-28">
           {/* Removed header as per request */}
           <div className="h-2"></div>
 

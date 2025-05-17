@@ -28,7 +28,7 @@ const Account: React.FC = () => {
   };
 
   return (
-    <div className="w-full pb-20 px-2 max-w-screen-sm mx-auto overflow-hidden">
+    <div className="fade-in">
       {/* Account Summary Card */}
       <SummaryCard 
         title="Meus Aportes" 
@@ -47,20 +47,20 @@ const Account: React.FC = () => {
       />
 
       {/* Tab Content */}
-      <div className="w-full bg-white rounded-xl p-3 shadow-sm">
+      <div className="bg-white rounded-xl p-4 shadow-sm">
         {/* Debts Tab */}
         {accountTab === 'debts' && (
-          <div className="w-full">
+          <div>
             {userDebts.length > 0 ? (
               userDebts.map((debt) => (
-                <div key={debt.id} className="w-full py-3 border-b border-gray-100 last:border-0">
-                  <div className="flex flex-wrap sm:flex-nowrap justify-between">
-                    <div className="flex-1 min-w-0 w-full sm:w-auto">
-                      <p className="font-semibold truncate">{debt.description}</p>
-                      <p className="text-gray-500 text-sm truncate">{debt.fundName}</p>
+                <div key={debt.id} className="py-3 border-b border-gray-100 last:border-0">
+                  <div className="flex justify-between">
+                    <div>
+                      <p className="font-semibold">{debt.description}</p>
+                      <p className="text-gray-500 text-sm">{debt.fundName}</p>
                       <p className="text-gray-500 text-sm">Vencimento: {debt.dueDate}</p>
                     </div>
-                    <p className="font-bold text-red-500 ml-0 sm:ml-2 mt-1 sm:mt-0 w-full sm:w-auto">
+                    <p className="font-bold text-red-500">
                       {formatCurrency(debt.amount, hideValues)}
                     </p>
                   </div>
@@ -78,16 +78,16 @@ const Account: React.FC = () => {
 
         {/* Movements Tab */}
         {accountTab === 'movements' && (
-          <div className="w-full">
+          <div>
             {userMovements.map((movement) => (
-              <div key={movement.id} className="w-full py-3 border-b border-gray-100 last:border-0">
-                <div className="flex flex-wrap sm:flex-nowrap justify-between">
-                  <div className="flex-1 min-w-0 w-full sm:w-auto">
-                    <p className="font-semibold truncate">{movement.description}</p>
-                    <p className="text-gray-500 text-sm truncate">{movement.fundName}</p>
+              <div key={movement.id} className="py-3 border-b border-gray-100 last:border-0">
+                <div className="flex justify-between">
+                  <div>
+                    <p className="font-semibold">{movement.description}</p>
+                    <p className="text-gray-500 text-sm">{movement.fundName}</p>
                     <p className="text-gray-500 text-sm">{movement.date}</p>
                   </div>
-                  <p className={`font-bold ml-0 sm:ml-2 mt-1 sm:mt-0 w-full sm:w-auto ${
+                  <p className={`font-bold ${
                     movement.type === 'deposit' ? 'text-green-500' : 
                     movement.type === 'debt-payment' ? 'text-blue-500' : 'text-red-500'
                   }`}>
@@ -102,29 +102,29 @@ const Account: React.FC = () => {
 
         {/* Approvals Tab */}
         {accountTab === 'approvals' && (
-          <div className="w-full">
+          <div>
             {userApprovals.length > 0 ? (
               userApprovals.map((approval) => (
-                <div key={approval.id} className="w-full py-3 border-b border-gray-100 last:border-0">
-                  <div className="flex flex-wrap sm:flex-nowrap justify-between mb-2">
-                    <div className="flex-1 min-w-0 w-full sm:w-auto">
-                      <p className="font-semibold truncate">{approval.description}</p>
-                      <p className="text-gray-500 text-sm truncate">{approval.fundName}</p>
+                <div key={approval.id} className="py-3 border-b border-gray-100 last:border-0">
+                  <div className="flex justify-between mb-2">
+                    <div>
+                      <p className="font-semibold">{approval.description}</p>
+                      <p className="text-gray-500 text-sm">{approval.fundName}</p>
                       <p className="text-gray-500 text-sm">{approval.date}</p>
                     </div>
                     {approval.value && (
-                      <p className="font-bold ml-0 sm:ml-2 mt-1 sm:mt-0 w-full sm:w-auto">
+                      <p className="font-bold">
                         {formatCurrency(approval.value, hideValues)}
                       </p>
                     )}
                   </div>
                   <div className="flex space-x-2">
-                    <button className="flex-1 bg-green-500 text-white px-2 sm:px-3 py-2 rounded-lg flex items-center justify-center hover:bg-green-600 transition-colors text-sm sm:text-base">
-                      <Check className="mr-1 sm:mr-2" size={16} />
+                    <button className="flex-1 bg-green-500 text-white px-3 py-2 rounded-lg flex items-center justify-center hover:bg-green-600 transition-colors">
+                      <Check className="mr-2" size={16} />
                       Aprovar
                     </button>
-                    <button className="flex-1 bg-red-500 text-white px-2 sm:px-3 py-2 rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors text-sm sm:text-base">
-                      <X className="mr-1 sm:mr-2" size={16} />
+                    <button className="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors">
+                      <X className="mr-2" size={16} />
                       Recusar
                     </button>
                   </div>
