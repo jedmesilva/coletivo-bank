@@ -30,8 +30,8 @@ const AccountPage: React.FC = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
-      <div className="w-full max-w-md mx-auto pb-28">
-        <div className="fade-in px-3">
+      <div className="w-full max-w-md mx-auto pb-24 px-4 sm:px-6">
+        <div className="fade-in pt-4 sm:pt-6">
           {/* Account Summary Card */}
           <SummaryCard 
             title="Meus Aportes" 
@@ -50,13 +50,13 @@ const AccountPage: React.FC = () => {
           />
 
           {/* Tab Content */}
-          <div className="bg-white rounded-xl p-4 shadow-sm">
+          <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm mt-4">
             {/* Debts Tab */}
             {accountTab === 'debts' && (
               <div>
                 {userDebts.length > 0 ? (
                   userDebts.map((debt) => (
-                    <div key={debt.id} className="py-3 border-b border-gray-100 last:border-0">
+                    <div key={debt.id} className="py-4 border-b border-gray-100 last:border-0">
                       <div className="flex justify-between">
                         <div>
                           <p className="font-semibold">{debt.description}</p>
@@ -67,7 +67,7 @@ const AccountPage: React.FC = () => {
                           {formatCurrency(debt.amount, hideValues)}
                         </p>
                       </div>
-                      <button className="mt-2 bg-primary text-white px-4 py-2 rounded-lg w-full flex items-center justify-center hover:bg-primary/90 transition-colors">
+                      <button className="mt-3 bg-primary text-white px-4 py-2.5 sm:py-3 rounded-lg w-full flex items-center justify-center hover:bg-primary/90 transition-colors text-sm sm:text-base">
                         <CreditCard className="mr-2" size={16} />
                         Pagar
                       </button>
@@ -122,7 +122,7 @@ const AccountPage: React.FC = () => {
                         )}
                       </div>
                       <div className="flex space-x-2">
-                        <button className="flex-1 bg-green-500 text-white px-3 py-2 rounded-lg flex items-center justify-center hover:bg-green-600 transition-colors">
+                        <button className="flex-1 bg-green-500 text-white px-3 py-2.5 sm:py-3 rounded-lg flex items-center justify-center hover:bg-green-600 transition-colors text-sm sm:text-base">
                           <Check className="mr-2" size={16} />
                           Aprovar
                         </button>
