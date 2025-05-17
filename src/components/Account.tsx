@@ -18,9 +18,9 @@ const Account: React.FC = () => {
   } = useApp();
 
   const tabs = [
-    { id: 'approvals', label: 'Aprovações' },
     { id: 'debts', label: 'Dívidas' },
-    { id: 'movements', label: 'Movimentações' }
+    { id: 'movements', label: 'Movimentações' },
+    { id: 'approvals', label: 'Aprovações' }
   ];
 
   const handleTabChange = (tabId: string) => {
@@ -28,7 +28,7 @@ const Account: React.FC = () => {
   };
 
   return (
-    <div className="fade-in w-full">
+    <div className="fade-in">
       {/* Account Summary Card */}
       <SummaryCard 
         title="Meus Aportes" 
@@ -47,7 +47,7 @@ const Account: React.FC = () => {
       />
 
       {/* Tab Content */}
-      <div className="bg-white rounded-xl p-4 shadow-sm w-full">
+      <div className="bg-white rounded-xl p-4 shadow-sm">
         {/* Debts Tab */}
         {accountTab === 'debts' && (
           <div>
