@@ -28,7 +28,7 @@ const Account: React.FC = () => {
   };
 
   return (
-    <div className="fade-in">
+    <div className="w-full px-4 pb-20">
       {/* Account Summary Card */}
       <SummaryCard 
         title="Meus Aportes" 
@@ -47,20 +47,20 @@ const Account: React.FC = () => {
       />
 
       {/* Tab Content */}
-      <div className="bg-white rounded-xl p-4 shadow-sm">
+      <div className="w-full bg-white rounded-xl p-4 shadow-sm">
         {/* Debts Tab */}
         {accountTab === 'debts' && (
-          <div>
+          <div className="w-full">
             {userDebts.length > 0 ? (
               userDebts.map((debt) => (
-                <div key={debt.id} className="py-3 border-b border-gray-100 last:border-0">
+                <div key={debt.id} className="w-full py-3 border-b border-gray-100 last:border-0">
                   <div className="flex justify-between">
-                    <div>
-                      <p className="font-semibold">{debt.description}</p>
-                      <p className="text-gray-500 text-sm">{debt.fundName}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold truncate">{debt.description}</p>
+                      <p className="text-gray-500 text-sm truncate">{debt.fundName}</p>
                       <p className="text-gray-500 text-sm">Vencimento: {debt.dueDate}</p>
                     </div>
-                    <p className="font-bold text-red-500">
+                    <p className="font-bold text-red-500 ml-2">
                       {formatCurrency(debt.amount, hideValues)}
                     </p>
                   </div>
@@ -78,16 +78,16 @@ const Account: React.FC = () => {
 
         {/* Movements Tab */}
         {accountTab === 'movements' && (
-          <div>
+          <div className="w-full">
             {userMovements.map((movement) => (
-              <div key={movement.id} className="py-3 border-b border-gray-100 last:border-0">
+              <div key={movement.id} className="w-full py-3 border-b border-gray-100 last:border-0">
                 <div className="flex justify-between">
-                  <div>
-                    <p className="font-semibold">{movement.description}</p>
-                    <p className="text-gray-500 text-sm">{movement.fundName}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold truncate">{movement.description}</p>
+                    <p className="text-gray-500 text-sm truncate">{movement.fundName}</p>
                     <p className="text-gray-500 text-sm">{movement.date}</p>
                   </div>
-                  <p className={`font-bold ${
+                  <p className={`font-bold ml-2 ${
                     movement.type === 'deposit' ? 'text-green-500' : 
                     movement.type === 'debt-payment' ? 'text-blue-500' : 'text-red-500'
                   }`}>
@@ -102,18 +102,18 @@ const Account: React.FC = () => {
 
         {/* Approvals Tab */}
         {accountTab === 'approvals' && (
-          <div>
+          <div className="w-full">
             {userApprovals.length > 0 ? (
               userApprovals.map((approval) => (
-                <div key={approval.id} className="py-3 border-b border-gray-100 last:border-0">
+                <div key={approval.id} className="w-full py-3 border-b border-gray-100 last:border-0">
                   <div className="flex justify-between mb-2">
-                    <div>
-                      <p className="font-semibold">{approval.description}</p>
-                      <p className="text-gray-500 text-sm">{approval.fundName}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold truncate">{approval.description}</p>
+                      <p className="text-gray-500 text-sm truncate">{approval.fundName}</p>
                       <p className="text-gray-500 text-sm">{approval.date}</p>
                     </div>
                     {approval.value && (
-                      <p className="font-bold">
+                      <p className="font-bold ml-2">
                         {formatCurrency(approval.value, hideValues)}
                       </p>
                     )}
