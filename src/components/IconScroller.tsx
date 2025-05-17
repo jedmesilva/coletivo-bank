@@ -24,7 +24,7 @@ export default function IconScroller() {
         container.style.transform = "translateY(0)";
         setCurrentIndex((prev) => (prev + 1) % icons.length);
       }, 500);
-    }, 2000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [icons.length]);
