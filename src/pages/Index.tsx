@@ -3,7 +3,6 @@ import { Menu, Home, User, ArrowUp } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import FundCard from '@/components/FundCard';
-import BottomNavigation from '@/components/BottomNavigation';
 import FundDetail from '@/components/FundDetail';
 import Account from '@/components/Account';
 
@@ -20,43 +19,48 @@ const Index: React.FC = () => {
   // ACCOUNT SCREEN
   if (activeScreen === 'account') {
     return (
-      <div className="bg-gray-50 min-h-screen font-sans">
+      <>
+        <header className="sticky top-0 z-10 bg-white shadow-sm">
+          <div className="max-w-lg mx-auto h-14 px-4 flex items-center">
+            <h1 className="text-xl font-semibold">Minha Conta</h1>
+          </div>
+        </header>
         <div className="max-w-md mx-auto p-4 pb-28">
-          {/* Removed header as per request */}
-          <div className="h-2"></div>
-
           <Account />
         </div>
-        <BottomNavigation />
-      </div>
+      </>
     );
   }
 
   // FUND DETAIL SCREEN
   if (activeScreen === 'fund-detail') {
     return (
-      <div className="bg-gray-50 min-h-screen font-sans">
+      <>
+        <header className="sticky top-0 z-10 bg-white shadow-sm">
+          <div className="max-w-lg mx-auto h-14 px-4 flex items-center">
+            <h1 className="text-xl font-semibold">Detalhes do Fundo</h1>
+          </div>
+        </header>
         <div className="max-w-md mx-auto p-4 pb-28">
-          {/* Removed header as per request */}
-          <div className="h-2"></div>
-
           <FundDetail />
         </div>
-        <BottomNavigation />
-      </div>
+      </>
     );
   }
 
   // HOME SCREEN (MAIN APP SCREEN)
   return (
-    <div className="bg-gray-50 min-h-screen font-sans">
+    <>
+      <header className="sticky top-0 z-10 bg-white shadow-sm">
+        <div className="max-w-lg mx-auto h-14 px-4 flex items-center">
+          <h1 className="text-xl font-semibold">Coletivo Bank</h1>
+        </div>
+      </header>
       <div className="max-w-md mx-auto p-4 pb-28">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold">Olá, <span className="text-primary">Lucas</span>!</h1>
-            <p className="text-sm text-gray-500 mt-1">Bem-vindo ao Coletivo Bank</p>
-          </div>
+        {/* User greeting */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold">Olá, <span className="text-primary">Lucas</span>!</h2>
+          <p className="text-sm text-gray-500 mt-1">Bem-vindo ao Coletivo Bank</p>
         </div>
 
         {/* Summary Card */}
@@ -95,8 +99,7 @@ const Index: React.FC = () => {
           />
         ))}
       </div>
-      <BottomNavigation />
-    </div>
+    </>
   );
 };
 
