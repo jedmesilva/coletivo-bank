@@ -20,17 +20,7 @@ const Index: React.FC = () => {
 
   // ACCOUNT SCREEN
   if (activeScreen === 'account') {
-    return (
-      <div className="bg-gray-50 min-h-screen font-sans">
-        <div className="max-w-md mx-auto p-4 pb-28">
-          {/* Removed header as per request */}
-          <div className="h-2"></div>
-
-          <Account />
-        </div>
-        <BottomNavigation />
-      </div>
-    );
+    return <Account />;
   }
 
   // FUND DETAIL SCREEN
