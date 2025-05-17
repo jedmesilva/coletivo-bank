@@ -6,7 +6,7 @@ import SummaryCard from '@/components/SummaryCard';
 import FundCard from '@/components/FundCard';
 import BottomNavigation from '@/components/BottomNavigation';
 import FundDetail from '@/components/FundDetail';
-import Account from '@/components/Account';
+import Account from './AccountPage';
 
 const Index: React.FC = () => {
   const { 
