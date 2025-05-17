@@ -1,7 +1,8 @@
-import React from 'react';
-import { Home, ArrowUp } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Home, ArrowUp, DollarSign } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 const BottomNavigation: React.FC = () => {
   const { 
@@ -33,7 +34,22 @@ const BottomNavigation: React.FC = () => {
               className="bg-primary text-white px-6 py-3 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors"
               onClick={() => handleDepositClick()}
             >
-              <ArrowUp className="mr-2" size={18} />
+              <div className="relative h-[18px] w-[18px] mr-2 overflow-hidden">
+                <ArrowUp 
+                  size={18}
+                  className={cn(
+                    "absolute transition-transform duration-500 ease-in-out",
+                    "animate-slide-up"
+                  )}
+                />
+                <DollarSign 
+                  size={18}
+                  className={cn(
+                    "absolute transition-transform duration-500 ease-in-out",
+                    "animate-slide-up-delayed"
+                  )}
+                />
+              </div>
               <span className="font-medium">Fazer Aporte</span>
             </button>
           </div>

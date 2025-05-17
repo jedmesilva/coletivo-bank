@@ -4,6 +4,32 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes slideUp {
+  0%, 50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes slideUpDelayed {
+  0% {
+    transform: translateY(100%);
+  }
+  50%, 100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 2s infinite;
+}
+
+.animate-slide-up-delayed {
+  animation: slideUpDelayed 2s infinite;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
