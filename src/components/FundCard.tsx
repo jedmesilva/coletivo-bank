@@ -38,7 +38,7 @@ const FundCard: React.FC<FundCardProps> = ({ fund, onClick }) => {
         </div>
         
         {/* Horizontal row of stats */}
-        <div className="flex items-center gap-2 mt-3">
+        <div className="flex flex-wrap items-center gap-2 mt-3">
           <Badge variant="outline" className={`${isPositiveGrowth ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'} flex items-center px-2 py-1 text-xs font-medium shadow-sm`}>
             <TrendingUp className={`${isPositiveGrowth ? '' : 'rotate-180'} mr-1`} size={12} />
             {hideValues ? "***%" : formatPercentage(fund.growth, hideValues)}
