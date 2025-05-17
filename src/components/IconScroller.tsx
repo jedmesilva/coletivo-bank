@@ -16,7 +16,7 @@ export default function IconScroller() {
       const container = containerRef.current;
       if (!container) return;
 
-      container.style.transition = "transform 0.5s ease-in-out";
+      container.style.transition = "transform 0.5s cubic-bezier(0.37, 0, 0.63, 1)";
       container.style.transform = "translateY(-100%)";
 
       setTimeout(() => {
