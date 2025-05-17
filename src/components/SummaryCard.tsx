@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Eye, EyeOff, TrendingUp, TrendingDown } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -14,6 +13,7 @@ interface SummaryCardProps {
   rightValue?: string | number;
   showGrowth?: boolean;
   growthValue?: number;
+  className?: string;
 }
 
 const SummaryCard: React.FC<SummaryCardProps> = ({
@@ -25,12 +25,13 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   rightValue,
   showGrowth = false,
   growthValue = 0,
+  className = "",
 }) => {
   const { hideValues, setHideValues } = useApp();
   const isPositiveGrowth = growthValue >= 0;
-  
+
   return (
-    <div className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
+    <div className={`bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100 ${className}`}>
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           <h2 className="text-xl font-bold">{title}</h2>
@@ -57,13 +58,13 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           {hideValues ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
       </div>
-      
+
       <div className="mb-6">
         <p className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
           {formatCurrency(balance, hideValues)}
         </p>
       </div>
-      
+
       <div className="flex justify-between border-t border-gray-100 pt-4">
         {(leftLabel && leftValue !== undefined) && (
           <div>
@@ -73,7 +74,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
             </p>
           </div>
         )}
-        
+
         {(!showGrowth && rightLabel && rightValue !== undefined) && (
           <div className="text-right">
             <p className="text-lg font-bold flex items-center gap-2 justify-end">

@@ -28,7 +28,7 @@ const Account: React.FC = () => {
   };
 
   return (
-    <div className="w-full pb-20">
+    <div className="w-full pb-20 px-4">
       {/* Account Summary Card */}
       <SummaryCard 
         title="Meus Aportes" 
@@ -47,7 +47,7 @@ const Account: React.FC = () => {
       />
 
       {/* Tab Content */}
-      <div className="w-full bg-white rounded-xl p-4 mx-4 shadow-sm">
+      <div className="w-full bg-white rounded-xl p-4 shadow-sm">
         {/* Debts Tab */}
         {accountTab === 'debts' && (
           <div className="w-full">
