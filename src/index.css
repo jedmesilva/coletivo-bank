@@ -9,17 +9,17 @@
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-100%);
+    transform: translateY(-200%);
   }
 }
 
 .animate-slide-up {
-  animation: slideUp 2s infinite linear;
+  animation: slideUp 3s infinite linear;
 }
 
 .animate-slide-up-delayed {
-  animation: slideUp 2s infinite linear;
-  transform: translateY(100%);
+  animation: slideUp 3s infinite linear;
+  transform: translateY(200%);
 }
 
 @layer base {
