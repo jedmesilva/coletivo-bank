@@ -7,7 +7,8 @@ import DepositModal from "./components/DepositModal";
 import CapitalRequestSheet from "./components/CapitalRequestSheet";
 import DebtPaymentSheet from "./components/DebtPaymentSheet";
 import { Toaster } from "@/components/ui/sonner";
-import { SidebarProvider, Sidebar, SidebarCategories } from "@/components/ui/sidebar";
+import BottomNavigation from "./components/BottomNavigation";
+import MobileHeader from "./components/MobileHeader";
 
 const queryClient = new QueryClient();
 
@@ -16,21 +17,18 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <BrowserRouter>
-          <SidebarProvider>
-            <div className="flex justify-center">
-              <Sidebar variant="sidebar" collapsible="icon">
-                <SidebarCategories />
-              </Sidebar>
-              <main className="flex-1 max-w-[1200px]">
-                <Index />
-              </main>
-            </div>
+          <div className="flex flex-col min-h-screen bg-gray-50">
+            <MobileHeader />
+            <main className="flex-1 w-full max-w-lg mx-auto px-4 pb-20">
+              <Index />
+            </main>
+            <BottomNavigation />
             <FundCreationModal />
             <DepositModal />
             <CapitalRequestSheet />
             <DebtPaymentSheet />
             <Toaster />
-          </SidebarProvider>
+          </div>
         </BrowserRouter>
       </AppProvider>
     </QueryClientProvider>
