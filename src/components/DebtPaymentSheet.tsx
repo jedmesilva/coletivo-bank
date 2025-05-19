@@ -90,12 +90,24 @@ const DebtPaymentSheet = () => {
       <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh] overflow-y-auto p-0 safe-area-pb">
         <div className="p-6">
           <SheetHeader className="mb-6">
-            <SheetTitle className="text-2xl">Pagar Dívidas</SheetTitle>
-            <SheetDescription>
-              {step === 'select' 
-                ? "Selecione a dívida que deseja pagar" 
-                : "Escolha um método de pagamento"}
-            </SheetDescription>
+            <div className="flex items-center">
+              {step === 'payment' && (
+                <Button variant="ghost" size="icon" onClick={() => {
+                  setStep('select');
+                  setSelectedDebtId(null);
+                }} className="mr-2">
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+              )}
+              <div>
+                <SheetTitle className="text-2xl">Pagar Dívidas</SheetTitle>
+                <SheetDescription>
+                  {step === 'select' 
+                    ? "Selecione a dívida que deseja pagar" 
+                    : "Escolha um método de pagamento"}
+                </SheetDescription>
+              </div>
+            </div>
           </SheetHeader>
 
           {step === 'select' && (
@@ -245,16 +257,7 @@ const DebtPaymentSheet = () => {
                       >
                         Finalizar pagamento
                       </Button>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={() => {
-                          setStep('select');
-                          setSelectedDebtId(null);
-                        }}
-                      >
-                        Voltar para seleção
-                      </Button>
+                      
                       <Button 
                         type="button" 
                         variant="outline" 
