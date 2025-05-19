@@ -72,7 +72,10 @@ const AccountPage: React.FC = () => {
                       </div>
                       <button 
                         className="mt-3 bg-primary text-white px-4 py-2.5 sm:py-3 rounded-lg w-full flex items-center justify-center hover:bg-primary/90 transition-colors text-sm sm:text-base"
-                        onClick={() => handleDebtPaymentClick(debt.fundId)}
+                        onClick={() => {
+                          setSelectedDebtId(debt.id);
+                          setIsDebtPaymentOpen(true);
+                        }}
                       >
                         <CreditCard className="mr-2" size={16} />
                         Pagar
