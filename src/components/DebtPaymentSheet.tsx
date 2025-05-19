@@ -164,7 +164,7 @@ const DebtPaymentSheet = () => {
 
               {/* Summary and actions */}
               {filteredDebts.length > 0 && (
-                <div className="border-t pt-4 mt-4">
+                <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
                   <div className="flex justify-between items-center mb-6">
                     <div>
                       <p className="text-gray-500">Total selecionado:</p>

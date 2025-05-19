@@ -438,20 +438,22 @@ const CapitalRequestSheet = () => {
                   </div>
 
                   {/* Form actions */}
-                  <div className="flex flex-col space-y-3 pt-4">
-                    <Button 
-                      type="submit"
-                      className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
-                    >
-                      Enviar solicitação
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={handleCancel}
-                    >
-                      Cancelar
-                    </Button>
+                  <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
+                    <div className="flex flex-col space-y-3">
+                      <Button 
+                        type="submit"
+                        className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                      >
+                        Enviar solicitação
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={handleCancel}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
