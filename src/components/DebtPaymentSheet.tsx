@@ -240,33 +240,21 @@ const DebtPaymentSheet = () => {
               {/* Form actions */}
               <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
                 <div className="flex flex-col space-y-3">
-                  {step === 'select' ? (
-                    <>
-                      <Button 
-                        onClick={handleCancel}
-                        className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
-                      >
-                        Cancelar
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button 
-                        onClick={handlePaymentComplete}
-                        className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
-                      >
-                        Finalizar pagamento
-                      </Button>
-                      
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={handleCancel}
-                      >
-                        Cancelar
-                      </Button>
-                    </>
+                  {step === 'payment' && (
+                    <Button 
+                      onClick={handlePaymentComplete}
+                      className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                    >
+                      Finalizar pagamento
+                    </Button>
                   )}
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={handleCancel}
+                  >
+                    Cancelar
+                  </Button>
                 </div>
               </div>
             </div>
