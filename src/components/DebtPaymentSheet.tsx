@@ -59,6 +59,14 @@ const DebtPaymentSheet = () => {
     setPaymentMethod('pix');
   };
 
+  const handleCancel = () => {
+    setIsDebtPaymentOpen(false);
+    setSelectedFundIdForDebtPayment(null);
+    setSelectedDebtId(null);
+    setStep('select');
+    setPaymentMethod('pix');
+  };
+
   const handlePaymentComplete = () => {
     if (!selectedDebt) return;
 
@@ -225,26 +233,23 @@ const DebtPaymentSheet = () => {
                 </TabsContent>
               </Tabs>
 
-              {/* Demo action */}
-              <div className="text-center pt-4">
-                <p className="text-sm text-gray-500 mb-4">
-                  Para fins de demonstração, clique abaixo para simular o pagamento
-                </p>
-                <Button onClick={handlePaymentComplete}>
-                  Finalizar pagamento
-                </Button>
-              </div>
-
-              <div className="flex justify-center pt-2">
-                <Button 
-                  variant="link" 
-                  onClick={() => {
-                    setStep('select');
-                    setSelectedDebtId(null);
-                  }}
-                >
-                  Voltar para seleção
-                </Button>
+              {/* Form actions */}
+              <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
+                <div className="flex flex-col space-y-3">
+                  <Button 
+                    onClick={handlePaymentComplete}
+                    className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                  >
+                    Finalizar pagamento
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={handleCancel}
+                  >
+                    Cancelar
+                  </Button>
+                </div>
               </div>
             </div>
           )}
