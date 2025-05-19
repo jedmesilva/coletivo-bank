@@ -228,19 +228,42 @@ const DebtPaymentSheet = () => {
               {/* Form actions */}
               <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
                 <div className="flex flex-col space-y-3">
-                  <Button 
-                    onClick={handlePaymentComplete}
-                    className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
-                  >
-                    Finalizar pagamento
-                  </Button>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={handleCancel}
-                  >
-                    Cancelar
-                  </Button>
+                  {step === 'select' ? (
+                    <>
+                      <Button 
+                        onClick={handleCancel}
+                        className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                      >
+                        Cancelar
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button 
+                        onClick={handlePaymentComplete}
+                        className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                      >
+                        Finalizar pagamento
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => {
+                          setStep('select');
+                          setSelectedDebtId(null);
+                        }}
+                      >
+                        Voltar para seleção
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={handleCancel}
+                      >
+                        Cancelar
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
