@@ -17,7 +17,8 @@ const AccountPage: React.FC = () => {
     hideValues,
     getTotalUserDeposits,
     setSelectedDebtId,
-    setIsDebtPaymentOpen
+    setIsDebtPaymentOpen,
+    handleDebtPaymentClick
   } = useApp();
 
   const tabs = [
