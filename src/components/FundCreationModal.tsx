@@ -235,7 +235,7 @@ const FundCreationModal: React.FC = () => {
           </div>
         )}
 
-        <DialogFooter>
+        <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
           {step === 'details' ? (
             <div className="flex w-full justify-end space-x-2">
               <Button variant="outline" onClick={handleClose}>Cancelar</Button>
@@ -251,7 +251,7 @@ const FundCreationModal: React.FC = () => {
               </Button>
             </div>
           )}
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
