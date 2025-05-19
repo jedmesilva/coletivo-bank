@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, CreditCard, Copy } from 'lucide-react';
+import { Check, CreditCard, Copy, ArrowLeft } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { formatCurrency } from '@/utils/formatCurrency';
 
