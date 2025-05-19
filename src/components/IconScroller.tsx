@@ -17,16 +17,22 @@ export default function IconScroller() {
       setAnimationState('leaving');
       
       // Depois de completar a animação de saída, prepara a entrada
+      // Reduziu de 400ms para 200ms - animação mais rápida
       setTimeout(() => {
         setCurrentIcon(prev => prev === 'arrow' ? 'dollar' : 'arrow');
-        setAnimationState('entering');
         
-        // Volta para o estado de repouso após a entrada
+        // Pequeno atraso para garantir que não haja sobreposição
         setTimeout(() => {
-          setAnimationState('idle');
-        }, 400);
-      }, 400);
-    }, 3000);
+          setAnimationState('entering');
+          
+          // Volta para o estado de repouso após a entrada
+          // Reduziu de 400ms para 200ms - animação mais rápida
+          setTimeout(() => {
+            setAnimationState('idle');
+          }, 200);
+        }, 20);
+      }, 200);
+    }, 10000); // Aumentou de 3000ms para 10000ms (10 segundos)
     
     return () => clearInterval(intervalId);
   }, []);
@@ -36,7 +42,7 @@ export default function IconScroller() {
       {/* Container do ícone visível/saindo */}
       <div 
         ref={leavingRef}
-        className={`absolute inset-0 flex items-center justify-center transition-transform duration-[400ms] ease-in-out ${
+        className={`absolute inset-0 flex items-center justify-center transition-transform duration-[200ms] ease-in-out ${
           animationState === 'leaving' ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
@@ -50,7 +56,7 @@ export default function IconScroller() {
       {/* Container do ícone entrando */}
       <div 
         ref={enteringRef}
-        className={`absolute inset-0 flex items-center justify-center transition-transform duration-[400ms] ease-in-out ${
+        className={`absolute inset-0 flex items-center justify-center transition-transform duration-[200ms] ease-in-out ${
           animationState === 'idle' ? 'translate-y-full' : 
           animationState === 'entering' ? 'translate-y-0' : 'translate-y-full'
         }`}
