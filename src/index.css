@@ -119,11 +119,20 @@
   }
   
   .safe-area-pt {
-    padding-top: env(safe-area-inset-top);
+    padding-top: max(env(safe-area-inset-top), 16px);
   }
   
   .safe-area-top {
     margin-top: env(safe-area-inset-top);
+  }
+}
+
+/* Ajuste para sheets na parte inferior da tela */
+@supports (padding: env(safe-area-inset-top)) {
+  .sheet-position-fix {
+    padding-top: env(safe-area-inset-top);
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
   }
 }
 

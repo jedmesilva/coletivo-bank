@@ -160,7 +160,7 @@ const CapitalRequestSheet = () => {
           Modal para solicitar capital de fundos coletivos
         </div>
         <div className="p-6">
-          <SheetHeader className="mb-6">
+          <SheetHeader className="mb-6 sticky top-0 bg-white z-10 safe-area-pt pt-6">
             <SheetTitle className="text-2xl">Solicitar Capital</SheetTitle>
             <SheetDescription>
               Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
