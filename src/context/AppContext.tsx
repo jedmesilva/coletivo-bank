@@ -154,6 +154,8 @@ interface AppContextType {
   setIsDebtPaymentOpen: React.Dispatch<React.SetStateAction<boolean>>;
   selectedFundIdForDebtPayment: string | null;
   setSelectedFundIdForDebtPayment: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedDebtId: string | null;
+  setSelectedDebtId: React.Dispatch<React.SetStateAction<string | null>>;
   handleDebtPaymentClick: (fundId?: string) => void;
   payFundDebt: (fundId: string, debtId: string, amount: number) => void;
 }
@@ -181,6 +183,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   // Debt payment features
   const [isDebtPaymentOpen, setIsDebtPaymentOpen] = useState<boolean>(false);
   const [selectedFundIdForDebtPayment, setSelectedFundIdForDebtPayment] = useState<string | null>(null);
+  const [selectedDebtId, setSelectedDebtId] = useState<string | null>(null);
 
   const handleFundClick = (fundId: string) => {
     const fund = funds.find(f => f.id === fundId);

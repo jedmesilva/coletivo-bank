@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, CreditCard, Copy } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { formatCurrency } from '@/utils/formatCurrency';
@@ -22,10 +21,11 @@ const DebtPaymentSheet = () => {
     userDebts,
     selectedFundIdForDebtPayment,
     setSelectedFundIdForDebtPayment,
+    selectedDebtId,
+    setSelectedDebtId,
     payFundDebt
   } = useApp();
   const { toast } = useToast();
-  const [selectedDebts, setSelectedDebts] = useState<string[]>([]);
   const [step, setStep] = useState<'select' | 'payment'>('select');
   const [paymentMethod, setPaymentMethod] = useState<'pix' | 'boleto'>('pix');
   const [isCopied, setIsCopied] = useState(false);
@@ -35,50 +35,38 @@ const DebtPaymentSheet = () => {
     ? userDebts.filter(debt => debt.fundId === selectedFundIdForDebtPayment)
     : userDebts;
 
-  const totalAmount = filteredDebts
-    .filter(debt => selectedDebts.includes(debt.id))
-    .reduce((sum, debt) => sum + debt.amount, 0);
+  const selectedDebt = userDebts.find(debt => debt.id === selectedDebtId);
 
-  const handleToggleDebt = (debtId: string) => {
-    if (selectedDebts.includes(debtId)) {
-      setSelectedDebts(selectedDebts.filter(id => id !== debtId));
+  useEffect(() => {
+    // If a specific debt is selected, move to payment step
+    if (selectedDebtId) {
+      setStep('payment');
     } else {
-      setSelectedDebts([...selectedDebts, debtId]);
+      setStep('select');
     }
-  };
+  }, [selectedDebtId, isDebtPaymentOpen]);
 
-  const handleSelectAll = () => {
-    if (selectedDebts.length === filteredDebts.length) {
-      setSelectedDebts([]);
-    } else {
-      setSelectedDebts(filteredDebts.map(debt => debt.id));
-    }
-  };
-
-  const handleProceedToPayment = () => {
+  const handleDebtSelect = (debtId: string) => {
+    setSelectedDebtId(debtId);
     setStep('payment');
   };
 
   const handleCancel = () => {
     setIsDebtPaymentOpen(false);
     setSelectedFundIdForDebtPayment(null);
-    setSelectedDebts([]);
+    setSelectedDebtId(null);
     setStep('select');
     setPaymentMethod('pix');
   };
 
   const handlePaymentComplete = () => {
-    // Process payment for selected debts
-    selectedDebts.forEach(debtId => {
-      const debt = userDebts.find(d => d.id === debtId);
-      if (debt) {
-        payFundDebt(debt.fundId, debt.id, debt.amount);
-      }
-    });
+    if (!selectedDebt) return;
+
+    payFundDebt(selectedDebt.fundId, selectedDebt.id, selectedDebt.amount);
 
     toast({
       title: "Pagamento realizado",
-      description: `${selectedDebts.length} dívida(s) pagas com sucesso.`,
+      description: "Dívida paga com sucesso.",
     });
 
     handleCancel();
@@ -90,7 +78,7 @@ const DebtPaymentSheet = () => {
     toast({
       description: "Código copiado para a área de transferência!"
     });
-    
+
     setTimeout(() => setIsCopied(false), 3000);
   };
 
@@ -105,38 +93,21 @@ const DebtPaymentSheet = () => {
             <SheetTitle className="text-2xl">Pagar Dívidas</SheetTitle>
             <SheetDescription>
               {step === 'select' 
-                ? "Selecione as dívidas que deseja pagar" 
+                ? "Selecione a dívida que deseja pagar" 
                 : "Escolha um método de pagamento"}
             </SheetDescription>
           </SheetHeader>
 
           {step === 'select' && (
             <div className="space-y-6">
-              {/* Select/Deselect all button */}
-              {filteredDebts.length > 0 && (
-                <div className="flex justify-end">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleSelectAll}
-                  >
-                    {selectedDebts.length === filteredDebts.length ? 'Desmarcar todos' : 'Selecionar todos'}
-                  </Button>
-                </div>
-              )}
-
               {/* Debts list */}
               <div className="space-y-3">
                 {filteredDebts.length > 0 ? (
                   filteredDebts.map((debt) => (
                     <div 
                       key={debt.id}
-                      className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                        selectedDebts.includes(debt.id) 
-                          ? 'border-primary bg-primary/5' 
-                          : 'hover:bg-gray-50'
-                      }`}
-                      onClick={() => handleToggleDebt(debt.id)}
+                      className="border rounded-lg p-4 cursor-pointer transition-colors hover:bg-gray-50"
+                      onClick={() => handleDebtSelect(debt.id)}
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -144,14 +115,7 @@ const DebtPaymentSheet = () => {
                           <p className="text-sm text-gray-500">{debt.fundName}</p>
                           <p className="text-sm text-gray-500">Vencimento: {debt.dueDate}</p>
                         </div>
-                        <div className="text-right">
-                          <p className="font-bold text-lg">{formatCurrency(debt.amount)}</p>
-                          <div className="h-5 w-5 rounded-full border mt-1 flex items-center justify-center ml-auto">
-                            {selectedDebts.includes(debt.id) && (
-                              <Check className="h-4 w-4 text-primary" />
-                            )}
-                          </div>
-                        </div>
+                        <p className="font-bold text-lg">{formatCurrency(debt.amount)}</p>
                       </div>
                     </div>
                   ))
@@ -161,51 +125,20 @@ const DebtPaymentSheet = () => {
                   </div>
                 )}
               </div>
-
-              {/* Summary and actions */}
-              {filteredDebts.length > 0 && (
-                <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
-                  <div className="flex justify-between items-center mb-6">
-                    <div>
-                      <p className="text-gray-500">Total selecionado:</p>
-                      <p className="text-xl font-bold">{formatCurrency(totalAmount)}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-gray-500">Dívidas selecionadas:</p>
-                      <p className="text-xl font-bold">{selectedDebts.length}/{filteredDebts.length}</p>
-                    </div>
-                  </div>
-                
-                  <div className="flex justify-between">
-                    <Button 
-                      variant="outline" 
-                      onClick={handleCancel}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      onClick={handleProceedToPayment}
-                      disabled={selectedDebts.length === 0}
-                    >
-                      Continuar
-                    </Button>
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
-          {step === 'payment' && (
+          {step === 'payment' && selectedDebt && (
             <div className="space-y-6">
               {/* Payment summary */}
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="flex justify-between mb-2">
                   <p className="text-gray-500">Total a pagar:</p>
-                  <p className="font-bold">{formatCurrency(totalAmount)}</p>
+                  <p className="font-bold">{formatCurrency(selectedDebt.amount)}</p>
                 </div>
                 <div className="flex justify-between">
-                  <p className="text-gray-500">Dívidas:</p>
-                  <p>{selectedDebts.length} selecionadas</p>
+                  <p className="text-gray-500">Dívida:</p>
+                  <p>{selectedDebt.description}</p>
                 </div>
               </div>
 
@@ -215,7 +148,7 @@ const DebtPaymentSheet = () => {
                   <TabsTrigger value="pix">PIX</TabsTrigger>
                   <TabsTrigger value="boleto">Boleto</TabsTrigger>
                 </TabsList>
-                
+
                 <TabsContent value="pix" className="mt-4 space-y-4">
                   <div className="border rounded-lg p-6 text-center space-y-4">
                     <div className="bg-gray-100 mx-auto w-48 h-48 flex items-center justify-center mb-2">
@@ -226,7 +159,7 @@ const DebtPaymentSheet = () => {
                         ))}
                       </div>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <p className="text-sm text-gray-500">Código PIX</p>
                       <div className="relative">
@@ -246,12 +179,12 @@ const DebtPaymentSheet = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <p className="text-sm text-gray-500 text-center">
                     Escaneie o QR code ou copie o código acima para pagar pelo seu aplicativo de banco
                   </p>
                 </TabsContent>
-                
+
                 <TabsContent value="boleto" className="mt-4 space-y-4">
                   <div className="border rounded-lg p-6 space-y-4">
                     <div className="flex items-center p-4 bg-gray-100 rounded-md">
@@ -261,7 +194,7 @@ const DebtPaymentSheet = () => {
                         <p className="text-sm text-gray-500">Vencimento em 3 dias úteis</p>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <p className="text-sm text-gray-500">Código do boleto</p>
                       <div className="relative">
@@ -280,19 +213,19 @@ const DebtPaymentSheet = () => {
                         </button>
                       </div>
                     </div>
-                    
+
                     <Button className="w-full">
                       Baixar boleto em PDF
                     </Button>
                   </div>
-                  
+
                   <p className="text-sm text-gray-500 text-center">
                     Você também pode copiar o código e pagar pelo internet banking
                   </p>
                 </TabsContent>
               </Tabs>
 
-              {/* Demo action - in a real app this would verify payment */}
+              {/* Demo action */}
               <div className="text-center pt-4">
                 <p className="text-sm text-gray-500 mb-4">
                   Para fins de demonstração, clique abaixo para simular o pagamento
@@ -301,11 +234,14 @@ const DebtPaymentSheet = () => {
                   Finalizar pagamento
                 </Button>
               </div>
-              
+
               <div className="flex justify-center pt-2">
                 <Button 
                   variant="link" 
-                  onClick={() => setStep('select')}
+                  onClick={() => {
+                    setStep('select');
+                    setSelectedDebtId(null);
+                  }}
                 >
                   Voltar para seleção
                 </Button>
