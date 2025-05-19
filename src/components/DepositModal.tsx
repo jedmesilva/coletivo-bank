@@ -99,6 +99,7 @@ const DepositModal: React.FC = () => {
         side="bottom" 
         className="h-[95vh] max-h-[95vh] p-0 rounded-t-xl safe-area-pb"
         aria-describedby="deposit-modal-description"
+        style={{ top: 'env(safe-area-inset-top)' }}
       >
         <div id="deposit-modal-description" className="sr-only">
           Modal para realizar aportes em fundos coletivos

@@ -117,6 +117,14 @@
   .safe-area-pb {
     padding-bottom: env(safe-area-inset-bottom);
   }
+  
+  .safe-area-pt {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-top {
+    margin-top: env(safe-area-inset-top);
+  }
 }
 
 .grow-animation {
