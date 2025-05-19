@@ -3,59 +3,63 @@ import { useState, useEffect, useRef } from 'react';
 import { ArrowUp, DollarSign } from 'lucide-react';
 
 export default function IconScroller() {
-  const icons = [
-    { component: ArrowUp },
-    { component: DollarSign },
-  ];
-
-  const [visibleIcons, setVisibleIcons] = useState([0, 1]);
-  const containerRef = useRef(null);
-  const isAnimatingRef = useRef(false);
-
-  const animateScroll = () => {
-    if (isAnimatingRef.current || !containerRef.current) return;
-    isAnimatingRef.current = true;
-
-    const container = containerRef.current;
-    
-    // Primeiro movimento: deslizar para cima
-    container.style.transition = "transform 0.6s ease-in-out";
-    container.style.transform = "translateY(-100%)";
-    
-    // Após a animação, reposicionar e atualizar os ícones
-    setTimeout(() => {
-      container.style.transition = "none";
-      container.style.transform = "translateY(0)";
-      
-      setVisibleIcons(prev => [
-        prev[1],
-        (prev[1] + 1) % icons.length
-      ]);
-      
-      // Permitir nova animação
-      setTimeout(() => {
-        isAnimatingRef.current = false;
-      }, 50);
-    }, 600);
-  };
+  const [currentIcon, setCurrentIcon] = useState<'arrow' | 'dollar'>('arrow');
+  const [animationState, setAnimationState] = useState<'idle' | 'leaving' | 'entering'>('idle');
+  
+  // Referência para o elemento que está saindo
+  const leavingRef = useRef<HTMLDivElement>(null);
+  // Referência para o elemento que está entrando
+  const enteringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(animateScroll, 3000);
-    return () => clearInterval(interval);
+    const intervalId = setInterval(() => {
+      // Inicia animação de saída
+      setAnimationState('leaving');
+      
+      // Depois de completar a animação de saída, prepara a entrada
+      setTimeout(() => {
+        setCurrentIcon(prev => prev === 'arrow' ? 'dollar' : 'arrow');
+        setAnimationState('entering');
+        
+        // Volta para o estado de repouso após a entrada
+        setTimeout(() => {
+          setAnimationState('idle');
+        }, 400);
+      }, 400);
+    }, 3000);
+    
+    return () => clearInterval(intervalId);
   }, []);
 
-  const Icon1 = icons[visibleIcons[0]].component;
-  const Icon2 = icons[visibleIcons[1]].component;
-
   return (
-    <div className="h-[18px] w-[18px] mr-2 overflow-hidden relative">
-      <div ref={containerRef} className="transform-gpu">
-        <div className="h-[18px] flex items-center justify-center">
-          <Icon1 size={18} className="text-white" />
-        </div>
-        <div className="h-[18px] flex items-center justify-center">
-          <Icon2 size={18} className="text-white" />
-        </div>
+    <div className="h-[18px] w-[18px] mr-2 relative overflow-hidden">
+      {/* Container do ícone visível/saindo */}
+      <div 
+        ref={leavingRef}
+        className={`absolute inset-0 flex items-center justify-center transition-transform duration-[400ms] ease-in-out ${
+          animationState === 'leaving' ? '-translate-y-full' : 'translate-y-0'
+        }`}
+      >
+        {currentIcon === 'arrow' ? (
+          <ArrowUp size={18} className="text-white" />
+        ) : (
+          <DollarSign size={18} className="text-white" />
+        )}
+      </div>
+      
+      {/* Container do ícone entrando */}
+      <div 
+        ref={enteringRef}
+        className={`absolute inset-0 flex items-center justify-center transition-transform duration-[400ms] ease-in-out ${
+          animationState === 'idle' ? 'translate-y-full' : 
+          animationState === 'entering' ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
+        {currentIcon === 'arrow' ? (
+          <DollarSign size={18} className="text-white" />
+        ) : (
+          <ArrowUp size={18} className="text-white" />
+        )}
       </div>
     </div>
   );
