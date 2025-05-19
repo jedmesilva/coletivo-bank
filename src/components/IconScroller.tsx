@@ -1,72 +1,61 @@
 
-import { useState, useEffect, useRef } from 'react';
-import { ArrowUp, DollarSign } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { DollarSign, ArrowUp } from 'lucide-react';
 
 export default function IconScroller() {
-  const [currentIcon, setCurrentIcon] = useState<'arrow' | 'dollar'>('arrow');
-  const [animationState, setAnimationState] = useState<'idle' | 'leaving' | 'entering'>('idle');
-  
-  // Referência para o elemento que está saindo
-  const leavingRef = useRef<HTMLDivElement>(null);
-  // Referência para o elemento que está entrando
-  const enteringRef = useRef<HTMLDivElement>(null);
+  // Define os dois tipos de ícones (adaptado para o tamanho correto)
+  const iconTypes = {
+    dollar: <DollarSign size={18} className="text-white" />,
+    arrow: <ArrowUp size={18} className="text-white" />
+  };
+
+  // Estado para controlar a coluna de ícones
+  const [iconColumn, setIconColumn] = useState([
+    { id: 'top', type: 'dollar', position: -1 },     // Fora da visão (topo)
+    { id: 'visible', type: 'arrow', position: 0 },   // Visível para o usuário (meio)
+    { id: 'bottom', type: 'dollar', position: 1 }    // Aguardando para entrar (abaixo)
+  ]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      // Inicia animação de saída
-      setAnimationState('leaving');
-      
-      // Depois de completar a animação de saída, prepara a entrada
-      // Reduziu de 400ms para 200ms - animação mais rápida
-      setTimeout(() => {
-        setCurrentIcon(prev => prev === 'arrow' ? 'dollar' : 'arrow');
+    const interval = setInterval(() => {
+      // Mover todos os ícones uma posição para cima
+      setIconColumn(prevColumn => {
+        // Criar um novo array para não mutar o estado diretamente
+        const newColumn = [...prevColumn];
         
-        // Pequeno atraso para garantir que não haja sobreposição
-        setTimeout(() => {
-          setAnimationState('entering');
-          
-          // Volta para o estado de repouso após a entrada
-          // Reduziu de 400ms para 200ms - animação mais rápida
-          setTimeout(() => {
-            setAnimationState('idle');
-          }, 200);
-        }, 20);
-      }, 200);
-    }, 10000); // Aumentou de 3000ms para 10000ms (10 segundos)
-    
-    return () => clearInterval(intervalId);
+        // Determinar o próximo tipo de ícone (alternando)
+        // Se o último na fila for dollar, o próximo será arrow e vice-versa
+        const lastType = newColumn[2].type;
+        const newType = lastType === 'dollar' ? 'arrow' : 'dollar';
+        
+        // Ícone que estava no topo sai da lista
+        // Ícone visível move para o topo
+        // Ícone de baixo se torna visível
+        // Novo ícone entra na posição de baixo
+        return [
+          { id: newColumn[1].id, type: newColumn[1].type, position: -1 },  // Move para cima (fora)
+          { id: newColumn[2].id, type: newColumn[2].type, position: 0 },   // Agora visível
+          { id: `bottom-${Date.now()}`, type: newType, position: 1 }       // Novo ícone abaixo
+        ];
+      });
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="h-[18px] w-[18px] mr-2 relative overflow-hidden">
-      {/* Container do ícone visível/saindo */}
-      <div 
-        ref={leavingRef}
-        className={`absolute inset-0 flex items-center justify-center transition-transform duration-[200ms] ease-in-out ${
-          animationState === 'leaving' ? '-translate-y-full' : 'translate-y-0'
-        }`}
-      >
-        {currentIcon === 'arrow' ? (
-          <ArrowUp size={18} className="text-white" />
-        ) : (
-          <DollarSign size={18} className="text-white" />
-        )}
-      </div>
-      
-      {/* Container do ícone entrando */}
-      <div 
-        ref={enteringRef}
-        className={`absolute inset-0 flex items-center justify-center transition-transform duration-[200ms] ease-in-out ${
-          animationState === 'idle' ? 'translate-y-full' : 
-          animationState === 'entering' ? 'translate-y-0' : 'translate-y-full'
-        }`}
-      >
-        {currentIcon === 'arrow' ? (
-          <DollarSign size={18} className="text-white" />
-        ) : (
-          <ArrowUp size={18} className="text-white" />
-        )}
-      </div>
+      {iconColumn.map(icon => (
+        <div
+          key={icon.id}
+          className="absolute inset-0 flex items-center justify-center transition-transform duration-500 ease-in-out"
+          style={{
+            transform: `translateY(${icon.position * 100}%)`,
+          }}
+        >
+          {iconTypes[icon.type]}
+        </div>
+      ))}
     </div>
   );
 }
