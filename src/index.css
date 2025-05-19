@@ -113,6 +113,12 @@
   }
 }
 
+@layer utilities {
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 .grow-animation {
   transition: transform 0.2s ease;
 }

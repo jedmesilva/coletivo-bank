@@ -99,7 +99,7 @@ const DebtPaymentSheet = () => {
 
   return (
     <Sheet open={isDebtPaymentOpen} onOpenChange={setIsDebtPaymentOpen}>
-      <SheetContent side="bottom" className="h-[90vh] overflow-y-auto p-0">
+      <SheetContent side="bottom" className="h-[90vh] max-h-[90vh] overflow-y-auto p-0 rounded-t-xl safe-area-pb">
         <div className="p-6">
           <SheetHeader className="mb-6">
             <SheetTitle className="text-2xl">Pagar Dívidas</SheetTitle>

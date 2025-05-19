@@ -100,7 +100,7 @@ const FundCreationModal: React.FC = () => {
 
   return (
     <Dialog open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto safe-area-pb">
         <DialogHeader>
           <DialogTitle className="text-xl">
             {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
