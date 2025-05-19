@@ -59,14 +59,6 @@ const DebtPaymentSheet = () => {
     setPaymentMethod('pix');
   };
 
-  const handleCancel = () => {
-    setIsDebtPaymentOpen(false);
-    setSelectedFundIdForDebtPayment(null);
-    setSelectedDebtId(null);
-    setStep('select');
-    setPaymentMethod('pix');
-  };
-
   const handlePaymentComplete = () => {
     if (!selectedDebt) return;
 
