@@ -149,7 +149,7 @@ const CapitalRequestSheet = () => {
     <Sheet open={isCapitalRequestOpen} onOpenChange={setIsCapitalRequestOpen}>
       <SheetContent 
         side="bottom" 
-        className="!fixed !inset-0 !h-screen !m-0 !rounded-none p-0 flex flex-col w-full"
+        className="!fixed !inset-0 !h-screen !m-0 !rounded-none !rounded-t-none p-0 flex flex-col w-full"
       >
         <div className="flex-1 overflow-y-auto p-6">
           <SheetHeader className="mb-6 text-left">
