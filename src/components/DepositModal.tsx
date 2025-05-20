@@ -103,21 +103,21 @@ const DepositModal: React.FC = () => {
           Modal para realizar aportes em fundos coletivos
         </div>
         <div className="h-full overflow-y-auto">
-          <div className="border-b bg-white safe-area-pt">
-            <div className="flex items-center">
-              {step === 'deposit-details' && (
-                <Button variant="ghost" size="icon" onClick={handleBack}>
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-              )}
-              <SheetTitle className="text-xl">
-                {step === 'select-fund' ? 'Escolha um fundo' : 'Aportar capital'}
-              </SheetTitle>
+            <div className="border-b bg-white">
+              <div className="flex items-center">
+                {step === 'deposit-details' && (
+                  <Button variant="ghost" size="icon" className="p-0" onClick={handleBack}>
+                    <ArrowLeft className="h-5 w-5" />
+                  </Button>
+                )}
+                <SheetTitle className="text-xl p-0">
+                  {step === 'select-fund' ? 'Escolha um fundo' : 'Aportar capital'}
+                </SheetTitle>
+              </div>
             </div>
-          </div>
 
-          {/* Content */}
-          <div>
+            {/* Content */}
+            <div className="p-0 m-0">
             {step === 'select-fund' ? (
               <div className="space-y-4">
                 <p className="text-sm text-gray-500 mb-4">Selecione um fundo para realizar o aporte:</p>

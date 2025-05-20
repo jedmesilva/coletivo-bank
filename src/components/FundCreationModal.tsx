@@ -54,7 +54,7 @@ const FundCreationModal: React.FC = () => {
       });
       return;
     }
-    
+
     if (!fundData.description.trim()) {
       toast({
         title: "Descrição obrigatória",
@@ -63,7 +63,7 @@ const FundCreationModal: React.FC = () => {
       });
       return;
     }
-    
+
     setStep('members');
   };
 
@@ -83,12 +83,12 @@ const FundCreationModal: React.FC = () => {
       ...fundData,
       members: members
     });
-    
+
     toast({
       title: "Fundo criado com sucesso!",
       description: `O fundo "${fundData.name}" foi criado.`
     });
-    
+
     handleClose();
   };
 
@@ -107,20 +107,20 @@ const FundCreationModal: React.FC = () => {
           Modal para criar novo fundo coletivo
         </div>
         <div className="h-full overflow-y-auto">
-          <div className="border-b bg-white safe-area-pt">
-            <div className="flex items-center">
-              {step === 'members' && (
-                <Button variant="ghost" size="icon" onClick={() => setStep('details')}>
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-              )}
-              <SheetTitle className="text-xl">
-                {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
-              </SheetTitle>
+            <div className="border-b bg-white">
+              <div className="flex items-center">
+                {step === 'members' && (
+                  <Button variant="ghost" size="icon" className="p-0" onClick={() => setStep('details')}>
+                    <ArrowLeft className="h-5 w-5" />
+                  </Button>
+                )}
+                <SheetTitle className="text-xl p-0">
+                  {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
+                </SheetTitle>
+              </div>
             </div>
-          </div>
-          
-          <div>
+
+            <div className="p-0 m-0">
             {step === 'details' ? (
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -132,7 +132,7 @@ const FundCreationModal: React.FC = () => {
                     onChange={(e) => setFundData({...fundData, name: e.target.value})}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <label className="text-sm font-medium" htmlFor="fund-description">Descrição</label>
                   <Input 
@@ -142,7 +142,7 @@ const FundCreationModal: React.FC = () => {
                     onChange={(e) => setFundData({...fundData, description: e.target.value})}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Imagem</label>
                   <div className="grid grid-cols-1 gap-4">
@@ -166,9 +166,9 @@ const FundCreationModal: React.FC = () => {
                         </div>
                       </label>
                     </div>
-                    
+
                     <p className="text-sm text-gray-500 mb-2">Ou escolha uma das opções abaixo:</p>
-                    
+
                     <div className="grid grid-cols-3 gap-3">
                       {images.map((image, index) => (
                         <div 
@@ -207,7 +207,7 @@ const FundCreationModal: React.FC = () => {
                     <UserPlus size={18} />
                   </Button>
                 </div>
-                
+
                 {members.length > 0 ? (
                   <div className="space-y-2 mt-2">
                     <p className="text-sm font-medium">Membros ({members.length})</p>
@@ -231,7 +231,7 @@ const FundCreationModal: React.FC = () => {
                     <p>Adicione membros ao seu fundo</p>
                   </div>
                 )}
-                
+
                 <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center text-sm text-gray-600">
@@ -249,7 +249,7 @@ const FundCreationModal: React.FC = () => {
               </div>
             )}
           </div>
-          
+
           <div className="border-t bg-white w-full fixed bottom-0 left-0 right-0 safe-area-pb">
             {step === 'details' ? (
               <div className="flex flex-col space-y-3">

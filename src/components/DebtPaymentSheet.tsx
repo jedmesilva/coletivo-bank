@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Check, CreditCard, Copy, ArrowLeft } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -87,30 +86,30 @@ const DebtPaymentSheet = () => {
     <Sheet open={isDebtPaymentOpen} onOpenChange={setIsDebtPaymentOpen}>
       <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh]">
         <div className="h-full overflow-y-auto">
-          {/* Header - agora rola junto com o conteúdo */}
-          <div className="border-b bg-white safe-area-pt">
-            <div className="flex items-center">
-              {step === 'payment' && (
-                <Button variant="ghost" size="icon" onClick={() => {
-                  setStep('select');
-                  setSelectedDebtId(null);
-                }}>
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-              )}
-              <div className="text-left">
-                <SheetTitle className="text-xl">Pagar Dívidas</SheetTitle>
-                <SheetDescription>
-                  {step === 'select' 
-                    ? "Selecione a dívida que deseja pagar" 
-                    : "Escolha um método de pagamento"}
-                </SheetDescription>
+            {/* Header - agora rola junto com o conteúdo */}
+            <div className="border-b bg-white">
+              <div className="flex items-center">
+                {step === 'payment' && (
+                  <Button variant="ghost" size="icon" className="p-0" onClick={() => {
+                    setStep('select');
+                    setSelectedDebtId(null);
+                  }}>
+                    <ArrowLeft className="h-5 w-5" />
+                  </Button>
+                )}
+                <div className="text-left">
+                  <SheetTitle className="text-xl p-0">Pagar Dívidas</SheetTitle>
+                  <SheetDescription className="p-0 m-0">
+                    {step === 'select' 
+                      ? "Selecione a dívida que deseja pagar" 
+                      : "Escolha um método de pagamento"}
+                  </SheetDescription>
+                </div>
               </div>
             </div>
-          </div>
-          
-          {/* Content */}
-          <div>
+
+            {/* Content */}
+            <div className="p-0 m-0">
             {step === 'select' && (
               <div className="space-y-6">
                 <div className="space-y-3">

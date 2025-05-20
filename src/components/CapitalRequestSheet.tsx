@@ -133,19 +133,19 @@ const CapitalRequestSheet = () => {
 
   const onSubmit = (data: FormValues) => {
     const amountNumber = Number(data.amount.replace(/[^\d.-]/g, ''));
-    
+
     requestCapitalFromFund(
       data.fundId,
       amountNumber,
       data.description,
       data.repaymentDate
     );
-    
+
     toast({
       title: "Solicitação enviada",
       description: "Sua solicitação de capital foi enviada para aprovação."
     });
-    
+
     handleCancel();
   };
 
@@ -160,14 +160,14 @@ const CapitalRequestSheet = () => {
           Modal para solicitar capital de fundos coletivos
         </div>
         <div className="h-full overflow-y-auto">
-          <div className="border-b bg-white safe-area-pt text-left">
-            <SheetTitle className="text-xl">Solicitar Capital</SheetTitle>
-            <SheetDescription>
-              Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
-            </SheetDescription>
-          </div>
-          
-          <div>
+            <div className="border-b bg-white text-left">
+              <SheetTitle className="text-xl p-0">Solicitar Capital</SheetTitle>
+              <SheetDescription className="p-0 m-0">
+                Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
+              </SheetDescription>
+            </div>
+
+            <div className="p-0 m-0">
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -230,7 +230,7 @@ const CapitalRequestSheet = () => {
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Amount field */}
                   <FormField
                     control={form.control}
@@ -444,7 +444,7 @@ const CapitalRequestSheet = () => {
             </form>
           </Form>
           </div>
-          
+
           {/* Form actions */}
           {step === 2 && (
             <div className="border-t bg-white w-full fixed bottom-0 left-0 right-0 safe-area-pb">
