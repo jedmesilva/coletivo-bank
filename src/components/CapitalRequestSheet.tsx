@@ -447,7 +447,7 @@ const CapitalRequestSheet = () => {
           
           {/* Form actions */}
           {step === 2 && (
-            <div className="border-t bg-white p-6 w-full">
+            <div className="border-t bg-white p-6 w-full sticky bottom-0">
               <div className="flex flex-col space-y-3">
                 <Button 
                   onClick={form.handleSubmit(onSubmit)}
