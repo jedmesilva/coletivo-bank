@@ -107,10 +107,10 @@ const FundCreationModal: React.FC = () => {
           Modal para criar novo fundo coletivo
         </div>
         <div className="h-full flex flex-col">
-          <SheetHeader className="p-4 border-b sticky top-0 bg-white z-10 safe-area-pt">
+          <SheetHeader className="p-6 border-b sticky top-0 bg-white z-10 safe-area-pt">
             <div className="flex items-center">
               {step === 'members' && (
-                <Button variant="ghost" size="icon" onClick={() => setStep('details')} className="mr-2">
+                <Button variant="ghost" size="icon" onClick={() => setStep('details')} className="mr-2 -ml-2">
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
@@ -120,7 +120,7 @@ const FundCreationModal: React.FC = () => {
             </div>
           </SheetHeader>
           
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto px-6 py-5">
             {step === 'details' ? (
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -250,17 +250,18 @@ const FundCreationModal: React.FC = () => {
             )}
           </div>
           
-          <div className="sticky bottom-0 bg-white border-t p-4 w-full">
+          <div className="sticky bottom-0 bg-white border-t p-6 w-full">
             {step === 'details' ? (
               <div className="flex flex-col space-y-3">
                 <Button
                   onClick={handleNextStep}
-                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                  className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
                 >
                   Próximo
                 </Button>
                 <Button 
-                  variant="outline" 
+                  variant="outline"
+                  className="w-full"
                   onClick={handleClose}
                 >
                   Cancelar
@@ -270,12 +271,13 @@ const FundCreationModal: React.FC = () => {
               <div className="flex flex-col space-y-3">
                 <Button 
                   onClick={handleCreateFund}
-                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                  className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
                 >
                   Criar fundo
                 </Button>
                 <Button 
-                  variant="outline" 
+                  variant="outline"
+                  className="w-full"
                   onClick={handleClose}
                 >
                   Cancelar

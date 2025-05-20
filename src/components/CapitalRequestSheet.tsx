@@ -447,17 +447,18 @@ const CapitalRequestSheet = () => {
           
           {/* Form actions */}
           {step === 2 && (
-            <div className="sticky bottom-0 bg-white border-t p-4 w-full">
+            <div className="sticky bottom-0 bg-white border-t p-6 w-full">
               <div className="flex flex-col space-y-3">
                 <Button 
                   onClick={form.handleSubmit(onSubmit)}
-                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                  className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
                 >
                   Enviar solicitação
                 </Button>
                 <Button 
                   type="button" 
                   variant="outline" 
+                  className="w-full"
                   onClick={handleCancel}
                 >
                   Cancelar
