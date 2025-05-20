@@ -42,6 +42,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
+      {/* Botão X removido daqui */}
     </DialogPrimitive.Content>
   </DialogPortal>
 ))
