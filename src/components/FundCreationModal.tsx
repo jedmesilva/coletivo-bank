@@ -122,7 +122,7 @@ const FundCreationModal: React.FC = () => {
 
             <div className="p-0 m-0">
             {step === 'details' ? (
-              <div className="space-y-4">
+              <div className="space-y-0">
                 <div className="space-y-2">
                   <label className="text-sm font-medium" htmlFor="fund-name">Nome do fundo</label>
                   <Input 
