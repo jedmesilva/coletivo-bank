@@ -168,7 +168,7 @@ const CapitalRequestSheet = () => {
           </SheetHeader>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form id="capital-request-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {step === 1 && (
                 <div className="space-y-4">
                   <h3 className="font-medium text-lg mb-2">Selecione um fundo</h3>
@@ -437,24 +437,32 @@ const CapitalRequestSheet = () => {
                     </div>
                   </div>
 
-                  {/* Form actions */}
-                  <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
-                    <div className="flex flex-col space-y-3">
-                      <Button 
-                        type="submit"
-                        className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
-                      >
-                        Enviar solicitação
-                      </Button>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={handleCancel}
-                      >
-                        Cancelar
-                      </Button>
-                    </div>
                   </div>
+              </div>
+            </form>
+          </Form>
+        </div>
+      </div>
+
+      {/* Footer with actions */}
+      <div className="border-t bg-white p-4">
+        <div className="flex flex-col gap-3">
+          <Button 
+            type="submit"
+            form="capital-request-form"
+            className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+          >
+            Enviar solicitação
+          </Button>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={handleCancel}
+          >
+            Cancelar
+          </Button>
+        </div>
+      </div>
                 </div>
               )}
             </form>
