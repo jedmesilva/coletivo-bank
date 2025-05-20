@@ -138,7 +138,7 @@ const DebtPaymentSheet = () => {
             </div>
           )}
 
-            {step === 'payment' && selectedDebt && (
+          {step === 'payment' && selectedDebt && (
             <div className="space-y-6">
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="flex justify-between mb-2">
