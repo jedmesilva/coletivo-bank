@@ -88,11 +88,11 @@ const DebtPaymentSheet = () => {
     <Sheet open={isDebtPaymentOpen} onOpenChange={setIsDebtPaymentOpen}>
       <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh] overflow-y-auto p-0 safe-area-pb flex flex-col">
         <div className="flex-1 overflow-y-auto">
-          <div className="p-6">
+          <div className="px-4">
             <SheetHeader className="mb-6">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center">
                 {step === 'payment' && (
-                  <Button variant="ghost" size="icon" onClick={() => {
+                  <Button variant="ghost" size="icon" className="-ml-3 mr-1" onClick={() => {
                     setStep('select');
                     setSelectedDebtId(null);
                   }}>
