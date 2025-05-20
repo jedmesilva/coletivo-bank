@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import './styles/hide-close-button.css';
 
 // Função para ajustar a altura da viewport em dispositivos móveis
 const setViewportHeight = () => {

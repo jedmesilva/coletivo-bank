@@ -1,0 +1,12 @@
+/* CSS para esconder o botão X no menu lateral */
+[data-radix-sheet-content] button[aria-label="Close"] {
+  display: none !important;
+}
+
+/* Classe personalizada para remover o botão X */
+.sheet-content-no-close button[aria-label="Close"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
-import { Home, User, MapPin, CreditCard, Bell, Lock, Shield, Palette, Menu, X } from "lucide-react";
+import { Home, User, MapPin, CreditCard, Bell, Lock, Shield, Palette, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetClose
-} from "@/components/ui/sheet";
+} from "@/components/ui/custom-sheet";
 import { Separator } from "@/components/ui/separator";
 import {
   DropdownMenu,
@@ -104,6 +104,7 @@ export const MainMenu = () => {
             <SheetContent side="left" className="w-[280px] p-0">
               <SheetHeader className="p-4 border-b">
                 <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
+                {/* Removido botão X que aparecia aqui */}
               </SheetHeader>
               <div className="overflow-y-auto h-full py-2">
                 {menuItems.map((category, idx) => (
