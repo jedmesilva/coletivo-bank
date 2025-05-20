@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { Home, User, MapPin, CreditCard, Bell, Lock, Shield, Palette, Menu, X } from "lucide-react";
@@ -176,4 +177,3 @@ export const MainMenu = () => {
 };
 
 export default MainMenu;
-```
