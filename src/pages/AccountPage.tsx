@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { CreditCard, Check, X, User } from 'lucide-react';
+import { CreditCard, Check, X } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import TabNavigation from '@/components/TabNavigation';
@@ -36,12 +37,13 @@ const AccountPage: React.FC = () => {
       {/* Navbar */}
       <div className="w-full max-w-md mx-auto px-4 py-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-            <User className="w-6 h-6 text-gray-600" />
-          </div>
+          <Avatar className="w-10 h-10 border-2 border-gray-100">
+            <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
+            <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
+          </Avatar>
           <div>
-            <h2 className="font-semibold">Lucas Silva</h2>
-            <p className="text-sm text-gray-500">@lucassilva</p>
+            <h2 className="font-semibold">{currentUser.name}</h2>
+            <p className="text-sm text-gray-500">@{currentUser.username}</p>
           </div>
         </div>
       </div>
