@@ -105,10 +105,10 @@ const DepositModal: React.FC = () => {
         </div>
         <div className="h-full flex flex-col">
           {/* Header */}
-          <SheetHeader className="p-4 border-b sticky top-0 bg-white z-10 safe-area-pt">
+          <SheetHeader className="p-6 border-b sticky top-0 bg-white z-10 safe-area-pt">
             <div className="flex items-center">
               {step === 'deposit-details' && (
-                <Button variant="ghost" size="icon" onClick={handleBack} className="mr-2">
+                <Button variant="ghost" size="icon" onClick={handleBack} className="mr-2 -ml-2">
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
@@ -119,9 +119,9 @@ const DepositModal: React.FC = () => {
           </SheetHeader>
           
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto px-6 py-5">
             {step === 'select-fund' ? (
-              <div className="space-y-3 mt-2">
+              <div className="space-y-4">
                 <p className="text-sm text-gray-500 mb-4">Selecione um fundo para realizar o aporte:</p>
                 {funds.map((fund) => (
                   <div
@@ -205,7 +205,7 @@ const DepositModal: React.FC = () => {
           </div>
           
           {/* Footer */}
-          <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
+          <div className="sticky bottom-0 bg-white border-t p-6 mt-auto">
             {step === 'select-fund' ? (
               <Button 
                 variant="outline" 
