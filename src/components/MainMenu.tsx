@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetClose
-} from "@/components/ui/custom-sheet";
+} from "@/components/ui/NoCloseSheet";
 import { Separator } from "@/components/ui/separator";
 import {
   DropdownMenu,
