@@ -72,11 +72,6 @@ const Index: React.FC = () => {
                 <SheetHeader className="p-4 border-b">
                   <div className="flex justify-between items-center">
                     <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
-                    <SheetClose asChild>
-                      <Button variant="ghost" size="icon">
-                        <X className="h-5 w-5" />
-                      </Button>
-                    </SheetClose>
                   </div>
                 </SheetHeader>
                 <div className="overflow-y-auto h-full py-2">
