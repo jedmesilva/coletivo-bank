@@ -7,7 +7,7 @@ import DepositModal from "./components/DepositModal";
 import CapitalRequestSheet from "./components/CapitalRequestSheet";
 import DebtPaymentSheet from "./components/DebtPaymentSheet";
 import { Toaster } from "@/components/ui/sonner";
-import MainMenu from "./components/MainMenu";
+
 
 const queryClient = new QueryClient();
 
@@ -17,7 +17,6 @@ const App = () => {
       <AppProvider>
         <BrowserRouter>
           <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
-            <MainMenu />
             <main className="flex-1 w-full max-w-[1200px] mx-auto">
               <Index />
             </main>
