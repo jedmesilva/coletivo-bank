@@ -107,10 +107,10 @@ const FundCreationModal: React.FC = () => {
           Modal para criar novo fundo coletivo
         </div>
         <div className="h-full overflow-y-auto">
-          <div className="px-4 py-6 border-b bg-white safe-area-pt">
+          <div className="border-b bg-white safe-area-pt">
             <div className="flex items-center">
               {step === 'members' && (
-                <Button variant="ghost" size="icon" onClick={() => setStep('details')} className="mr-2 -ml-2">
+                <Button variant="ghost" size="icon" onClick={() => setStep('details')}>
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
@@ -120,7 +120,7 @@ const FundCreationModal: React.FC = () => {
             </div>
           </div>
           
-          <div className="px-4 py-5">
+          <div>
             {step === 'details' ? (
               <div className="space-y-4">
                 <div className="space-y-2">

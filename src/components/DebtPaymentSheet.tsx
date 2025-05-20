@@ -88,10 +88,10 @@ const DebtPaymentSheet = () => {
       <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb">
         <div className="h-full overflow-y-auto">
           {/* Header - agora rola junto com o conteúdo */}
-          <div className="px-4 py-6 border-b bg-white safe-area-pt">
+          <div className="border-b bg-white safe-area-pt">
             <div className="flex items-center">
               {step === 'payment' && (
-                <Button variant="ghost" size="icon" className="-ml-2 mr-1" onClick={() => {
+                <Button variant="ghost" size="icon" onClick={() => {
                   setStep('select');
                   setSelectedDebtId(null);
                 }}>
@@ -110,7 +110,7 @@ const DebtPaymentSheet = () => {
           </div>
           
           {/* Content */}
-          <div className="px-4 py-5">
+          <div>
             {step === 'select' && (
               <div className="space-y-6">
                 <div className="space-y-3">
