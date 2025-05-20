@@ -105,7 +105,7 @@ const DepositModal: React.FC = () => {
         </div>
         <div className="h-full flex flex-col">
           {/* Header */}
-          <SheetHeader className="p-4">
+          <SheetHeader className="p-4 border-b">
             <div className="flex items-center">
               {step === 'deposit-details' && (
                 <Button variant="ghost" size="icon" onClick={handleBack} className="mr-2">
