@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CreditCard, Check, X } from 'lucide-react';
+import { CreditCard, Check, X, User } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import TabNavigation from '@/components/TabNavigation';
