@@ -33,8 +33,21 @@ const AccountPage: React.FC = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans w-full overflow-x-hidden">
+      {/* Navbar */}
+      <div className="w-full max-w-md mx-auto px-4 py-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+            <User className="w-6 h-6 text-gray-600" />
+          </div>
+          <div>
+            <h2 className="font-semibold">Lucas Silva</h2>
+            <p className="text-sm text-gray-500">@lucassilva</p>
+          </div>
+        </div>
+      </div>
+
       <div className="w-full max-w-md mx-auto pb-20 px-4">
-        <div className="fade-in pt-3">
+        <div className="fade-in">
           {/* Account Summary Card */}
           <SummaryCard 
             title="Meus Aportes" 
