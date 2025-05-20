@@ -95,18 +95,14 @@ const DepositModal: React.FC = () => {
   return (
     <Sheet open={isDepositModalOpen} onOpenChange={setIsDepositModalOpen}>
       <SheetContent 
-        side="bottom" 
-        className="h-[100dvh] max-h-[100dvh]"
+        side="bottom"
         aria-describedby="deposit-modal-description"
       >
-        <div id="deposit-modal-description" className="sr-only">
-          Modal para realizar aportes em fundos coletivos
-        </div>
-        <div className="h-full overflow-y-auto p-0 m-0">
-            <div className="border-b bg-white p-0 m-0">
-              <div className="flex items-center p-0 m-0">
+        <div>
+            <div>
+              <div>
                 {step === 'deposit-details' && (
-                  <Button variant="ghost" size="icon" className="p-0 m-0" onClick={handleBack}>
+                  <Button variant="ghost" size="icon"  onClick={handleBack}>
                     <ArrowLeft className="h-5 w-5" />
                   </Button>
                 )}

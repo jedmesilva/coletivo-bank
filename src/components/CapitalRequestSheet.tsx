@@ -152,22 +152,18 @@ const CapitalRequestSheet = () => {
   return (
     <Sheet open={isCapitalRequestOpen} onOpenChange={setIsCapitalRequestOpen}>
       <SheetContent 
-        side="bottom" 
-        className="h-[100dvh] max-h-[100dvh]"
+        side="bottom"
         aria-describedby="capital-request-description"
       >
-        <div id="capital-request-description" className="sr-only">
-          Modal para solicitar capital de fundos coletivos
-        </div>
-        <div className="h-full overflow-y-auto p-0 m-0">
-            <div className="border-b bg-white text-left p-0 m-0">
+        <div>
+            <div>
               <SheetTitle className="text-xl p-0 m-0">Solicitar Capital</SheetTitle>
               <SheetDescription className="p-0 m-0">
                 Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
               </SheetDescription>
             </div>
 
-            <div className="p-0 m-0">
+            <div>
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

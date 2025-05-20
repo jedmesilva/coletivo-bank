@@ -99,16 +99,12 @@ const FundCreationModal: React.FC = () => {
   return (
     <Sheet open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
       <SheetContent 
-        side="bottom" 
-        className="h-[100dvh] max-h-[100dvh]"
+        side="bottom"
         aria-describedby="fund-creation-description"
       >
-        <div id="fund-creation-description" className="sr-only">
-          Modal para criar novo fundo coletivo
-        </div>
-        <div className="h-full overflow-y-auto p-0 m-0">
-            <div className="border-b bg-white p-0 m-0">
-              <div className="flex items-center p-0 m-0">
+        <div>
+            <div>
+              <div>
                 {step === 'members' && (
                   <Button variant="ghost" size="icon" className="p-0" onClick={() => setStep('details')}>
                     <ArrowLeft className="h-5 w-5" />
@@ -120,7 +116,7 @@ const FundCreationModal: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-0 m-0">
+            <div>
             {step === 'details' ? (
               <div className="space-y-0">
                 <div className="space-y-2">
