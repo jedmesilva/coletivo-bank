@@ -97,7 +97,7 @@ const DepositModal: React.FC = () => {
     <Sheet open={isDepositModalOpen} onOpenChange={setIsDepositModalOpen}>
       <SheetContent 
         side="bottom" 
-        className="h-screen max-h-screen p-0 !rounded-none safe-area-pb"
+        className="h-[95vh] max-h-[95vh] p-0 rounded-t-xl safe-area-pb"
         aria-describedby="deposit-modal-description"
       >
         <div id="deposit-modal-description" className="sr-only">
@@ -105,7 +105,7 @@ const DepositModal: React.FC = () => {
         </div>
         <div className="h-full flex flex-col">
           {/* Header */}
-          <SheetHeader className="p-4 border-b">
+          <SheetHeader className="p-4 border-b sticky top-0 bg-white z-10 safe-area-pt">
             <div className="flex items-center">
               {step === 'deposit-details' && (
                 <Button variant="ghost" size="icon" onClick={handleBack} className="mr-2">

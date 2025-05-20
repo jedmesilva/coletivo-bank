@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Calendar as CalendarIcon, Check, Copy } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -43,6 +42,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 
+// Schema for the form validation
 const formSchema = z.object({
   fundId: z.string({ required_error: "Selecione um fundo" }),
   amount: z.string().min(1, "Valor é obrigatório")
@@ -67,7 +67,10 @@ const CapitalRequestSheet = () => {
   } = useApp();
   const { toast } = useToast();
   const [step, setStep] = useState(1);
-  const interestRate = 5;
+
+  // Get the selected fund's interest rate (mock value for now)
+  const selectedFund = funds.find(f => f.id === selectedFundIdForCapitalRequest);
+  const interestRate = 5; // Mock value, typically this would come from the fund's settings
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -80,6 +83,7 @@ const CapitalRequestSheet = () => {
     }
   });
 
+  // Update form when selectedFundIdForCapitalRequest changes
   React.useEffect(() => {
     if (selectedFundIdForCapitalRequest) {
       form.setValue('fundId', selectedFundIdForCapitalRequest);
@@ -87,6 +91,7 @@ const CapitalRequestSheet = () => {
     }
   }, [selectedFundIdForCapitalRequest, form]);
 
+  // Update date when repayment option changes
   const handleRepaymentOptionChange = (value: string) => {
     const today = new Date();
     let newDate = today;
@@ -105,6 +110,7 @@ const CapitalRequestSheet = () => {
         newDate = addDays(today, 90);
         break;
       case 'custom':
+        // Keep current selected date
         newDate = form.getValues('repaymentDate');
         break;
     }
@@ -143,15 +149,17 @@ const CapitalRequestSheet = () => {
     handleCancel();
   };
 
-  const selectedFund = funds.find(f => f.id === selectedFundIdForCapitalRequest);
-
   return (
     <Sheet open={isCapitalRequestOpen} onOpenChange={setIsCapitalRequestOpen}>
       <SheetContent 
         side="bottom" 
-        className="!fixed !inset-0 !h-screen !m-0 !rounded-none !rounded-t-none p-0 flex flex-col w-full"
+        className="h-[100dvh] max-h-[100dvh] overflow-y-auto p-0 safe-area-pb"
+        aria-describedby="capital-request-description"
       >
-        <div className="flex-1 overflow-y-auto p-6">
+        <div id="capital-request-description" className="sr-only">
+          Modal para solicitar capital de fundos coletivos
+        </div>
+        <div className="p-6">
           <SheetHeader className="mb-6 text-left">
             <SheetTitle className="text-2xl">Solicitar Capital</SheetTitle>
             <SheetDescription>
@@ -160,7 +168,7 @@ const CapitalRequestSheet = () => {
           </SheetHeader>
 
           <Form {...form}>
-            <form id="capital-request-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {step === 1 && (
                 <div className="space-y-4">
                   <h3 className="font-medium text-lg mb-2">Selecione um fundo</h3>
@@ -199,6 +207,7 @@ const CapitalRequestSheet = () => {
 
               {step === 2 && (
                 <div className="space-y-6">
+                  {/* Fund display for step 2 */}
                   {selectedFund && (
                     <div className="flex items-center p-5 border border-primary/20 rounded-xl bg-primary/5 shadow-sm">
                       <div className="relative mr-4">
@@ -220,6 +229,7 @@ const CapitalRequestSheet = () => {
                     </div>
                   )}
                   
+                  {/* Amount field */}
                   <FormField
                     control={form.control}
                     name="amount"
@@ -248,6 +258,7 @@ const CapitalRequestSheet = () => {
                     )}
                   />
 
+                  {/* Description field */}
                   <FormField
                     control={form.control}
                     name="description"
@@ -270,6 +281,7 @@ const CapitalRequestSheet = () => {
                     )}
                   />
 
+                  {/* Repayment options */}
                   <FormField
                     control={form.control}
                     name="repaymentOption"
@@ -360,6 +372,7 @@ const CapitalRequestSheet = () => {
                     )}
                   />
 
+                  {/* Custom date picker - only shown when custom date option is selected */}
                   {form.watch('repaymentOption') === 'custom' && (
                     <FormField
                       control={form.control}
@@ -403,6 +416,7 @@ const CapitalRequestSheet = () => {
                     />
                   )}
 
+                  {/* Interest rate info */}
                   <div className="rounded-xl border border-blue-100 bg-blue-50 p-5 text-blue-800">
                     <div className="flex items-start">
                       <div className="mr-3 text-blue-600 mt-1">
@@ -422,30 +436,29 @@ const CapitalRequestSheet = () => {
                       </div>
                     </div>
                   </div>
+
+                  {/* Form actions */}
+                  <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
+                    <div className="flex flex-col space-y-3">
+                      <Button 
+                        type="submit"
+                        className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                      >
+                        Enviar solicitação
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={handleCancel}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               )}
             </form>
           </Form>
-        </div>
-
-        {/* Footer with actions */}
-        <div className="border-t bg-white p-4">
-          <div className="flex flex-col gap-3">
-            <Button 
-              type="submit"
-              form="capital-request-form"
-              className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
-            >
-              Enviar solicitação
-            </Button>
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={handleCancel}
-            >
-              Cancelar
-            </Button>
-          </div>
         </div>
       </SheetContent>
     </Sheet>
