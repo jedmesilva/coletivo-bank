@@ -203,7 +203,7 @@ const DepositModal: React.FC = () => {
           </div>
 
           {/* Footer - fixo */}
-          <div className="border-t bg-white p-6 sticky bottom-0">
+          <div className="border-t bg-white sticky bottom-0">
             {step === 'select-fund' ? (
               <Button 
                 variant="outline" 
