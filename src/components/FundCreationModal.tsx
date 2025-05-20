@@ -107,7 +107,7 @@ const FundCreationModal: React.FC = () => {
           Modal para criar novo fundo coletivo
         </div>
         <div className="h-full flex flex-col">
-          <SheetHeader className="p-6 border-b sticky top-0 bg-white z-10 safe-area-pt">
+          <SheetHeader className="p-6 border-b bg-white safe-area-pt">
             <div className="flex items-center">
               {step === 'members' && (
                 <Button variant="ghost" size="icon" onClick={() => setStep('details')} className="mr-2 -ml-2">

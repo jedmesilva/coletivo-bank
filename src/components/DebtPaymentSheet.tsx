@@ -89,7 +89,7 @@ const DebtPaymentSheet = () => {
       <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb">
         <div className="flex flex-col h-full overflow-hidden">
           {/* Header */}
-          <SheetHeader className="p-6 border-b sticky top-0 bg-white z-10 safe-area-pt">
+          <SheetHeader className="p-6 border-b bg-white safe-area-pt">
             <div className="flex items-center">
               {step === 'payment' && (
                 <Button variant="ghost" size="icon" className="-ml-2 mr-1" onClick={() => {
