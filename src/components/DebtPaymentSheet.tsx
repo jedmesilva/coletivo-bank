@@ -238,7 +238,7 @@ const DebtPaymentSheet = () => {
           </div>
 
           {/* Footer with actions - fixo */}
-          <div className="border-t bg-white sticky bottom-0">
+          <div className="border-t bg-white fixed bottom-0 left-0 right-0 safe-area-pb">
             <div className="flex flex-col gap-3">
               {step === 'payment' && (
                 <Button 
