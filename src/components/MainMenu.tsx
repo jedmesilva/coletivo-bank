@@ -103,14 +103,7 @@ export const MainMenu = () => {
             </SheetTrigger>
             <SheetContent side="left" className="w-[280px] p-0">
               <SheetHeader className="p-4 border-b">
-                <div className="flex justify-between items-center">
-                  <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
-                  <SheetClose asChild>
-                    <Button variant="ghost" size="icon">
-                      <X className="h-5 w-5" />
-                    </Button>
-                  </SheetClose>
-                </div>
+                <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
               </SheetHeader>
               <div className="overflow-y-auto h-full py-2">
                 {menuItems.map((category, idx) => (
