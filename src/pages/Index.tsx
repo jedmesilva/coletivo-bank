@@ -68,7 +68,7 @@ const Index: React.FC = () => {
               <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(true)}>
                 <Menu className="h-6 w-6" />
               </Button>
-              <SheetContent side="right" className="w-[280px] p-0">
+              <SheetContent side="left" className="w-[280px] p-0">
                 <SheetHeader className="p-4 border-b">
                   <div className="flex justify-between items-center">
                     <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
