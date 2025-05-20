@@ -153,6 +153,7 @@ const CapitalRequestSheet = () => {
     <Sheet open={isCapitalRequestOpen} onOpenChange={setIsCapitalRequestOpen}>
       <SheetContent 
         side="bottom"
+        className="p-0"
         aria-describedby="capital-request-description"
       >
         <div>

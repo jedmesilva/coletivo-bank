@@ -96,6 +96,7 @@ const DepositModal: React.FC = () => {
     <Sheet open={isDepositModalOpen} onOpenChange={setIsDepositModalOpen}>
       <SheetContent 
         side="bottom"
+        className="p-0"
         aria-describedby="deposit-modal-description"
       >
         <div>

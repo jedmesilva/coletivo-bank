@@ -84,7 +84,7 @@ const DebtPaymentSheet = () => {
 
   return (
     <Sheet open={isDebtPaymentOpen} onOpenChange={setIsDebtPaymentOpen}>
-      <SheetContent side="bottom">
+      <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh] p-0">
         <div>
             <div>
               <div>
