@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
 import { ArrowLeft } from 'lucide-react';
@@ -17,7 +16,7 @@ const DepositModal: React.FC = () => {
     depositToFund, 
     selectedFundIdForDeposit 
   } = useApp();
-  
+
   const [step, setStep] = useState<DepositStep>('select-fund');
   const [selectedFund, setSelectedFund] = useState<string | null>(selectedFundIdForDeposit);
   const [amount, setAmount] = useState<string>('');
@@ -55,7 +54,7 @@ const DepositModal: React.FC = () => {
     }
 
     const amountValue = parseFloat(amount.replace(',', '.'));
-    
+
     if (isNaN(amountValue) || amountValue <= 0) {
       toast({
         title: "Valor inválido",
@@ -75,12 +74,12 @@ const DepositModal: React.FC = () => {
     }
 
     depositToFund(selectedFund, amountValue, description);
-    
+
     toast({
       title: "Aporte realizado com sucesso!",
       description: `Valor de R$ ${amountValue.toLocaleString('pt-BR')} depositado.`
     });
-    
+
     handleClose();
   };
 
@@ -103,10 +102,8 @@ const DepositModal: React.FC = () => {
         <div id="deposit-modal-description" className="sr-only">
           Modal para realizar aportes em fundos coletivos
         </div>
-        {/* Single scrollable container */}
         <div className="h-full overflow-y-auto">
-          {/* Header - agora rola junto com o conteúdo */}
-          <div className="p-6 border-b bg-white safe-area-pt">
+          <div className="px-4 py-6 border-b bg-white safe-area-pt">
             <div className="flex items-center">
               {step === 'deposit-details' && (
                 <Button variant="ghost" size="icon" onClick={handleBack} className="mr-2 -ml-2">
@@ -118,7 +115,7 @@ const DepositModal: React.FC = () => {
               </SheetTitle>
             </div>
           </div>
-          
+
           {/* Content */}
           <div className="px-6 py-5">
             {step === 'select-fund' ? (
@@ -158,7 +155,7 @@ const DepositModal: React.FC = () => {
                     <p className="font-bold text-primary text-lg">{selectedFundName}</p>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <label className="text-sm font-medium flex items-center" htmlFor="deposit-amount">
                     Valor do aporte
@@ -186,7 +183,7 @@ const DepositModal: React.FC = () => {
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Insira o valor que deseja depositar no fundo</p>
                 </div>
-                
+
                 <div className="space-y-2">
                   <label className="text-sm font-medium flex items-center" htmlFor="deposit-description">
                     Descrição
@@ -204,7 +201,7 @@ const DepositModal: React.FC = () => {
               </div>
             )}
           </div>
-          
+
           {/* Footer - fixo */}
           <div className="border-t bg-white p-6 sticky bottom-0">
             {step === 'select-fund' ? (
