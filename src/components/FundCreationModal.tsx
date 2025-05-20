@@ -106,9 +106,11 @@ const FundCreationModal: React.FC = () => {
         <div id="fund-creation-description" className="sr-only">
           Modal para criar novo fundo coletivo
         </div>
-        <div className="h-full overflow-y-auto">
-            <div className="border-b bg-white">
-              <div className="flex items-center">
+        <div 
+className="h-full overflow-y-auto p-0 m-0">
+        <div className="h-full overflow-y-auto p-0 m-0">
+            <div className="border-b bg-white p-0 m-0">
+              <div className="flex items-center p-0 m-0">
                 {step === 'members' && (
                   <Button variant="ghost" size="icon" className="p-0" onClick={() => setStep('details')}>
                     <ArrowLeft className="h-5 w-5" />

@@ -85,10 +85,11 @@ const DebtPaymentSheet = () => {
   return (
     <Sheet open={isDebtPaymentOpen} onOpenChange={setIsDebtPaymentOpen}>
       <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh]">
-        <div className="h-full overflow-y-auto">
+        <div className="h-full overflow-y-auto p-0 m-0">
+        <div className="h-full overflow-y-auto p-0 m-0">
             {/* Header - agora rola junto com o conteúdo */}
-            <div className="border-b bg-white">
-              <div className="flex items-center">
+            <div className="border-b bg-white p-0 m-0">
+              <div className="flex items-center p-0 m-0">
                 {step === 'payment' && (
                   <Button variant="ghost" size="icon" className="p-0" onClick={() => {
                     setStep('select');

@@ -159,9 +159,11 @@ const CapitalRequestSheet = () => {
         <div id="capital-request-description" className="sr-only">
           Modal para solicitar capital de fundos coletivos
         </div>
-        <div className="h-full overflow-y-auto">
-            <div className="border-b bg-white text-left">
-              <SheetTitle className="text-xl p-0">Solicitar Capital</SheetTitle>
+        <div 
+        className="h-full overflow-y-auto p-0 m-0">
+        <div className="h-full overflow-y-auto p-0 m-0">
+            <div className="border-b bg-white text-left p-0 m-0">
+              <SheetTitle className="text-xl p-0 m-0">Solicitar Capital</SheetTitle>
               <SheetDescription className="p-0 m-0">
                 Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
               </SheetDescription>
