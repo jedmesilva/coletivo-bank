@@ -96,60 +96,66 @@ const DepositModal: React.FC = () => {
     <Sheet open={isDepositModalOpen} onOpenChange={setIsDepositModalOpen}>
       <SheetContent 
         side="bottom"
-        className="p-0"
+        className="p-0 h-[100dvh] overflow-hidden flex flex-col"
         aria-describedby="deposit-modal-description"
       >
-        <div>
-            <div>
-              <div>
+        <div className="flex flex-col h-full">
+          {/* Scrollable Content with Header included */}
+          <div className="flex-1 overflow-y-auto pb-24">
+            {/* Header (rolls with content) */}
+            <div className="px-4 py-3 border-b">
+              <div className="flex items-center gap-2">
                 {step === 'deposit-details' && (
-                  <Button variant="ghost" size="icon"  onClick={handleBack}>
-                    <ArrowLeft className="h-5 w-5" />
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleBack}>
+                    <ArrowLeft className="h-4 w-4" />
                   </Button>
                 )}
-                <SheetTitle className="text-xl p-0 m-0">
+                <h2 className="text-xl font-semibold">
                   {step === 'select-fund' ? 'Escolha um fundo' : 'Aportar capital'}
-                </SheetTitle>
+                </h2>
               </div>
             </div>
 
-            {/* Content */}
-            <div className="p-0 m-0">
-            {step === 'select-fund' ? (
-              <div className="space-y-0">
-                <p className="text-sm text-gray-500 mb-4">Selecione um fundo para realizar o aporte:</p>
-                {funds.map((fund) => (
-                  <div
-                    key={fund.id}
-                    className="flex items-center p-4 border border-gray-200 rounded-xl cursor-pointer 
+            {/* Main Content */}
+            <div className="px-4 py-4">
+              {step === 'select-fund' ? (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-500 mb-2">Selecione um fundo para realizar o aporte:</p>
+                
+                <div className="space-y-3">
+                  {funds.map((fund) => (
+                    <div
+                      key={fund.id}
+                      className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer 
                               hover:border-primary/30 hover:bg-primary/5 transition-all"
-                    onClick={() => handleSelectFund(fund.id)}
-                  >
-                    <div className="relative mr-3">
-                      <img 
-                        src={fund.image} 
-                        alt={fund.name} 
-                        className="w-14 h-14 rounded-lg object-cover shadow-sm ring-1 ring-gray-200" 
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">{fund.name}</p>
-                      <p className="text-sm text-gray-600 line-clamp-1">{fund.description}</p>
-                      <div className="flex items-center text-xs text-gray-500 mt-1">
-                        <span>{fund.members.length} membros</span>
-                        <span className="mx-2">•</span>
-                        <span>Desde {fund.date}</span>
+                      onClick={() => handleSelectFund(fund.id)}
+                    >
+                      <div className="flex-shrink-0 mr-3">
+                        <img 
+                          src={fund.image} 
+                          alt={fund.name} 
+                          className="w-12 h-12 rounded-lg object-cover shadow-sm ring-1 ring-gray-200" 
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-gray-900 truncate">{fund.name}</p>
+                        <p className="text-sm text-gray-600 line-clamp-1">{fund.description}</p>
+                        <div className="flex items-center text-xs text-gray-500 mt-1">
+                          <span>{fund.members.length} membros</span>
+                          <span className="mx-2">•</span>
+                          <span>Desde {fund.date}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             ) : (
-              <div className="space-y-6">
-                <div className="bg-primary/5 p-5 rounded-xl border border-primary/20">
+              <div className="space-y-5">
+                <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
                   <p className="text-xs text-gray-500 uppercase font-medium tracking-wide mb-1">Fundo selecionado</p>
                   <div className="flex items-center">
-                    <p className="font-bold text-primary text-lg">{selectedFundName}</p>
+                    <p className="font-bold text-primary text-lg truncate">{selectedFundName}</p>
                   </div>
                 </div>
 
@@ -178,7 +184,7 @@ const DepositModal: React.FC = () => {
                       }}
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Insira o valor que deseja depositar no fundo</p>
+                  <p className="text-xs text-gray-500">Insira o valor que deseja depositar no fundo</p>
                 </div>
 
                 <div className="space-y-2">
@@ -193,33 +199,33 @@ const DepositModal: React.FC = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
-                  <p className="text-xs text-gray-500 mt-1">Identifique o propósito deste aporte</p>
+                  <p className="text-xs text-gray-500">Identifique o propósito deste aporte</p>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Footer - fixo */}
-          <div className="border-t bg-white fixed bottom-0 left-0 right-0 safe-area-pb">
+          {/* Footer - fixed */}
+          <div className="border-t py-4 px-4 bg-white w-full fixed bottom-0 left-0 right-0">
             {step === 'select-fund' ? (
-              <Button 
+                              <Button 
                 variant="outline" 
-                className="w-full font-medium hover:bg-gray-100" 
+                className="w-full h-11 font-medium" 
                 onClick={handleClose}
               >
                 Cancelar
               </Button>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Button 
                   onClick={handleDeposit} 
-                  className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                  className="w-full h-12 text-base font-medium"
                 >
                   Concluir aporte
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="w-full" 
+                  className="w-full h-11" 
                   onClick={handleClose}
                 >
                   Cancelar
