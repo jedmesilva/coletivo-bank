@@ -250,7 +250,7 @@ const FundCreationModal: React.FC = () => {
             )}
           </div>
           
-          <div className="border-t bg-white p-6 w-full">
+          <div className="border-t bg-white p-6 w-full sticky bottom-0">
             {step === 'details' ? (
               <div className="flex flex-col space-y-3">
                 <Button
