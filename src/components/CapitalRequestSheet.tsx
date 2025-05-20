@@ -438,34 +438,33 @@ const CapitalRequestSheet = () => {
                   </div>
 
                   </div>
-              </div>
-            </form>
-          </Form>
-        </div>
-      </div>
-
-      {/* Footer with actions */}
-      <div className="border-t bg-white p-4">
-        <div className="flex flex-col gap-3">
-          <Button 
-            type="submit"
-            form="capital-request-form"
-            className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
-          >
-            Enviar solicitação
-          </Button>
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={handleCancel}
-          >
-            Cancelar
-          </Button>
-        </div>
-      </div>
                 </div>
               )}
             </form>
+          </Form>
+        </div>
+
+        {/* Footer with actions */}
+        <div className="border-t bg-white p-4">
+          <div className="flex flex-col gap-3">
+            <Button 
+              type="submit"
+              form="capital-request-form"
+              className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+            >
+              Enviar solicitação
+            </Button>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleCancel}
+            >
+              Cancelar
+            </Button>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
           </Form>
         </div>
       </SheetContent>
