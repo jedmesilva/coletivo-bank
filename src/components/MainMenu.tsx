@@ -91,7 +91,7 @@ export const MainMenu = () => {
   // Versão mobile: menu lateral com drawer
   if (isMobile) {
     return (
-      <nav className="sticky top-0 z-50 w-full bg-white shadow-sm">
+      <nav className="sticky top-0 z-50 w-full bg-white">
         <div className="flex items-center justify-between p-4">
           <h2 className="text-lg font-semibold">Coletivo Bank</h2>
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -144,7 +144,7 @@ export const MainMenu = () => {
 
   // Versão desktop: menu horizontal
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white shadow-sm">
+    <nav className="sticky top-0 z-50 w-full bg-white">
       <div className="flex items-center justify-between p-4 max-w-[1200px] mx-auto">
         <h2 className="text-lg font-semibold">Coletivo Bank</h2>
         <div className="flex space-x-6">
@@ -176,3 +176,4 @@ export const MainMenu = () => {
 };
 
 export default MainMenu;
+```
