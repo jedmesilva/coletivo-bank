@@ -1,12 +1,11 @@
-
 import React, { useState } from 'react';
-import { X, Users, Plus, UserPlus, Link } from 'lucide-react';
+import { X, Users, Plus, UserPlus, Link, ArrowLeft } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { 
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle 
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -109,158 +108,184 @@ const FundCreationModal: React.FC = () => {
         </div>
         <div className="h-full flex flex-col">
           <SheetHeader className="p-4 border-b sticky top-0 bg-white z-10 safe-area-pt">
-            <SheetTitle className="text-xl">
-              {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
-            </SheetTitle>
+            <div className="flex items-center">
+              {step === 'members' && (
+                <Button variant="ghost" size="icon" onClick={() => setStep('details')} className="mr-2">
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+              )}
+              <SheetTitle className="text-xl">
+                {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
+              </SheetTitle>
+            </div>
           </SheetHeader>
+          
           <div className="flex-1 overflow-y-auto p-4">
-          {step === 'details' ? (
-            <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="fund-name">Nome do fundo</label>
-              <Input 
-                id="fund-name"
-                placeholder="Ex: Amigos do futebol" 
-                value={fundData.name}
-                onChange={(e) => setFundData({...fundData, name: e.target.value})}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="fund-description">Descrição</label>
-              <Input 
-                id="fund-description"
-                placeholder="Ex: Para custos de aluguel de quadra" 
-                value={fundData.description}
-                onChange={(e) => setFundData({...fundData, description: e.target.value})}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Imagem</label>
-              <div className="grid grid-cols-1 gap-4">
-                <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-colors">
-                  <label className="flex flex-col items-center justify-center cursor-pointer">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const imageUrl = URL.createObjectURL(file);
-                          setFundData({...fundData, image: imageUrl});
-                        }
-                      }}
-                    />
-                    <div className="flex flex-col items-center">
-                      <Plus size={24} className="text-gray-400 mb-2" />
-                      <span className="text-sm text-gray-500">Fazer upload de imagem</span>
-                    </div>
-                  </label>
+            {step === 'details' ? (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium" htmlFor="fund-name">Nome do fundo</label>
+                  <Input 
+                    id="fund-name"
+                    placeholder="Ex: Amigos do futebol" 
+                    value={fundData.name}
+                    onChange={(e) => setFundData({...fundData, name: e.target.value})}
+                  />
                 </div>
                 
-                <p className="text-sm text-gray-500 mb-2">Ou escolha uma das opções abaixo:</p>
-                
-                <div className="grid grid-cols-3 gap-3">
-                  {images.map((image, index) => (
-                    <div 
-                      key={index}
-                      className={`cursor-pointer rounded-lg overflow-hidden h-20 border-2 ${
-                        fundData.image === image ? 'border-primary' : 'border-transparent'
-                      }`}
-                      onClick={() => selectImage(image)}
-                    >
-                      <img 
-                        src={image} 
-                        alt={`Option ${index + 1}`} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium" htmlFor="fund-description">Descrição</label>
+                  <Input 
+                    id="fund-description"
+                    placeholder="Ex: Para custos de aluguel de quadra" 
+                    value={fundData.description}
+                    onChange={(e) => setFundData({...fundData, description: e.target.value})}
+                  />
                 </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="py-4 space-y-4">
-            <div className="flex items-center space-x-2">
-              <Input
-                placeholder="@username ou nome do membro"
-                value={memberInput}
-                onChange={(e) => setMemberInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleAddMember();
-                  }
-                }}
-              />
-              <Button type="button" onClick={handleAddMember}>
-                <UserPlus size={18} />
-              </Button>
-            </div>
-            
-            {members.length > 0 ? (
-              <div className="space-y-2 mt-2">
-                <p className="text-sm font-medium">Membros ({members.length})</p>
-                <div className="border rounded-lg divide-y">
-                  {members.map((member, index) => (
-                    <div key={index} className="flex justify-between items-center p-3">
-                      <span>{member}</span>
-                      <button 
-                        onClick={() => handleRemoveMember(member)}
-                        className="text-gray-500 hover:text-red-500 transition-colors"
-                      >
-                        <X size={18} />
-                      </button>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Imagem</label>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-colors">
+                      <label className="flex flex-col items-center justify-center cursor-pointer">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const imageUrl = URL.createObjectURL(file);
+                              setFundData({...fundData, image: imageUrl});
+                            }
+                          }}
+                        />
+                        <div className="flex flex-col items-center">
+                          <Plus size={24} className="text-gray-400 mb-2" />
+                          <span className="text-sm text-gray-500">Fazer upload de imagem</span>
+                        </div>
+                      </label>
                     </div>
-                  ))}
+                    
+                    <p className="text-sm text-gray-500 mb-2">Ou escolha uma das opções abaixo:</p>
+                    
+                    <div className="grid grid-cols-3 gap-3">
+                      {images.map((image, index) => (
+                        <div 
+                          key={index}
+                          className={`cursor-pointer rounded-lg overflow-hidden h-20 border-2 ${
+                            fundData.image === image ? 'border-primary' : 'border-transparent'
+                          }`}
+                          onClick={() => selectImage(image)}
+                        >
+                          <img 
+                            src={image} 
+                            alt={`Option ${index + 1}`} 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-500">
-                <Users className="mx-auto mb-2" size={40} />
-                <p>Adicione membros ao seu fundo</p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Input
+                    placeholder="@username ou nome do membro"
+                    value={memberInput}
+                    onChange={(e) => setMemberInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddMember();
+                      }
+                    }}
+                  />
+                  <Button type="button" onClick={handleAddMember}>
+                    <UserPlus size={18} />
+                  </Button>
+                </div>
+                
+                {members.length > 0 ? (
+                  <div className="space-y-2 mt-2">
+                    <p className="text-sm font-medium">Membros ({members.length})</p>
+                    <div className="border rounded-lg divide-y">
+                      {members.map((member, index) => (
+                        <div key={index} className="flex justify-between items-center p-3">
+                          <span>{member}</span>
+                          <button 
+                            onClick={() => handleRemoveMember(member)}
+                            className="text-gray-500 hover:text-red-500 transition-colors"
+                          >
+                            <X size={18} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    <Users className="mx-auto mb-2" size={40} />
+                    <p>Adicione membros ao seu fundo</p>
+                  </div>
+                )}
+                
+                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Link className="mr-2" size={16} />
+                      Link de convite
+                    </div>
+                    <Button variant="outline" size="sm">
+                      Copiar link
+                    </Button>
+                  </div>
+                  <p className="text-xs mt-2 text-gray-500">
+                    Compartilhe este link para convidar pessoas para o fundo
+                  </p>
+                </div>
               </div>
             )}
-            
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center text-sm text-gray-600">
-                  <Link className="mr-2" size={16} />
-                  Link de convite
-                </div>
-                <Button variant="outline" size="sm">
-                  Copiar link
+          </div>
+          
+          <div className="sticky bottom-0 bg-white border-t p-4 w-full">
+            {step === 'details' ? (
+              <div className="flex flex-col space-y-3">
+                <Button
+                  onClick={handleNextStep}
+                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                >
+                  Próximo
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={handleClose}
+                >
+                  Cancelar
                 </Button>
               </div>
-              <p className="text-xs mt-2 text-gray-500">
-                Compartilhe este link para convidar pessoas para o fundo
-              </p>
-            </div>
+            ) : (
+              <div className="flex flex-col space-y-3">
+                <Button 
+                  onClick={handleCreateFund}
+                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                >
+                  Criar fundo
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={handleClose}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            )}
           </div>
-        )}
-
-        <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
-          {step === 'details' ? (
-            <div className="flex w-full justify-end space-x-2">
-              <Button variant="outline" onClick={handleClose}>Cancelar</Button>
-              <Button onClick={handleNextStep}>Próximo</Button>
-            </div>
-          ) : (
-            <div className="flex w-full justify-between">
-              <Button variant="outline" onClick={() => setStep('details')}>
-                Voltar
-              </Button>
-              <Button onClick={handleCreateFund}>
-                Criar fundo
-              </Button>
-            </div>
-          )}
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 };
 
