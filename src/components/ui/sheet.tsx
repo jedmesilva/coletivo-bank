@@ -1,6 +1,5 @@
 import * as SheetPrimitive from "@radix-ui/react-dialog"
 import { cva, type VariantProps } from "class-variance-authority"
-import { X } from "lucide-react"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -56,19 +55,30 @@ const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
 >(({ side = "right", className, children, ...props }, ref) => {
-  // Criando um componente Content personalizado que não inclui o botão Close
+  // Hook para remoção do botão X após o componente ser montado
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      const closeButtons = document.querySelectorAll('button[aria-label="Close"]');
+      closeButtons.forEach(button => {
+        if (button.parentNode) {
+          button.parentNode.removeChild(button);
+        }
+      });
+    }, 0);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <SheetPortal>
       <SheetOverlay />
-      <div className="fixed inset-0 z-50 flex">
-        <SheetPrimitive.Content
-          ref={ref}
-          className={cn(sheetVariants({ side }), "safe-area-pb", className)}
-          {...props}
-        >
-          {children}
-        </SheetPrimitive.Content>
-      </div>
+      <SheetPrimitive.Content
+        ref={ref}
+        className={cn(sheetVariants({ side }), "safe-area-pb", className)}
+        {...props}
+      >
+        {children}
+      </SheetPrimitive.Content>
     </SheetPortal>
   );
 })
