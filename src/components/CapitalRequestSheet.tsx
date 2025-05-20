@@ -159,15 +159,15 @@ const CapitalRequestSheet = () => {
         <div id="capital-request-description" className="sr-only">
           Modal para solicitar capital de fundos coletivos
         </div>
-        <div className="flex flex-col h-full">
-          <SheetHeader className="p-6 border-b bg-white safe-area-pt text-left">
+        <div className="h-full overflow-y-auto">
+          <div className="p-6 border-b bg-white safe-area-pt text-left">
             <SheetTitle className="text-xl">Solicitar Capital</SheetTitle>
             <SheetDescription>
               Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
             </SheetDescription>
-          </SheetHeader>
+          </div>
           
-          <div className="px-6 py-5 flex-1 overflow-y-auto">
+          <div className="px-6 py-5">
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -447,7 +447,7 @@ const CapitalRequestSheet = () => {
           
           {/* Form actions */}
           {step === 2 && (
-            <div className="sticky bottom-0 bg-white border-t p-6 w-full">
+            <div className="border-t bg-white p-6 w-full">
               <div className="flex flex-col space-y-3">
                 <Button 
                   onClick={form.handleSubmit(onSubmit)}

@@ -7,7 +7,6 @@ import { formatCurrency } from '@/utils/formatCurrency';
 import { 
   Sheet, 
   SheetContent, 
-  SheetHeader, 
   SheetTitle, 
   SheetDescription 
 } from '@/components/ui/sheet';
@@ -86,34 +85,32 @@ const DebtPaymentSheet = () => {
 
   return (
     <Sheet open={isDebtPaymentOpen} onOpenChange={setIsDebtPaymentOpen}>
-      <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb overflow-hidden">
-        {/* Use a single scrollable container for everything */}
+      <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb">
         <div className="h-full overflow-y-auto">
-          <div className="flex flex-col">
-            {/* Header - agora não é fixo, rola com o conteúdo */}
-            <div className="p-6 border-b bg-white safe-area-pt">
-              <div className="flex items-center">
-                {step === 'payment' && (
-                  <Button variant="ghost" size="icon" className="-ml-2 mr-1" onClick={() => {
-                    setStep('select');
-                    setSelectedDebtId(null);
-                  }}>
-                    <ArrowLeft className="h-5 w-5" />
-                  </Button>
-                )}
-                <div className="text-left">
-                  <SheetTitle className="text-xl">Pagar Dívidas</SheetTitle>
-                  <SheetDescription>
-                    {step === 'select' 
-                      ? "Selecione a dívida que deseja pagar" 
-                      : "Escolha um método de pagamento"}
-                  </SheetDescription>
-                </div>
+          {/* Header - agora rola junto com o conteúdo */}
+          <div className="p-6 border-b bg-white safe-area-pt">
+            <div className="flex items-center">
+              {step === 'payment' && (
+                <Button variant="ghost" size="icon" className="-ml-2 mr-1" onClick={() => {
+                  setStep('select');
+                  setSelectedDebtId(null);
+                }}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+              )}
+              <div className="text-left">
+                <SheetTitle className="text-xl">Pagar Dívidas</SheetTitle>
+                <SheetDescription>
+                  {step === 'select' 
+                    ? "Selecione a dívida que deseja pagar" 
+                    : "Escolha um método de pagamento"}
+                </SheetDescription>
               </div>
             </div>
-            
-            {/* Content - sem usar overflow-y-auto aqui, pois o scroll está no container pai */}
-            <div className="px-6 py-5">
+          </div>
+          
+          {/* Content */}
+          <div className="px-6 py-5">
             {step === 'select' && (
               <div className="space-y-6">
                 <div className="space-y-3">
@@ -240,26 +237,25 @@ const DebtPaymentSheet = () => {
             )}
           </div>
 
-            {/* Footer with actions */}
-            <div className="border-t bg-white p-6">
-              <div className="flex flex-col gap-3">
-                {step === 'payment' && (
-                  <Button 
-                    onClick={handlePaymentComplete}
-                    className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
-                  >
-                    Finalizar pagamento
-                  </Button>
-                )}
+          {/* Footer with actions */}
+          <div className="border-t bg-white p-6">
+            <div className="flex flex-col gap-3">
+              {step === 'payment' && (
                 <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={handleCancel}
+                  onClick={handlePaymentComplete}
+                  className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
                 >
-                  Cancelar
+                  Finalizar pagamento
                 </Button>
-              </div>
+              )}
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-full"
+                onClick={handleCancel}
+              >
+                Cancelar
+              </Button>
             </div>
           </div>
         </div>

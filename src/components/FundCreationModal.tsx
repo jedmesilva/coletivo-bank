@@ -106,8 +106,8 @@ const FundCreationModal: React.FC = () => {
         <div id="fund-creation-description" className="sr-only">
           Modal para criar novo fundo coletivo
         </div>
-        <div className="h-full flex flex-col">
-          <SheetHeader className="p-6 border-b bg-white safe-area-pt">
+        <div className="h-full overflow-y-auto">
+          <div className="p-6 border-b bg-white safe-area-pt">
             <div className="flex items-center">
               {step === 'members' && (
                 <Button variant="ghost" size="icon" onClick={() => setStep('details')} className="mr-2 -ml-2">
@@ -118,9 +118,9 @@ const FundCreationModal: React.FC = () => {
                 {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
               </SheetTitle>
             </div>
-          </SheetHeader>
+          </div>
           
-          <div className="flex-1 overflow-y-auto px-6 py-5">
+          <div className="px-6 py-5">
             {step === 'details' ? (
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -250,7 +250,7 @@ const FundCreationModal: React.FC = () => {
             )}
           </div>
           
-          <div className="sticky bottom-0 bg-white border-t p-6 w-full">
+          <div className="border-t bg-white p-6 w-full">
             {step === 'details' ? (
               <div className="flex flex-col space-y-3">
                 <Button
