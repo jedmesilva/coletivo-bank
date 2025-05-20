@@ -153,22 +153,23 @@ const CapitalRequestSheet = () => {
     <Sheet open={isCapitalRequestOpen} onOpenChange={setIsCapitalRequestOpen}>
       <SheetContent 
         side="bottom" 
-        className="h-[100dvh] max-h-[100dvh] overflow-y-auto p-0 safe-area-pb"
+        className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb"
         aria-describedby="capital-request-description"
       >
         <div id="capital-request-description" className="sr-only">
           Modal para solicitar capital de fundos coletivos
         </div>
-        <div className="p-6">
-          <SheetHeader className="mb-6 text-left">
-            <SheetTitle className="text-2xl">Solicitar Capital</SheetTitle>
-            <SheetDescription>
-              Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
-            </SheetDescription>
-          </SheetHeader>
+        <div className="flex flex-col h-full">
+          <div className="p-6 flex-1 overflow-y-auto">
+            <SheetHeader className="mb-6 text-left">
+              <SheetTitle className="text-2xl">Solicitar Capital</SheetTitle>
+              <SheetDescription>
+                Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
+              </SheetDescription>
+            </SheetHeader>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {step === 1 && (
                 <div className="space-y-4">
                   <h3 className="font-medium text-lg mb-2">Selecione um fundo</h3>
@@ -437,28 +438,32 @@ const CapitalRequestSheet = () => {
                     </div>
                   </div>
 
-                  {/* Form actions */}
-                  <div className="sticky bottom-0 bg-white border-t p-4 mt-auto">
-                    <div className="flex flex-col space-y-3">
-                      <Button 
-                        type="submit"
-                        className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
-                      >
-                        Enviar solicitação
-                      </Button>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={handleCancel}
-                      >
-                        Cancelar
-                      </Button>
-                    </div>
-                  </div>
                 </div>
               )}
             </form>
           </Form>
+          </div>
+          
+          {/* Form actions */}
+          {step === 2 && (
+            <div className="sticky bottom-0 bg-white border-t p-4 w-full">
+              <div className="flex flex-col space-y-3">
+                <Button 
+                  onClick={form.handleSubmit(onSubmit)}
+                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                >
+                  Enviar solicitação
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={handleCancel}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>
