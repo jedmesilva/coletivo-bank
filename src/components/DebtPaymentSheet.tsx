@@ -85,7 +85,7 @@ const DebtPaymentSheet = () => {
 
   return (
     <Sheet open={isDebtPaymentOpen} onOpenChange={setIsDebtPaymentOpen}>
-      <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb">
+      <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh]">
         <div className="h-full overflow-y-auto">
           {/* Header - agora rola junto com o conteúdo */}
           <div className="border-b bg-white safe-area-pt">

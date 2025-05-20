@@ -100,7 +100,7 @@ const FundCreationModal: React.FC = () => {
     <Sheet open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
       <SheetContent 
         side="bottom" 
-        className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb"
+        className="h-[100dvh] max-h-[100dvh]"
         aria-describedby="fund-creation-description"
       >
         <div id="fund-creation-description" className="sr-only">

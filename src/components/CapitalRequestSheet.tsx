@@ -153,7 +153,7 @@ const CapitalRequestSheet = () => {
     <Sheet open={isCapitalRequestOpen} onOpenChange={setIsCapitalRequestOpen}>
       <SheetContent 
         side="bottom" 
-        className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb"
+        className="h-[100dvh] max-h-[100dvh]"
         aria-describedby="capital-request-description"
       >
         <div id="capital-request-description" className="sr-only">
