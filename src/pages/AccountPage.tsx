@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CreditCard, Check, X } from 'lucide-react';
+import { CreditCard, Check, X, User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
@@ -10,6 +10,7 @@ import BottomNavigation from '@/components/BottomNavigation';
 
 const AccountPage: React.FC = () => {
   const { 
+    currentUser,
     userDebts, 
     userMovements, 
     userApprovals,
