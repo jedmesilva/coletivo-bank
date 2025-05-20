@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 import { X, Users, Plus, UserPlus, Link } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { 
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle
+} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
@@ -99,16 +98,24 @@ const FundCreationModal: React.FC = () => {
   };
 
   return (
-    <Dialog open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
-      <DialogContent className="sm:max-w-md h-[100dvh] max-h-[100dvh] overflow-y-auto safe-area-pb">
-        <DialogHeader>
-          <DialogTitle className="text-xl">
-            {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
-          </DialogTitle>
-        </DialogHeader>
-        
-        {step === 'details' ? (
-          <div className="space-y-4 py-4">
+    <Sheet open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
+      <SheetContent 
+        side="bottom" 
+        className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb"
+        aria-describedby="fund-creation-description"
+      >
+        <div id="fund-creation-description" className="sr-only">
+          Modal para criar novo fundo coletivo
+        </div>
+        <div className="h-full flex flex-col">
+          <SheetHeader className="p-4 border-b sticky top-0 bg-white z-10 safe-area-pt">
+            <SheetTitle className="text-xl">
+              {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 overflow-y-auto p-4">
+          {step === 'details' ? (
+            <div className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium" htmlFor="fund-name">Nome do fundo</label>
               <Input 
