@@ -152,17 +152,21 @@ const CapitalRequestSheet = () => {
   return (
     <Sheet open={isCapitalRequestOpen} onOpenChange={setIsCapitalRequestOpen}>
       <SheetContent 
-        side="bottom"
-        className="p-0"
+        side="bottom" 
+        className="p-0 h-[100dvh] overflow-hidden flex flex-col max-w-full"
         aria-describedby="capital-request-description"
       >
-        <div>
-            <div>
-              <SheetTitle className="text-xl p-0 m-0">Solicitar Capital</SheetTitle>
-              <SheetDescription className="p-0 m-0">
+        <div className="flex-0 overflow-y-auto pb-0">
+          <header className="border-b border-gray-200">
+            <div className="h-10 px-4 flex items-center">
+              <SheetTitle className="text-xl">Solicitar Capital</SheetTitle>
+            </div>
+            <div className="px-4 pb-3">
+              <SheetDescription>
                 Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
               </SheetDescription>
             </div>
+          </header>
 
             <div>
 
@@ -444,8 +448,8 @@ const CapitalRequestSheet = () => {
 
           {/* Form actions */}
           {step === 2 && (
-            <div className="border-t bg-white w-full fixed bottom-0 left-0 right-0 safe-area-pb">
-              <div className="flex flex-col space-y-3">
+            <div className="border-t border-gray-200 py-3 bg-white w-full fixed bottom-0 left-0 right-0">
+              <div className="px-4 space-y-3">
                 <Button 
                   onClick={form.handleSubmit(onSubmit)}
                   className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
