@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { X, Users, Plus, UserPlus, Link, ArrowLeft } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -54,7 +55,7 @@ const FundCreationModal: React.FC = () => {
       });
       return;
     }
-    
+
     if (!fundData.description.trim()) {
       toast({
         title: "Descrição obrigatória",
@@ -63,7 +64,7 @@ const FundCreationModal: React.FC = () => {
       });
       return;
     }
-    
+
     setStep('members');
   };
 
@@ -83,12 +84,12 @@ const FundCreationModal: React.FC = () => {
       ...fundData,
       members: members
     });
-    
+
     toast({
       title: "Fundo criado com sucesso!",
       description: `O fundo "${fundData.name}" foi criado.`
     });
-    
+
     handleClose();
   };
 
@@ -100,31 +101,41 @@ const FundCreationModal: React.FC = () => {
     <Sheet open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
       <SheetContent 
         side="bottom" 
-        className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb"
+        className="p-0 h-[100dvh] overflow-hidden flex flex-col max-w-full"
         aria-describedby="fund-creation-description"
       >
-        <div id="fund-creation-description" className="sr-only">
-          Modal para criar novo fundo coletivo
-        </div>
-        <div className="h-full flex flex-col">
-          <SheetHeader className="p-4 border-b sticky top-0 bg-white z-10 safe-area-pt">
-            <div className="flex items-center">
+        <div className="flex-0 overflow-y-auto pb-0">
+          <header className="border-b border-gray-200">
+            <div className="h-10 px-4 flex items-center">
               {step === 'members' && (
-                <Button variant="ghost" size="icon" onClick={() => setStep('details')} className="mr-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 mr-2" 
+                  onClick={() => {
+                    setStep('details');
+                    setSelectedDebtId(null);
+                  }}
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
-              <SheetTitle className="text-xl">
-                {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
-              </SheetTitle>
+              <div className="text-left">
+                <SheetTitle className="text-xl">
+                  {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
+                </SheetTitle>
+              </div>
             </div>
-          </SheetHeader>
-          
-          <div className="flex-1 overflow-y-auto p-4">
+          </header>
+
+          <div className="pt-3 px-4">
             {step === 'details' ? (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium" htmlFor="fund-name">Nome do fundo</label>
+                  <label className="text-sm font-medium flex items-center" htmlFor="fund-name">
+                    Nome do fundo
+                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
+                  </label>
                   <Input 
                     id="fund-name"
                     placeholder="Ex: Amigos do futebol" 
@@ -132,9 +143,12 @@ const FundCreationModal: React.FC = () => {
                     onChange={(e) => setFundData({...fundData, name: e.target.value})}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium" htmlFor="fund-description">Descrição</label>
+                  <label className="text-sm font-medium flex items-center" htmlFor="fund-description">
+                    Descrição
+                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
+                  </label>
                   <Input 
                     id="fund-description"
                     placeholder="Ex: Para custos de aluguel de quadra" 
@@ -142,7 +156,7 @@ const FundCreationModal: React.FC = () => {
                     onChange={(e) => setFundData({...fundData, description: e.target.value})}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Imagem</label>
                   <div className="grid grid-cols-1 gap-4">
@@ -166,9 +180,9 @@ const FundCreationModal: React.FC = () => {
                         </div>
                       </label>
                     </div>
-                    
+
                     <p className="text-sm text-gray-500 mb-2">Ou escolha uma das opções abaixo:</p>
-                    
+
                     <div className="grid grid-cols-3 gap-3">
                       {images.map((image, index) => (
                         <div 
@@ -207,7 +221,7 @@ const FundCreationModal: React.FC = () => {
                     <UserPlus size={18} />
                   </Button>
                 </div>
-                
+
                 {members.length > 0 ? (
                   <div className="space-y-2 mt-2">
                     <p className="text-sm font-medium">Membros ({members.length})</p>
@@ -227,11 +241,11 @@ const FundCreationModal: React.FC = () => {
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
-                    <Users className="mx-auto mb-2" size={40} />
+                    <Users className="mx-auto mb-2 h-10 w-10" />
                     <p>Adicione membros ao seu fundo</p>
                   </div>
                 )}
-                
+
                 <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center text-sm text-gray-600">
@@ -249,33 +263,37 @@ const FundCreationModal: React.FC = () => {
               </div>
             )}
           </div>
-          
-          <div className="sticky bottom-0 bg-white border-t p-4 w-full">
+        </div>
+
+        <div className="border-t border-gray-200 py-3 bg-white w-full fixed bottom-0 left-0 right-0">
+          <div className="px-4">
             {step === 'details' ? (
-              <div className="flex flex-col space-y-3">
+              <div className="space-y-3">
                 <Button
                   onClick={handleNextStep}
-                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                  className="w-full h-12 text-base font-medium"
                 >
                   Próximo
                 </Button>
                 <Button 
                   variant="outline" 
+                  className="w-full h-12" 
                   onClick={handleClose}
                 >
                   Cancelar
                 </Button>
               </div>
             ) : (
-              <div className="flex flex-col space-y-3">
+              <div className="space-y-3">
                 <Button 
                   onClick={handleCreateFund}
-                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                  className="w-full h-12 text-base font-medium"
                 >
                   Criar fundo
                 </Button>
                 <Button 
-                  variant="outline" 
+                  variant="outline"
+                  className="w-full h-12"
                   onClick={handleClose}
                 >
                   Cancelar
