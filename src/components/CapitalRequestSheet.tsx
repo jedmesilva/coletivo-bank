@@ -133,19 +133,19 @@ const CapitalRequestSheet = () => {
 
   const onSubmit = (data: FormValues) => {
     const amountNumber = Number(data.amount.replace(/[^\d.-]/g, ''));
-
+    
     requestCapitalFromFund(
       data.fundId,
       amountNumber,
       data.description,
       data.repaymentDate
     );
-
+    
     toast({
       title: "Solicitação enviada",
       description: "Sua solicitação de capital foi enviada para aprovação."
     });
-
+    
     handleCancel();
   };
 
@@ -153,22 +153,20 @@ const CapitalRequestSheet = () => {
     <Sheet open={isCapitalRequestOpen} onOpenChange={setIsCapitalRequestOpen}>
       <SheetContent 
         side="bottom" 
-        className="p-0 h-[100dvh] overflow-hidden flex flex-col max-w-full"
+        className="h-[100dvh] max-h-[100dvh] p-0 safe-area-pb"
         aria-describedby="capital-request-description"
       >
-        <div className="flex-0 overflow-y-auto pb-0">
-          <header className="border-b border-gray-200">
-            <div className="h-10 px-4 flex items-center">
-              <SheetTitle className="text-xl">Solicitar Capital</SheetTitle>
-            </div>
-            <div className="px-4 pb-3">
+        <div id="capital-request-description" className="sr-only">
+          Modal para solicitar capital de fundos coletivos
+        </div>
+        <div className="flex flex-col h-full">
+          <div className="p-6 flex-1 overflow-y-auto">
+            <SheetHeader className="mb-6 text-left">
+              <SheetTitle className="text-2xl">Solicitar Capital</SheetTitle>
               <SheetDescription>
                 Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
               </SheetDescription>
-            </div>
-          </header>
-
-            <div>
+            </SheetHeader>
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -231,7 +229,7 @@ const CapitalRequestSheet = () => {
                       </div>
                     </div>
                   )}
-
+                  
                   {/* Amount field */}
                   <FormField
                     control={form.control}
@@ -445,21 +443,20 @@ const CapitalRequestSheet = () => {
             </form>
           </Form>
           </div>
-
+          
           {/* Form actions */}
           {step === 2 && (
-            <div className="border-t border-gray-200 py-3 bg-white w-full fixed bottom-0 left-0 right-0">
-              <div className="px-4 space-y-3">
+            <div className="sticky bottom-0 bg-white border-t p-4 w-full">
+              <div className="flex flex-col space-y-3">
                 <Button 
                   onClick={form.handleSubmit(onSubmit)}
-                  className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
                 >
                   Enviar solicitação
                 </Button>
                 <Button 
                   type="button" 
                   variant="outline" 
-                  className="w-full"
                   onClick={handleCancel}
                 >
                   Cancelar
