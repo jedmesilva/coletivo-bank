@@ -112,19 +112,21 @@ const FundCreationModal: React.FC = () => {
                   variant="ghost" 
                   size="icon" 
                   className="h-8 w-8 mr-2" 
-                  onClick={() => {
-                    setStep('details');
-                    setSelectedDebtId(null);
-                  }}
+                  onClick={() => setStep('details')}
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
-              <div className="text-left">
-                <SheetTitle className="text-xl">
-                  {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
-                </SheetTitle>
-              </div>
+              <SheetTitle className="text-xl">
+                {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
+              </SheetTitle>
+            </div>
+            <div className="px-4 pb-3">
+              <SheetDescription>
+                {step === 'details' 
+                  ? "Defina as informações básicas do fundo" 
+                  : "Adicione os membros que farão parte do fundo"}
+              </SheetDescription>
             </div>
           </header>
 
