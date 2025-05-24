@@ -160,29 +160,13 @@ const CapitalRequestSheet = () => {
           Modal para solicitar capital de fundos coletivos
         </div>
         <div className="flex flex-col h-full">
-          <div className="flex-1 overflow-y-auto pb-0">
-            <header className="border-b border-gray-200">
-              <div className="h-10 px-4 flex items-center">
-                {step === 2 && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-8 w-8 mr-2" 
-                    onClick={() => setStep(1)}
-                  >
-                    <ArrowLeft className="h-5 w-5" />
-                  </Button>
-                )}
-                <SheetTitle className="text-xl">Solicitar Capital</SheetTitle>
-              </div>
-              <div className="px-4 pb-3">
-                <SheetDescription>
-                  {step === 1 
-                    ? "Selecione o fundo para solicitar capital" 
-                    : "Defina o valor e os detalhes da solicitação"}
-                </SheetDescription>
-              </div>
-            </header>
+          <div className="p-4 flex-1 overflow-y-auto">
+            <SheetHeader className="mb-6 text-left">
+              <SheetTitle className="text-2xl">Solicitar Capital</SheetTitle>
+              <SheetDescription>
+                Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
+              </SheetDescription>
+            </SheetHeader>
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
