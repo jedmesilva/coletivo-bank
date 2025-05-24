@@ -56,7 +56,14 @@ const Index: React.FC = () => {
       <div className="max-w-md mx-auto p-4 pb-28">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-2xl font-bold">Olá, <span className="text-primary">Lucas</span>!</h1>
+            <p className="text-sm text-gray-500 mt-1">Bem-vindo ao Coletivo Bank</p>
+          </div>
           <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => console.log('Notificações')}>
+              <Bell className="h-6 w-6" />
+            </Button>
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(true)}>
                 <Menu className="h-6 w-6" />
@@ -65,11 +72,6 @@ const Index: React.FC = () => {
                 <SheetHeader className="p-4 border-b">
                   <div className="flex justify-between items-center">
                     <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
-                    <SheetClose asChild>
-                      <Button variant="ghost" size="icon">
-                        <X className="h-5 w-5" />
-                      </Button>
-                    </SheetClose>
                   </div>
                 </SheetHeader>
                 <div className="overflow-y-auto h-full py-2">
@@ -173,10 +175,7 @@ const Index: React.FC = () => {
               </SheetContent>
             </Sheet>
             
-            <div>
-              <h1 className="text-2xl font-bold">Olá, <span className="text-primary">Lucas</span>!</h1>
-              <p className="text-sm text-gray-500 mt-1">Bem-vindo ao Coletivo Bank</p>
-            </div>
+            
           </div>
         </div>
 

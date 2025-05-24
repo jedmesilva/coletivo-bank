@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { CreditCard, Check, X } from 'lucide-react';
+import { CreditCard, Check, X, User } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import TabNavigation from '@/components/TabNavigation';
@@ -9,6 +10,7 @@ import BottomNavigation from '@/components/BottomNavigation';
 
 const AccountPage: React.FC = () => {
   const { 
+    currentUser,
     userDebts, 
     userMovements, 
     userApprovals,
@@ -33,8 +35,22 @@ const AccountPage: React.FC = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans w-full overflow-x-hidden">
+      {/* Navbar */}
+      <div className="w-full max-w-md mx-auto px-4 py-4">
+        <div className="flex items-center gap-3">
+          <Avatar className="w-10 h-10 border-2 border-gray-100">
+            <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
+            <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div>
+            <h2 className="font-semibold">{currentUser.name}</h2>
+            <p className="text-sm text-gray-500">@{currentUser.username}</p>
+          </div>
+        </div>
+      </div>
+
       <div className="w-full max-w-md mx-auto pb-20 px-4">
-        <div className="fade-in pt-3">
+        <div className="fade-in">
           {/* Account Summary Card */}
           <SummaryCard 
             title="Meus Aportes" 
