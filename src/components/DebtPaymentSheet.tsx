@@ -91,7 +91,7 @@ const DebtPaymentSheet = () => {
         className="p-0 h-[100dvh] overflow-hidden flex flex-col max-w-full"
         aria-describedby="debt-payment-description"
       >
-        <div className="flex-1 overflow-y-auto pb-32 h-full">
+        <div className="flex-1 overflow-y-auto pb-40 h-full">
           <header className="border-b border-gray-200">
             <div className="h-10 px-4 flex items-center">
               {step === 'payment' && (
