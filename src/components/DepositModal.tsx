@@ -130,8 +130,6 @@ const DepositModal: React.FC = () => {
           <div className="pt-3">
             {step === 'select-fund' ? (
               <div className="space-y-4">
-                <p className="text-gray-500 px-4">Selecione um fundo para realizar o aporte:</p>
-                
                 <div className="space-y-3 px-4">
                   {funds.map((fund) => (
                     <div
