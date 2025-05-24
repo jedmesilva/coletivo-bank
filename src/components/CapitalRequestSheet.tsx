@@ -160,7 +160,7 @@ const CapitalRequestSheet = () => {
           Modal para solicitar capital de fundos coletivos
         </div>
         <div className="flex flex-col h-full">
-          <div className="p-6 flex-1 overflow-y-auto">
+          <div className="p-4 flex-1 overflow-y-auto">
             <SheetHeader className="mb-6 text-left">
               <SheetTitle className="text-2xl">Solicitar Capital</SheetTitle>
               <SheetDescription>
