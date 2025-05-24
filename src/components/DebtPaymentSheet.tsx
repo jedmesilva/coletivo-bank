@@ -91,7 +91,7 @@ const DebtPaymentSheet = () => {
         className="p-0 h-[100dvh] overflow-hidden flex flex-col max-w-full"
         aria-describedby="debt-payment-description"
       >
-        <div className="flex-0 overflow-y-auto pb-0">
+        <div className="flex-1 overflow-y-auto pb-24">
           <header className="border-b border-gray-200">
             <div className="h-10 px-4 flex items-center">
               {step === 'payment' && (
@@ -118,32 +118,31 @@ const DebtPaymentSheet = () => {
             </div>
           </header>
 
+          <div className="px-4 pt-4">
             {step === 'select' && (
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  {filteredDebts.length > 0 ? (
-                    filteredDebts.map((debt) => (
-                      <div 
-                        key={debt.id}
-                        className="border rounded-lg p-4 cursor-pointer transition-colors hover:bg-gray-50"
-                        onClick={() => handleDebtSelect(debt.id)}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">{debt.description}</p>
-                            <p className="text-sm text-gray-500">{debt.fundName}</p>
-                            <p className="text-sm text-gray-500">Vencimento: {debt.dueDate}</p>
-                          </div>
-                          <p className="font-bold text-lg">{formatCurrency(debt.amount)}</p>
+              <div className="space-y-3">
+                {filteredDebts.length > 0 ? (
+                  filteredDebts.map((debt) => (
+                    <div 
+                      key={debt.id}
+                      className="border rounded-lg p-4 cursor-pointer transition-colors hover:bg-gray-50"
+                      onClick={() => handleDebtSelect(debt.id)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">{debt.description}</p>
+                          <p className="text-sm text-gray-500">{debt.fundName}</p>
+                          <p className="text-sm text-gray-500">Vencimento: {debt.dueDate}</p>
                         </div>
+                        <p className="font-bold text-lg">{formatCurrency(debt.amount)}</p>
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-8 text-gray-500">
-                      Nenhuma dívida encontrada.
                     </div>
-                  )}
-                </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    Nenhuma dívida encontrada.
+                  </div>
+                )}
               </div>
             )}
 
