@@ -101,17 +101,28 @@ const DepositModal: React.FC = () => {
       >
         {/* Scrollable Content with Header included */}
         <div className="flex-0 overflow-y-auto pb-0">
-          {/* Header - Corrigido para ocupar toda a largura, sem margens laterais */}
           <header className="border-b border-gray-200">
             <div className="h-10 px-4 flex items-center">
               {step === 'deposit-details' && (
-                <Button variant="ghost" size="icon" className="h-8 w-8 mr-0" onClick={handleBack}>
-                  <ArrowLeft className="h-0 w-0" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 mr-2" 
+                  onClick={handleBack}
+                >
+                  <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
-              <h2 className="text-xl font-semibold">
+              <SheetTitle className="text-xl">
                 {step === 'select-fund' ? 'Escolha um fundo' : 'Aportar capital'}
-              </h2>
+              </SheetTitle>
+            </div>
+            <div className="px-4 pb-3">
+              <SheetDescription>
+                {step === 'select-fund' 
+                  ? "Selecione o fundo para realizar o aporte" 
+                  : "Defina o valor e a descrição do aporte"}
+              </SheetDescription>
             </div>
           </header>
 
