@@ -86,29 +86,37 @@ const DebtPaymentSheet = () => {
 
   return (
     <Sheet open={isDebtPaymentOpen} onOpenChange={setIsDebtPaymentOpen}>
-      <SheetContent side="bottom" className="h-[100dvh] max-h-[100dvh] overflow-y-auto p-0 safe-area-pb flex flex-col">
-        <div className="flex-1 overflow-y-auto">
-          <div className="px-4">
-            <SheetHeader className="mb-6">
-              <div className="flex items-center">
-                {step === 'payment' && (
-                  <Button variant="ghost" size="icon" className="-ml-3 mr-1" onClick={() => {
+      <SheetContent 
+        side="bottom" 
+        className="p-0 h-[100dvh] overflow-hidden flex flex-col max-w-full"
+        aria-describedby="debt-payment-description"
+      >
+        <div className="flex-0 overflow-y-auto pb-0">
+          <header className="border-b border-gray-200">
+            <div className="h-10 px-4 flex items-center">
+              {step === 'payment' && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 mr-2" 
+                  onClick={() => {
                     setStep('select');
                     setSelectedDebtId(null);
-                  }}>
-                    <ArrowLeft className="h-5 w-5" />
-                  </Button>
-                )}
-                <div className="text-left">
-                  <SheetTitle className="text-2xl">Pagar Dívidas</SheetTitle>
-                  <SheetDescription>
-                    {step === 'select' 
-                      ? "Selecione a dívida que deseja pagar" 
-                      : "Escolha um método de pagamento"}
-                  </SheetDescription>
-                </div>
-              </div>
-            </SheetHeader>
+                  }}
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+              )}
+              <SheetTitle className="text-xl">Pagar Dívidas</SheetTitle>
+            </div>
+            <div className="px-4 pb-3">
+              <SheetDescription>
+                {step === 'select' 
+                  ? "Selecione a dívida que deseja pagar" 
+                  : "Escolha um método de pagamento"}
+              </SheetDescription>
+            </div>
+          </header>
 
             {step === 'select' && (
               <div className="space-y-6">
@@ -238,12 +246,12 @@ const DebtPaymentSheet = () => {
         </div>
 
         {/* Footer with actions */}
-        <div className="border-t bg-white p-4">
-          <div className="flex flex-col gap-3">
+        <div className="border-t border-gray-200 py-3 bg-white w-full fixed bottom-0 left-0 right-0">
+          <div className="px-4 space-y-3">
             {step === 'payment' && (
               <Button 
                 onClick={handlePaymentComplete}
-                className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
               >
                 Finalizar pagamento
               </Button>
@@ -251,6 +259,7 @@ const DebtPaymentSheet = () => {
             <Button 
               type="button" 
               variant="outline" 
+              className="w-full h-12"
               onClick={handleCancel}
             >
               Cancelar
