@@ -1,200 +1,106 @@
+import React from 'react';
+import { X, Home, CreditCard, PieChart, Settings, HelpCircle, LogOut, User, Wallet, Bell } from 'lucide-react';
 
-import { useState, useEffect } from "react";
-import { useApp } from "@/context/AppContext";
-import { Home, User, MapPin, CreditCard, Bell, Lock, Shield, Palette, Menu, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose
-} from "@/components/ui/NoCloseSheet";
-import { Separator } from "@/components/ui/separator";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-export const MainMenu = () => {
-  const { setActiveScreen, currentUser } = useApp();
-  const isMobile = useIsMobile();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Fechar menu quando mudar de tela
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, []);
-
-  // Menu items organizados por categoria
+const SidebarMenu = ({ isMenuOpen, toggleMenu }) => {
   const menuItems = [
-    {
-      category: "Menu Principal",
-      items: [
-        { 
-          icon: <Home className="w-5 h-5" />, 
-          label: "Página Inicial", 
-          onClick: () => setActiveScreen('home')
-        }
-      ]
-    },
-    {
-      category: "Dados Pessoais",
-      items: [
-        { 
-          icon: <User className="w-5 h-5" />, 
-          label: "Meu Perfil", 
-          onClick: () => setActiveScreen('account') 
-        },
-        { 
-          icon: <MapPin className="w-5 h-5" />, 
-          label: "Endereço", 
-          onClick: () => {} 
-        },
-        { 
-          icon: <CreditCard className="w-5 h-5" />, 
-          label: "Dados Bancários", 
-          onClick: () => {} 
-        }
-      ]
-    },
-    {
-      category: "Configurações",
-      items: [
-        { 
-          icon: <Bell className="w-5 h-5" />, 
-          label: "Notificações", 
-          onClick: () => {} 
-        },
-        { 
-          icon: <Lock className="w-5 h-5" />, 
-          label: "Privacidade", 
-          onClick: () => {} 
-        },
-        { 
-          icon: <Shield className="w-5 h-5" />, 
-          label: "Segurança", 
-          onClick: () => {} 
-        },
-        { 
-          icon: <Palette className="w-5 h-5" />, 
-          label: "Tema", 
-          onClick: () => {} 
-        }
-      ]
-    }
+    { icon: Home, label: 'Início', active: true },
+    { icon: Wallet, label: 'Meus Fundos', badge: '2' },
+    { icon: CreditCard, label: 'Transações' },
+    { icon: PieChart, label: 'Relatórios' },
+    { icon: Bell, label: 'Notificações', badge: '3' },
+    { icon: Settings, label: 'Configurações' },
+    { icon: HelpCircle, label: 'Ajuda' },
   ];
 
-  // Versão mobile: menu lateral com drawer
-  if (isMobile) {
-    return (
-      <nav className="sticky top-0 z-50 w-full bg-white">
-        <div className="flex items-center justify-between p-4">
-          <h2 className="text-lg font-semibold">Coletivo Bank</h2>
-          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-[280px] p-0">
-              {/* Componente do Usuário */}
-              <div className="p-4 border-b bg-gradient-to-r from-blue-50 to-purple-50">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/70 hover:bg-white/90 transition-all duration-200 cursor-pointer group">
-                  <Avatar className="w-12 h-12 border-2 border-white shadow-md">
-                    <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
-                    <AvatarFallback className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-lg">
-                      {currentUser.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 truncate">{currentUser.name}</p>
-                    <p className="text-sm text-gray-600 truncate">{currentUser.email}</p>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
-                </div>
-              </div>
-              <div className="overflow-y-auto h-full py-2">
-                {menuItems.map((category, idx) => (
-                  <div key={idx} className="px-2 py-3">
-                    <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                      {category.category}
-                    </h3>
-                    {category.items.map((item, itemIdx) => (
-                      <SheetClose asChild key={itemIdx}>
-                        <Button
-                          variant="ghost"
-                          onClick={item.onClick}
-                          className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                        >
-                          {item.icon}
-                          <span>{item.label}</span>
-                        </Button>
-                      </SheetClose>
-                    ))}
-                    {idx < menuItems.length - 1 && (
-                      <Separator className="my-2 mx-3" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </nav>
-    );
-  }
-
-  // Versão desktop: menu horizontal
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white">
-      <div className="flex items-center justify-between p-4 max-w-[1200px] mx-auto">
-        {/* Componente do Usuário na versão desktop */}
-        <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all duration-200 cursor-pointer group">
-          <Avatar className="w-10 h-10 border-2 border-white shadow-md">
-            <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
-            <AvatarFallback className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold">
-              {currentUser.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <p className="font-semibold text-gray-900 text-sm">{currentUser.name}</p>
-            <p className="text-xs text-gray-600">{currentUser.email}</p>
+    <div className={`fixed inset-0 z-[99999] transition-all duration-300 ease-in-out ${
+      isMenuOpen ? 'visible' : 'invisible'
+    }`}>
+      {/* Overlay */}
+      <div 
+        className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+          isMenuOpen ? 'opacity-100' : 'opacity-0'
+        }`}
+        onClick={toggleMenu}
+      />
+      
+      {/* Menu Panel */}
+      <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out overflow-hidden ${
+        isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        {/* Header do Menu */}
+        <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-6 pb-8 flex-shrink-0">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-white">Menu</h2>
+            <button 
+              onClick={toggleMenu}
+              className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 transition-all duration-200 flex items-center justify-center group"
+            >
+              <X size={18} className="text-white group-hover:scale-110 transition-transform" />
+            </button>
           </div>
-          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
+          
+          {/* Profile Section */}
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+              <User size={20} className="text-white" />
+            </div>
+            <div>
+              <h3 className="text-white font-semibold">Lucas</h3>
+              <p className="text-blue-200/80 text-sm">Coletivo Bank</p>
+            </div>
+          </div>
         </div>
-        
-        <div className="flex space-x-6">
-          {menuItems.map((category) => (
-            <DropdownMenu key={category.category}>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="font-medium">
-                  {category.category}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {category.items.map((item, idx) => (
-                  <DropdownMenuItem 
-                    key={idx} 
-                    onClick={item.onClick}
-                    className="flex items-center gap-2"
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ))}
+
+        {/* Menu Items - Scrollable */}
+        <div className="flex-1 overflow-y-auto p-4">
+          <nav className="space-y-2">
+            {menuItems.map((item, index) => {
+              const IconComponent = item.icon;
+              return (
+                <button
+                  key={index}
+                  className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group ${
+                    item.active 
+                      ? 'bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 text-blue-700' 
+                      : 'hover:bg-gray-50 text-gray-700 hover:text-gray-900'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                    item.active 
+                      ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg' 
+                      : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200 group-hover:scale-105'
+                  }`}>
+                    <IconComponent size={18} />
+                  </div>
+                  <span className="font-medium flex-1 text-left">{item.label}</span>
+                  {item.badge && (
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      item.active 
+                        ? 'bg-blue-200 text-blue-700' 
+                        : 'bg-gray-200 text-gray-600'
+                    }`}>
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Logout Button */}
+          <div className="mt-8 pt-4 border-t border-gray-200">
+            <button className="w-full flex items-center gap-4 p-4 rounded-2xl text-red-600 hover:bg-red-50 transition-all duration-200 group">
+              <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-all duration-200 group-hover:scale-105">
+                <LogOut size={18} />
+              </div>
+              <span className="font-medium">Sair</span>
+            </button>
+          </div>
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 
-export default MainMenu;
+export default SidebarMenu;
