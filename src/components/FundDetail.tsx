@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useApp } from '@/context/AppContext';
 import SummaryCard from './SummaryCard';
+import FundBalanceCard from './FundBalanceCard';
 import TabNavigation from './TabNavigation';
 import { formatCurrency } from '@/utils/formatCurrency';
 
@@ -67,7 +68,7 @@ const FundDetail: React.FC = () => {
         </div>
 
         {/* Balance Card */}
-        <SummaryCard 
+        <FundBalanceCard 
           title="Saldo" 
           balance={selectedFund.balance}
           leftLabel="Membros"
