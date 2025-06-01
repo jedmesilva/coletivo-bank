@@ -1,9 +1,10 @@
 
 import { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
-import { Home, User, MapPin, CreditCard, Bell, Lock, Shield, Palette, Menu } from "lucide-react";
+import { Home, User, MapPin, CreditCard, Bell, Lock, Shield, Palette, Menu, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
   SheetContent,
@@ -21,7 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const MainMenu = () => {
-  const { setActiveScreen } = useApp();
+  const { setActiveScreen, currentUser } = useApp();
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -102,10 +103,22 @@ export const MainMenu = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[280px] p-0">
-              <SheetHeader className="p-4 border-b">
-                <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
-                {/* Removido botão X que aparecia aqui */}
-              </SheetHeader>
+              {/* Componente do Usuário */}
+              <div className="p-4 border-b bg-gradient-to-r from-blue-50 to-purple-50">
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/70 hover:bg-white/90 transition-all duration-200 cursor-pointer group">
+                  <Avatar className="w-12 h-12 border-2 border-white shadow-md">
+                    <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
+                    <AvatarFallback className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-lg">
+                      {currentUser.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-900 truncate">{currentUser.name}</p>
+                    <p className="text-sm text-gray-600 truncate">{currentUser.email}</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
+                </div>
+              </div>
               <div className="overflow-y-auto h-full py-2">
                 {menuItems.map((category, idx) => (
                   <div key={idx} className="px-2 py-3">
