@@ -154,7 +154,21 @@ export const MainMenu = () => {
   return (
     <nav className="sticky top-0 z-50 w-full bg-white">
       <div className="flex items-center justify-between p-4 max-w-[1200px] mx-auto">
-        <h2 className="text-lg font-semibold">Coletivo Bank</h2>
+        {/* Componente do Usuário na versão desktop */}
+        <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all duration-200 cursor-pointer group">
+          <Avatar className="w-10 h-10 border-2 border-white shadow-md">
+            <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
+            <AvatarFallback className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold">
+              {currentUser.name.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-gray-900 text-sm">{currentUser.name}</p>
+            <p className="text-xs text-gray-600">{currentUser.email}</p>
+          </div>
+          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
+        </div>
+        
         <div className="flex space-x-6">
           {menuItems.map((category) => (
             <DropdownMenu key={category.category}>
