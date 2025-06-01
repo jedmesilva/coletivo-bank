@@ -19,10 +19,10 @@ const BottomNavigation: React.FC = () => {
       <div className="bg-white border-t border-gray-200 px-4 shadow-lg">
         <div className="flex justify-between items-center max-w-md mx-auto h-16">
           <button 
-            className={`flex flex-col items-center p-3 relative transition-all ${
+            className={`flex flex-col items-center p-3 relative transition-all duration-200 ${
               location.pathname === '/' 
-                ? 'text-primary font-semibold after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-6 after:h-0.5 after:bg-primary after:rounded-full' 
-                : 'text-gray-600'
+                ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg font-semibold' 
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-2xl'
             }`}
             onClick={() => navigate('/')}
           >
@@ -41,18 +41,20 @@ const BottomNavigation: React.FC = () => {
           </div>
 
           <button 
-            className={`flex flex-col items-center p-3 relative transition-all ${
+            className={`flex flex-col items-center p-3 relative transition-all duration-200 ${
               location.pathname === '/account' 
-                ? 'text-primary font-semibold after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-6 after:h-0.5 after:bg-primary after:rounded-full'
-                : 'text-gray-600'
+                ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg font-semibold'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-2xl'
             }`}
             onClick={() => navigate('/account')}
           >
             <Avatar className={`w-8 h-8 border-2 transition-colors ${
-              location.pathname === '/account' ? 'border-primary' : 'border-gray-100'
+              location.pathname === '/account' ? 'border-white' : 'border-gray-200'
             }`}>
               <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
-              <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback className={`text-sm font-semibold ${
+                location.pathname === '/account' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+              }`}>{currentUser.name.charAt(0)}</AvatarFallback>
             </Avatar>
           </button>
         </div>
