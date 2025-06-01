@@ -22,7 +22,8 @@ const Index: React.FC = () => {
     funds, 
     getTotalBalance,
     getTotalMembers,
-    setIsFundCreationOpen
+    setIsFundCreationOpen,
+    handleDepositClick
   } = useApp();
   
   // Estado para controlar a abertura/fechamento do menu lateral
@@ -202,7 +203,10 @@ const Index: React.FC = () => {
 
           {/* Bottom Action */}
           <div className="pb-28">
-            <button className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.02] flex items-center justify-center gap-2">
+            <button 
+              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.02] flex items-center justify-center gap-2"
+              onClick={() => handleDepositClick()}
+            >
               <ArrowUp size={20} />
               Fazer Aporte
             </button>

@@ -192,8 +192,9 @@ const AccountPage: React.FC = () => {
         </SheetContent>
       </Sheet>
 
-      <div className="max-w-md mx-auto p-4 pb-28">
-        <div className="fade-in">
+      {/* Seção de Conteúdo - Fundo Branco */}
+      <div className="bg-white min-h-screen">
+        <div className="max-w-md mx-auto px-4 pt-8 pb-28">
           {/* Tabs */}
           <TabNavigation 
             tabs={tabs}
@@ -202,17 +203,17 @@ const AccountPage: React.FC = () => {
           />
 
           {/* Tab Content */}
-          <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm mt-4">
+          <div>
             {/* Debts Tab */}
             {accountTab === 'debts' && (
               <div>
                 {userDebts.length > 0 ? (
                   userDebts.map((debt) => (
-                    <div key={debt.id} className="py-4 border-b border-gray-100 last:border-0">
-                      <div className="flex justify-between">
+                    <div key={debt.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-lg mb-4">
+                      <div className="flex justify-between items-start mb-3">
                         <div>
-                          <p className="font-semibold">{debt.description}</p>
-                          <p className="text-gray-500 text-sm">{debt.fundName}</p>
+                          <p className="font-semibold text-gray-900">{debt.description}</p>
+                          <p className="text-gray-600 text-sm">{debt.fundName}</p>
                           <p className="text-gray-500 text-sm">Vencimento: {debt.dueDate}</p>
                         </div>
                         <p className="font-bold text-red-500">
@@ -220,7 +221,7 @@ const AccountPage: React.FC = () => {
                         </p>
                       </div>
                       <button 
-                        className="mt-3 bg-primary text-white px-4 py-2.5 sm:py-3 rounded-lg w-full flex items-center justify-center hover:bg-primary/90 transition-colors text-sm sm:text-base"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2.5 rounded-2xl w-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-sm"
                         onClick={() => {
                           setSelectedDebtId(debt.id);
                           setIsDebtPaymentOpen(true);
@@ -241,11 +242,11 @@ const AccountPage: React.FC = () => {
             {accountTab === 'movements' && (
               <div>
                 {userMovements.map((movement) => (
-                  <div key={movement.id} className="py-3 border-b border-gray-100 last:border-0">
-                    <div className="flex justify-between">
+                  <div key={movement.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-lg mb-4">
+                    <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-semibold">{movement.description}</p>
-                        <p className="text-gray-500 text-sm">{movement.fundName}</p>
+                        <p className="font-semibold text-gray-900">{movement.description}</p>
+                        <p className="text-gray-600 text-sm">{movement.fundName}</p>
                         <p className="text-gray-500 text-sm">{movement.date}</p>
                       </div>
                       <p className={`font-bold ${
@@ -266,25 +267,25 @@ const AccountPage: React.FC = () => {
               <div>
                 {userApprovals.length > 0 ? (
                   userApprovals.map((approval) => (
-                    <div key={approval.id} className="py-3 border-b border-gray-100 last:border-0">
-                      <div className="flex justify-between mb-2">
+                    <div key={approval.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-lg mb-4">
+                      <div className="flex justify-between items-start mb-3">
                         <div>
-                          <p className="font-semibold">{approval.description}</p>
-                          <p className="text-gray-500 text-sm">{approval.fundName}</p>
+                          <p className="font-semibold text-gray-900">{approval.description}</p>
+                          <p className="text-gray-600 text-sm">{approval.fundName}</p>
                           <p className="text-gray-500 text-sm">{approval.date}</p>
                         </div>
                         {approval.value && (
-                          <p className="font-bold">
+                          <p className="font-bold text-gray-900">
                             {formatCurrency(approval.value, hideValues)}
                           </p>
                         )}
                       </div>
                       <div className="flex space-x-2">
-                        <button className="flex-1 bg-green-500 text-white px-3 py-2.5 sm:py-3 rounded-lg flex items-center justify-center hover:bg-green-600 transition-colors text-sm sm:text-base">
+                        <button className="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2.5 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-sm">
                           <Check className="mr-2" size={16} />
                           Aprovar
                         </button>
-                        <button className="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors">
+                        <button className="flex-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2.5 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-sm">
                           <X className="mr-2" size={16} />
                           Recusar
                         </button>

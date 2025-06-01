@@ -9,8 +9,10 @@ interface TabProps {
 
 const Tab: React.FC<TabProps> = ({ label, isActive, onClick }) => (
   <button 
-    className={`px-4 py-2 ${
-      isActive ? 'border-b-2 border-primary font-bold' : 'text-gray-600'
+    className={`px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-200 ${
+      isActive 
+        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
     }`}
     onClick={onClick}
   >
@@ -30,7 +32,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   onTabChange,
 }) => {
   return (
-    <div className="flex border-b border-gray-300 mb-4 w-full">
+    <div className="flex gap-2 mb-6 w-full bg-gray-100 p-1 rounded-2xl">
       {tabs.map(tab => (
         <Tab
           key={tab.id}
