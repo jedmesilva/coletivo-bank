@@ -1,12 +1,15 @@
 
-import React from 'react';
-import { CreditCard, Check, X, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { CreditCard, Check, X, User, Menu, Bell } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import TabNavigation from '@/components/TabNavigation';
 import { formatCurrency } from '@/utils/formatCurrency';
 import BottomNavigation from '@/components/BottomNavigation';
+import TopNavbar from '@/components/TopNavbar';
+import HeaderSection from '@/components/HeaderSection';
+import MainMenu from '@/components/MainMenu';
 
 const AccountPage: React.FC = () => {
   const { 
@@ -23,6 +26,9 @@ const AccountPage: React.FC = () => {
     handleDebtPaymentClick
   } = useApp();
 
+  // Estado para controlar a abertura/fechamento do menu lateral
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const tabs = [
     { id: 'approvals', label: 'Aprovações' },
     { id: 'debts', label: 'Dívidas' },
@@ -35,32 +41,43 @@ const AccountPage: React.FC = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans w-full overflow-x-hidden">
-      {/* Navbar */}
-      <div className="w-full max-w-md mx-auto px-4 py-4">
-        <div className="flex items-center gap-3">
-          <Avatar className="w-10 h-10 border-2 border-gray-100">
-            <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
-            <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <h2 className="font-semibold">{currentUser.name}</h2>
-            <p className="text-sm text-gray-500">@{currentUser.username}</p>
+      {/* Top Navbar Transparente */}
+      <TopNavbar 
+        onMenuClick={() => setIsMenuOpen(true)}
+        onNotificationClick={() => console.log('Notificações')}
+      />
+
+      {/* Header Section com cor de destaque */}
+      <HeaderSection>
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Avatar className="w-12 h-12 border-2 border-white/20">
+              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
+              <AvatarFallback className="bg-white/20 text-white">{currentUser.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div>
+              <h2 className="font-semibold text-white text-lg">{currentUser.name}</h2>
+              <p className="text-sm text-white/70">Minha conta</p>
+            </div>
           </div>
         </div>
-      </div>
+        
+        {/* Account Summary Card dentro do header */}
+        <SummaryCard 
+          title="Meus Aportes" 
+          balance={getTotalUserDeposits()}
+          leftLabel="Fundos ativos"
+          leftValue={2}
+          rightLabel="Dívidas ativas"
+          rightValue={userDebts.length}
+        />
+      </HeaderSection>
 
-      <div className="w-full max-w-md mx-auto pb-20 px-4">
+      {/* Menu Sheet */}
+      <MainMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+
+      <div className="max-w-md mx-auto p-4 pb-28">
         <div className="fade-in">
-          {/* Account Summary Card */}
-          <SummaryCard 
-            title="Meus Aportes" 
-            balance={getTotalUserDeposits()}
-            leftLabel="Fundos ativos"
-            leftValue={2}
-            rightLabel="Dívidas ativas"
-            rightValue={userDebts.length}
-          />
-
           {/* Tabs */}
           <TabNavigation 
             tabs={tabs}
