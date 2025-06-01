@@ -32,11 +32,11 @@ const BottomNavigation: React.FC = () => {
           {/* Center deposit button */}
           <div className="flex items-center h-full">
             <button 
-              className="bg-primary text-white px-6 py-3 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] gap-2"
               onClick={() => handleDepositClick()}
             >
               <IconScroller />
-              <span className="font-medium">Fazer Aporte</span>
+              <span className="font-semibold">Fazer Aporte</span>
             </button>
           </div>
 
