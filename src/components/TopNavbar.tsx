@@ -45,7 +45,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick,
             <Bell size={20} className="text-white group-hover:scale-110 transition-transform" />
           </button>
           {notificationCount > 0 && (
-            <div className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center px-1 shadow-lg animate-pulse">
+            <div className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center px-1 shadow-lg">
               <span className="text-white text-xs font-bold leading-none">
                 {notificationCount > 99 ? '99+' : notificationCount}
               </span>
