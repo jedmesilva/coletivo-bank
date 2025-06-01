@@ -41,7 +41,7 @@ const Index: React.FC = () => {
       />
 
       {/* Header Section com cor de destaque */}
-      <HeaderSection className="pt-28">
+      <HeaderSection className="pt-20">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-white">Olá, <span className="text-white/90">Lucas</span>!</h1>
           <p className="text-sm text-white/70 mt-1">Bem-vindo ao Coletivo Bank</p>
