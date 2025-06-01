@@ -90,32 +90,34 @@ const FundDetail: React.FC = () => {
         />
       </HeaderSection>
 
-      <div className="max-w-md mx-auto p-4 pb-28 fade-in">
+      {/* Seção de Conteúdo - Fundo Branco */}
+      <div className="bg-white min-h-screen">
+        <div className="max-w-md mx-auto px-4 pt-8 pb-28">
 
-        {/* Action Buttons */}
-        <div className="flex justify-between mb-6">
-          <button 
-            className="bg-primary text-white px-4 py-3 rounded-xl flex flex-col items-center flex-1 mr-2 shadow-sm hover:bg-primary/90 transition-colors"
-            onClick={() => handleDepositClick(selectedFund.id)}
-          >
-            <ArrowUp size={20} className="mb-1" />
-            <span className="font-medium">Aportar capital</span>
-          </button>
-          <button 
-            className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 mx-2 shadow-sm hover:bg-gray-50 transition-colors"
-            onClick={() => handleCapitalRequestClick(selectedFund.id)}
-          >
-            <ArrowDownCircle size={20} className="mb-1" />
-            <span className="font-medium">Solicitar capital</span>
-          </button>
-          <button 
-            className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 ml-2 shadow-sm hover:bg-gray-50 transition-colors"
-            onClick={() => handleDebtPaymentClick(selectedFund.id)}
-          >
-            <CreditCard size={20} className="mb-1" />
-            <span className="font-medium">Pagar dívida</span>
-          </button>
-        </div>
+          {/* Action Buttons */}
+          <div className="flex justify-between mb-6">
+            <button 
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-xl flex flex-col items-center flex-1 mr-2 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+              onClick={() => handleDepositClick(selectedFund.id)}
+            >
+              <ArrowUp size={20} className="mb-1" />
+              <span className="font-medium">Aportar capital</span>
+            </button>
+            <button 
+              className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 mx-2 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+              onClick={() => handleCapitalRequestClick(selectedFund.id)}
+            >
+              <ArrowDownCircle size={20} className="mb-1" />
+              <span className="font-medium">Solicitar capital</span>
+            </button>
+            <button 
+              className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 ml-2 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+              onClick={() => handleDebtPaymentClick(selectedFund.id)}
+            >
+              <CreditCard size={20} className="mb-1" />
+              <span className="font-medium">Pagar dívida</span>
+            </button>
+          </div>
 
         {/* Tabs */}
         <TabNavigation
@@ -210,6 +212,7 @@ const FundDetail: React.FC = () => {
               ))}
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>
