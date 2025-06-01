@@ -58,7 +58,7 @@ const AccountPage: React.FC = () => {
       />
 
       {/* Header Section com cor de destaque */}
-      <HeaderSection className="pt-20">
+      <HeaderSection className="pt-28">
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-4">
             <Avatar className="w-12 h-12 border-2 border-white/20">

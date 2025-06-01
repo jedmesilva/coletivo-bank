@@ -63,7 +63,7 @@ const FundDetail: React.FC = () => {
       />
 
       {/* Header Section */}
-      <HeaderSection className="pt-20">
+      <HeaderSection className="pt-28">
         <div className="mb-6">
           {/* Fund info header */}
           <div className="flex items-center mb-6">
