@@ -7,7 +7,7 @@ interface HeaderSectionProps {
 
 const HeaderSection: React.FC<HeaderSectionProps> = ({ children, className = '' }) => {
   return (
-    <div className={`bg-primary pt-32 pb-6 px-4 safe-area-pt ${className}`}>
+    <div className={`bg-primary pt-24 pb-6 px-4 safe-area-pt ${className}`}>
       <div className="max-w-md mx-auto">
         {children}
       </div>
