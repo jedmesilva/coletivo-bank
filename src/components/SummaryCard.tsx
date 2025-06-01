@@ -30,7 +30,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   const isPositiveGrowth = growthValue >= 0;
   
   return (
-    <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 sm:p-6 mb-4 shadow-sm border border-primary/20 w-full">
+    <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 sm:p-6 mb-4 shadow-lg border border-white/30 w-full">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           <h2 className="text-xl font-bold">{title}</h2>
