@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, Bell } from 'lucide-react';
 import { useScrollDirection } from '../hooks/useScrollDirection';
 
@@ -9,10 +9,24 @@ interface TopNavbarProps {
 
 const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick }) => {
   const scrollDirection = useScrollDirection();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   return (
-    <div className={`fixed top-0 left-0 right-0 z-50 bg-transparent safe-area-pt transition-transform duration-300 ease-in-out ${
+    <div className={`fixed top-0 left-0 right-0 z-50 safe-area-pt transition-all duration-300 ease-in-out ${
       scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
+    } ${
+      isScrolled 
+        ? 'bg-white/10 backdrop-blur-md border-b border-white/20' 
+        : 'bg-primary'
     }`}>
       <div className="max-w-md mx-auto px-4 py-2 flex justify-between items-center">
         <button 
