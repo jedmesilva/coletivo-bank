@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { Eye, EyeOff, TrendingUp, TrendingDown } from 'lucide-react';
+import { Eye, EyeOff, TrendingUp, TrendingDown, Wallet, Users } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { formatCurrency, formatPercentage } from '@/utils/formatCurrency';
-import { Badge } from './ui/badge';
 
 interface SummaryCardProps {
   title: string;
@@ -30,56 +29,69 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   const isPositiveGrowth = growthValue >= 0;
   
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 sm:p-6 mb-4 shadow-lg w-full">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center">
-          <h2 className="text-xl font-bold text-white">{title}</h2>
-          {showGrowth && (
-            <Badge 
-              variant="outline" 
-              className={`${isPositiveGrowth ? 'text-green-200 bg-green-900/30 border-green-400/50' : 'text-red-200 bg-red-900/30 border-red-400/50'} 
-                         flex items-center px-2 py-0.5 ml-3 text-xs font-medium`}
-            >
-              {isPositiveGrowth ? (
-                <TrendingUp className="mr-1" size={14} />
-              ) : (
-                <TrendingDown className="mr-1" size={14} />
-              )}
-              {hideValues ? "***%" : formatPercentage(growthValue, hideValues)}
-            </Badge>
-          )}
+    <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-3xl p-6 border border-white/10 shadow-2xl">
+      {/* Header do Card */}
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h2 className="text-lg font-semibold text-white/90 mb-1">{title}</h2>
+          <div className="w-12 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
         </div>
         <button 
-          className="p-1.5 text-white/70 hover:text-white transition-colors rounded-full hover:bg-white/10" 
           onClick={() => setHideValues(!hideValues)}
-          aria-label={hideValues ? "Mostrar valores" : "Ocultar valores"}
+          className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 flex items-center justify-center group"
         >
-          {hideValues ? <EyeOff size={20} /> : <Eye size={20} />}
+          {hideValues ? 
+            <EyeOff size={18} className="text-white/70 group-hover:text-white group-hover:scale-110 transition-all" /> : 
+            <Eye size={18} className="text-white/70 group-hover:text-white group-hover:scale-110 transition-all" />
+          }
         </button>
       </div>
-      
-      <div className="mb-6">
-        <p className="text-4xl font-bold text-white">
-          {formatCurrency(balance, hideValues)}
-        </p>
+
+      {/* Valor Principal */}
+      <div className="mb-8">
+        <div className="flex items-baseline gap-2 mb-2">
+          <span className="text-2xl font-bold text-white">
+            {formatCurrency(balance, hideValues)}
+          </span>
+          {showGrowth && (
+            <div className="flex items-center gap-1 px-2 py-1 bg-green-500/20 rounded-full">
+              <TrendingUp size={12} className="text-green-400" />
+              <span className="text-xs font-semibold text-green-400">
+                {hideValues ? "***%" : formatPercentage(growthValue, hideValues)}
+              </span>
+            </div>
+          )}
+        </div>
+        <p className="text-sm text-white/60">Saldo total disponível</p>
       </div>
-      
-      <div className="flex justify-between border-t border-white/20 pt-4">
+
+      {/* Estatísticas */}
+      <div className="grid grid-cols-2 gap-4">
         {(leftLabel && leftValue !== undefined) && (
-          <div>
-            <p className="text-lg font-bold flex items-center gap-2 text-white">
-              <span>{leftValue}</span>
-              <span className="text-xs text-white/70 uppercase font-medium tracking-wide">{leftLabel}</span>
-            </p>
+          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl p-4 border border-blue-500/20">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                <Wallet size={16} className="text-blue-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{leftValue}</p>
+                <p className="text-xs text-white/60 uppercase tracking-wide">{leftLabel}</p>
+              </div>
+            </div>
           </div>
         )}
-        
-        {(!showGrowth && rightLabel && rightValue !== undefined) && (
-          <div className="text-right">
-            <p className="text-lg font-bold flex items-center gap-2 justify-end text-white">
-              <span>{rightValue}</span>
-              <span className="text-xs text-white/70 uppercase font-medium tracking-wide">{rightLabel}</span>
-            </p>
+
+        {(rightLabel && rightValue !== undefined) && (
+          <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 rounded-2xl p-4 border border-green-500/20">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                <Users size={16} className="text-green-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{rightValue}</p>
+                <p className="text-xs text-white/60 uppercase tracking-wide">{rightLabel}</p>
+              </div>
+            </div>
           </div>
         )}
       </div>
