@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import FundCard from '@/components/FundCard';
+import TopNavbar from '@/components/TopNavbar';
+import HeaderSection from '@/components/HeaderSection';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -32,133 +34,20 @@ const Index: React.FC = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
-      <div className="max-w-md mx-auto p-4 pb-28">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold">Olá, <span className="text-primary">Lucas</span>!</h1>
-            <p className="text-sm text-gray-500 mt-1">Bem-vindo ao Coletivo Bank</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => console.log('Notificações')}>
-              <Bell className="h-6 w-6" />
-            </Button>
-            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-              <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(true)}>
-                <Menu className="h-6 w-6" />
-              </Button>
-              <SheetContent side="left" className="w-[280px] p-0">
-                <SheetHeader className="p-4 border-b">
-                  <div className="flex justify-between items-center">
-                    <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
-                  </div>
-                </SheetHeader>
-                <div className="overflow-y-auto h-full py-2">
-                  {/* Menu Principal */}
-                  <div className="px-2 py-3">
-                    <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                      Menu Principal
-                    </h3>
-                    <SheetClose asChild>
-                      <Button
-                        variant="ghost"
-                        onClick={() => navigate('/')}
-                        className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                      >
-                        <Home className="w-5 h-5" />
-                        <span>Página Inicial</span>
-                      </Button>
-                    </SheetClose>
-                    <Separator className="my-2 mx-3" />
-                  </div>
-                  
-                  {/* Dados Pessoais */}
-                  <div className="px-2 py-3">
-                    <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                      Dados Pessoais
-                    </h3>
-                    <SheetClose asChild>
-                      <Button
-                        variant="ghost"
-                        onClick={() => navigate('/account')}
-                        className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                      >
-                        <User className="w-5 h-5" />
-                        <span>Meu Perfil</span>
-                      </Button>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                      >
-                        <MapPin className="w-5 h-5" />
-                        <span>Endereço</span>
-                      </Button>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                      >
-                        <CreditCard className="w-5 h-5" />
-                        <span>Dados Bancários</span>
-                      </Button>
-                    </SheetClose>
-                    <Separator className="my-2 mx-3" />
-                  </div>
-                  
-                  {/* Configurações */}
-                  <div className="px-2 py-3">
-                    <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                      Configurações
-                    </h3>
-                    <SheetClose asChild>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                      >
-                        <Bell className="w-5 h-5" />
-                        <span>Notificações</span>
-                      </Button>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                      >
-                        <Lock className="w-5 h-5" />
-                        <span>Privacidade</span>
-                      </Button>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                      >
-                        <Shield className="w-5 h-5" />
-                        <span>Segurança</span>
-                      </Button>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                      >
-                        <Palette className="w-5 h-5" />
-                        <span>Tema</span>
-                      </Button>
-                    </SheetClose>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-            
-            
-          </div>
-        </div>
+      {/* Top Navbar Transparente */}
+      <TopNavbar 
+        onMenuClick={() => setIsMenuOpen(true)}
+        onNotificationClick={() => console.log('Notificações')}
+      />
 
-        {/* Summary Card */}
+      {/* Header Section com cor de destaque */}
+      <HeaderSection>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-white">Olá, <span className="text-white/90">Lucas</span>!</h1>
+          <p className="text-sm text-white/70 mt-1">Bem-vindo ao Coletivo Bank</p>
+        </div>
+        
+        {/* Summary Card dentro do header */}
         <SummaryCard
           title="Resumo"
           balance={getTotalBalance()}
@@ -167,6 +56,117 @@ const Index: React.FC = () => {
           rightLabel="Membros"
           rightValue={getTotalMembers()}
         />
+      </HeaderSection>
+
+      <div className="max-w-md mx-auto p-4 pb-28">
+        {/* Menu Sheet */}
+        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <SheetContent side="left" className="w-[280px] p-0">
+            <SheetHeader className="p-4 border-b">
+              <div className="flex justify-between items-center">
+                <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
+              </div>
+            </SheetHeader>
+            <div className="overflow-y-auto h-full py-2">
+              {/* Menu Principal */}
+              <div className="px-2 py-3">
+                <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
+                  Menu Principal
+                </h3>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    onClick={() => navigate('/')}
+                    className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
+                  >
+                    <Home className="w-5 h-5" />
+                    <span>Página Inicial</span>
+                  </Button>
+                </SheetClose>
+                <Separator className="my-2 mx-3" />
+              </div>
+              
+              {/* Dados Pessoais */}
+              <div className="px-2 py-3">
+                <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
+                  Dados Pessoais
+                </h3>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    onClick={() => navigate('/account')}
+                    className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
+                  >
+                    <User className="w-5 h-5" />
+                    <span>Meu Perfil</span>
+                  </Button>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
+                  >
+                    <MapPin className="w-5 h-5" />
+                    <span>Endereço</span>
+                  </Button>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
+                  >
+                    <CreditCard className="w-5 h-5" />
+                    <span>Dados Bancários</span>
+                  </Button>
+                </SheetClose>
+                <Separator className="my-2 mx-3" />
+              </div>
+              
+              {/* Configurações */}
+              <div className="px-2 py-3">
+                <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
+                  Configurações
+                </h3>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
+                  >
+                    <Bell className="w-5 h-5" />
+                    <span>Notificações</span>
+                  </Button>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
+                  >
+                    <Lock className="w-5 h-5" />
+                    <span>Privacidade</span>
+                  </Button>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
+                  >
+                    <Shield className="w-5 h-5" />
+                    <span>Segurança</span>
+                  </Button>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
+                  >
+                    <Palette className="w-5 h-5" />
+                    <span>Tema</span>
+                  </Button>
+                </SheetClose>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
 
         {/* Collective Fund Section */}
         <div className="flex justify-between items-center mb-5 mt-8">
