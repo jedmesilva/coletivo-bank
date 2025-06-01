@@ -21,12 +21,12 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick 
   }, []);
   
   return (
-    <div className={`fixed top-0 left-0 right-0 z-50 safe-area-pt transition-all duration-300 ease-in-out ${
+    <div className={`fixed top-0 left-0 right-0 z-50 bg-primary safe-area-pt transition-all duration-300 ease-in-out ${
       scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
     } ${
       isScrolled 
-        ? 'bg-white/10 backdrop-blur-md border-b border-white/20' 
-        : 'bg-primary'
+        ? 'backdrop-blur-md border-b border-white/20' 
+        : ''
     }`}>
       <div className="max-w-md mx-auto px-4 py-2 flex justify-between items-center">
         <button 
