@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowUp, ArrowDownCircle, CreditCard, Check, X } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -6,11 +6,14 @@ import { useApp } from '@/context/AppContext';
 import SummaryCard from './SummaryCard';
 import FundBalanceCard from './FundBalanceCard';
 import TabNavigation from './TabNavigation';
+import TopNavbar from './TopNavbar';
+import HeaderSection from './HeaderSection';
 import { formatCurrency } from '@/utils/formatCurrency';
 
 const FundDetail: React.FC = () => {
   const { fundId } = useParams<{ fundId: string }>();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { 
     funds,
     fundTab, 
@@ -52,18 +55,27 @@ const FundDetail: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans">
-      <div className="max-w-md mx-auto p-4 pb-28 fade-in">
-        {/* Fund info header */}
-        <div className="flex items-center mb-4">
-          <img 
-            src={selectedFund.image} 
-            alt={selectedFund.name} 
-            className="w-16 h-16 rounded-lg object-cover mr-4 shadow-sm"
-          />
-          <div>
-            <h2 className="text-xl font-bold">{selectedFund.name}</h2>
-            <p className="text-gray-600">{selectedFund.description}</p>
+    <div className="bg-gray-50 min-h-screen font-sans w-full overflow-x-hidden">
+      {/* Top Navbar */}
+      <TopNavbar 
+        onMenuClick={() => setIsMenuOpen(true)}
+        onNotificationClick={() => console.log('Notificações')}
+      />
+
+      {/* Header Section */}
+      <HeaderSection>
+        <div className="mb-6">
+          {/* Fund info header */}
+          <div className="flex items-center mb-6">
+            <img 
+              src={selectedFund.image} 
+              alt={selectedFund.name} 
+              className="w-16 h-16 rounded-lg object-cover mr-4 shadow-sm border-2 border-white/20"
+            />
+            <div>
+              <h2 className="text-xl font-bold text-white">{selectedFund.name}</h2>
+              <p className="text-white/70">{selectedFund.description}</p>
+            </div>
           </div>
         </div>
 
@@ -76,6 +88,9 @@ const FundDetail: React.FC = () => {
           showGrowth={true}
           growthValue={selectedFund.growth}
         />
+      </HeaderSection>
+
+      <div className="max-w-md mx-auto p-4 pb-28 fade-in">
 
         {/* Action Buttons */}
         <div className="flex justify-between mb-6">
