@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ArrowUp, ArrowDownCircle, CreditCard, Check, X } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useApp } from '@/context/AppContext';
 import SummaryCard from './SummaryCard';
@@ -8,8 +9,10 @@ import TabNavigation from './TabNavigation';
 import { formatCurrency } from '@/utils/formatCurrency';
 
 const FundDetail: React.FC = () => {
+  const { fundId } = useParams<{ fundId: string }>();
+  const navigate = useNavigate();
   const { 
-    selectedFund, 
+    funds,
     fundTab, 
     setFundTab, 
     hideValues,
@@ -18,7 +21,25 @@ const FundDetail: React.FC = () => {
     handleDebtPaymentClick
   } = useApp();
 
-  if (!selectedFund) return null;
+  const selectedFund = funds.find(fund => fund.id === fundId);
+
+  if (!selectedFund) {
+    return (
+      <div className="bg-gray-50 min-h-screen font-sans">
+        <div className="max-w-md mx-auto p-4">
+          <div className="text-center mt-20">
+            <h2 className="text-xl font-bold mb-4">Fundo não encontrado</h2>
+            <button 
+              onClick={() => navigate('/')}
+              className="bg-primary text-white px-4 py-2 rounded-full"
+            >
+              Voltar para home
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const tabs = [
     { id: 'approvals', label: 'Aprovações' },
@@ -31,7 +52,8 @@ const FundDetail: React.FC = () => {
   };
 
   return (
-    <div className="fade-in">
+    <div className="bg-gray-50 min-h-screen font-sans">
+      <div className="max-w-md mx-auto p-4 pb-28 fade-in">
       {/* Fund info header */}
       <div className="flex items-center mb-4">
         <img 
@@ -181,6 +203,7 @@ const FundDetail: React.FC = () => {
             ))}
           </div>
         )}
+      </div>
       </div>
     </div>
   );

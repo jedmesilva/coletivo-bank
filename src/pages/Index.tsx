@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Home, User, ArrowUp, Menu, Settings, MapPin, CreditCard, Bell, Lock, Shield, Palette, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import FundCard from '@/components/FundCard';
-import BottomNavigation from '@/components/BottomNavigation';
-import FundDetail from '@/components/FundDetail';
-import Account from './AccountPage';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -17,40 +15,21 @@ import {
 import { Separator } from '@/components/ui/separator';
 
 const Index: React.FC = () => {
+  const navigate = useNavigate();
   const { 
     funds, 
-    activeScreen, 
-    handleFundClick,
     getTotalBalance,
     getTotalMembers,
-    setIsFundCreationOpen,
-    setActiveScreen
+    setIsFundCreationOpen
   } = useApp();
   
   // Estado para controlar a abertura/fechamento do menu lateral
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // ACCOUNT SCREEN
-  if (activeScreen === 'account') {
-    return <Account />;
-  }
+  const handleFundClick = (fundId: string) => {
+    navigate(`/fund/${fundId}`);
+  };
 
-  // FUND DETAIL SCREEN
-  if (activeScreen === 'fund-detail') {
-    return (
-      <div className="bg-gray-50 min-h-screen font-sans">
-        <div className="max-w-md mx-auto p-4 pb-28">
-          {/* Removed header as per request */}
-          <div className="h-2"></div>
-
-          <FundDetail />
-        </div>
-        <BottomNavigation />
-      </div>
-    );
-  }
-
-  // HOME SCREEN (MAIN APP SCREEN)
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
       <div className="max-w-md mx-auto p-4 pb-28">
@@ -83,7 +62,7 @@ const Index: React.FC = () => {
                     <SheetClose asChild>
                       <Button
                         variant="ghost"
-                        onClick={() => setActiveScreen('home')}
+                        onClick={() => navigate('/')}
                         className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
                       >
                         <Home className="w-5 h-5" />
@@ -101,7 +80,7 @@ const Index: React.FC = () => {
                     <SheetClose asChild>
                       <Button
                         variant="ghost"
-                        onClick={() => setActiveScreen('account')}
+                        onClick={() => navigate('/account')}
                         className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
                       >
                         <User className="w-5 h-5" />
@@ -215,7 +194,6 @@ const Index: React.FC = () => {
           />
         ))}
       </div>
-      <BottomNavigation />
     </div>
   );
 };
