@@ -28,17 +28,17 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick 
         ? 'backdrop-blur-md border-b border-white/20' 
         : ''
     }`}>
-      <div className="max-w-md mx-auto px-4 py-2 flex justify-between items-center">
+      <div className="max-w-md mx-auto px-4 py-3 flex justify-between items-center min-h-[56px]">
         <button 
           onClick={onMenuClick}
-          className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors"
+          className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors flex items-center justify-center"
         >
           <Menu size={20} className="text-white" />
         </button>
         
         <button 
           onClick={onNotificationClick}
-          className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors relative"
+          className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors relative flex items-center justify-center"
         >
           <Bell size={20} className="text-white" />
           {/* Badge de notificação (opcional) */}
