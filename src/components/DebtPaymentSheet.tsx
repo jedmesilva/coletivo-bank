@@ -229,7 +229,7 @@ const DebtPaymentSheet = () => {
                         </div>
                       </div>
 
-                      <Button className="w-full">
+                      <Button className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200">
                         Baixar boleto em PDF
                       </Button>
                     </div>
