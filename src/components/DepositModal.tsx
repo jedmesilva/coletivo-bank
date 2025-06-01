@@ -220,7 +220,7 @@ const DepositModal: React.FC = () => {
             {step === 'select-fund' ? (
               <Button 
                 variant="outline" 
-                className="w-full h-12 font-medium" 
+                className="w-full h-12 font-medium rounded-2xl border-gray-300 hover:bg-gray-50 transition-all duration-200" 
                 onClick={handleClose}
               >
                 Cancelar
@@ -229,13 +229,13 @@ const DepositModal: React.FC = () => {
               <div className="space-y-3">
                 <Button 
                   onClick={handleDeposit} 
-                  className="w-full h-12 text-base font-medium"
+                  className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   Concluir aporte
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="w-full h-12" 
+                  className="w-full h-12 rounded-2xl border-gray-300 hover:bg-gray-50 transition-all duration-200" 
                   onClick={handleClose}
                 >
                   Cancelar

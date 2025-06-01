@@ -450,13 +450,14 @@ const CapitalRequestSheet = () => {
               <div className="flex flex-col space-y-3">
                 <Button 
                   onClick={form.handleSubmit(onSubmit)}
-                  className="h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                  className="h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   Enviar solicitação
                 </Button>
                 <Button 
                   type="button" 
                   variant="outline" 
+                  className="h-12 rounded-2xl border-gray-300 hover:bg-gray-50 transition-all duration-200"
                   onClick={handleCancel}
                 >
                   Cancelar
