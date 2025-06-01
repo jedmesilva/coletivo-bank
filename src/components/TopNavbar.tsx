@@ -9,7 +9,7 @@ interface TopNavbarProps {
 const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick }) => {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-transparent safe-area-pt">
-      <div className="max-w-md mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="max-w-md mx-auto px-4 py-2 flex justify-between items-center">
         <button 
           onClick={onMenuClick}
           className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors"
