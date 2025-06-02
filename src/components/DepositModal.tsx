@@ -156,10 +156,10 @@ const DepositModal: React.FC = () => {
     <Sheet open={isDepositModalOpen} onOpenChange={setIsDepositModalOpen}>
       <SheetContent 
         side="bottom"
-        className="p-0 h-[100dvh] overflow-hidden flex flex-col max-w-full"
+        className="p-0 h-[100dvh] flex flex-col max-w-full"
         aria-describedby="deposit-modal-description"
       >
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto overscroll-contain">
           {/* Header */}
           <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
             <div className="px-4 flex items-center mb-4">
@@ -205,7 +205,7 @@ const DepositModal: React.FC = () => {
             </div>
           </header>
 
-          <div className="p-4 pb-40">
+          <div className="p-4 pb-48">
             {step === 'select-fund' && (
               <div className="space-y-4">
                 {funds.map((fund) => (
