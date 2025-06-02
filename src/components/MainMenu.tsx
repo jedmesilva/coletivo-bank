@@ -66,9 +66,9 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
           
           {/* Profile Section */}
           <div className="flex items-center gap-4">
-            <Avatar className="w-12 h-12 border-2 border-white/20 shadow-lg">
-              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+            <Avatar className="w-12 h-12 border-2 border-white/20 shadow-lg rounded-2xl">
+              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover rounded-2xl" />
+              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold rounded-2xl">
                 {currentUser.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
