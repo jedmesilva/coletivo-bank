@@ -1,27 +1,15 @@
-
 import React, { useState } from 'react';
-import { CreditCard, Check, X, User, Menu, Bell, Home, MapPin, Lock, Shield, Palette } from 'lucide-react';
+import { CreditCard, Check, X, User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import TabNavigation from '@/components/TabNavigation';
 import { formatCurrency } from '@/utils/formatCurrency';
-import BottomNavigation from '@/components/BottomNavigation';
 import TopNavbar from '@/components/TopNavbar';
 import HeaderSection from '@/components/HeaderSection';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetClose
-} from '@/components/ui/sheet';
-import { Separator } from '@/components/ui/separator';
+import SidebarMenu from '@/components/MainMenu';
 
 const AccountPage: React.FC = () => {
-  const navigate = useNavigate();
   const { 
     currentUser,
     userDebts, 
@@ -51,10 +39,11 @@ const AccountPage: React.FC = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans w-full overflow-x-hidden">
-      {/* Top Navbar Transparente */}
+      {/* Top Navbar */}
       <TopNavbar 
         onMenuClick={() => setIsMenuOpen(true)}
         onNotificationClick={() => console.log('Notificações')}
+        notificationCount={3}
       />
 
       {/* Header Section com cor de destaque */}
@@ -83,118 +72,16 @@ const AccountPage: React.FC = () => {
         />
       </HeaderSection>
 
-      {/* Menu Sheet */}
-      <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-        <SheetContent side="left" className="w-[280px] p-0">
-          <SheetHeader className="p-4 border-b">
-            <div className="flex justify-between items-center">
-              <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
-            </div>
-          </SheetHeader>
-          <div className="overflow-y-auto h-full py-2">
-            {/* Menu Principal */}
-            <div className="px-2 py-3">
-              <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                Menu Principal
-              </h3>
-              <SheetClose asChild>
-                <Button
-                  variant="ghost"
-                  onClick={() => navigate('/')}
-                  className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                >
-                  <Home className="w-5 h-5" />
-                  <span>Página Inicial</span>
-                </Button>
-              </SheetClose>
-              <Separator className="my-2 mx-3" />
-            </div>
-            
-            {/* Dados Pessoais */}
-            <div className="px-2 py-3">
-              <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                Dados Pessoais
-              </h3>
-              <SheetClose asChild>
-                <Button
-                  variant="ghost"
-                  onClick={() => navigate('/account')}
-                  className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                >
-                  <User className="w-5 h-5" />
-                  <span>Meu Perfil</span>
-                </Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                >
-                  <MapPin className="w-5 h-5" />
-                  <span>Endereço</span>
-                </Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                >
-                  <CreditCard className="w-5 h-5" />
-                  <span>Dados Bancários</span>
-                </Button>
-              </SheetClose>
-              <Separator className="my-2 mx-3" />
-            </div>
-            
-            {/* Configurações */}
-            <div className="px-2 py-3">
-              <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                Configurações
-              </h3>
-              <SheetClose asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                >
-                  <Bell className="w-5 h-5" />
-                  <span>Notificações</span>
-                </Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                >
-                  <Lock className="w-5 h-5" />
-                  <span>Privacidade</span>
-                </Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                >
-                  <Shield className="w-5 h-5" />
-                  <span>Segurança</span>
-                </Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                >
-                  <Palette className="w-5 h-5" />
-                  <span>Tema</span>
-                </Button>
-              </SheetClose>
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
-
       {/* Seção de Conteúdo - Fundo Branco */}
       <div className="bg-white min-h-screen">
         <div className="max-w-md mx-auto px-4 pt-8 pb-28">
+          
+          {/* Menu Lateral */}
+          <SidebarMenu 
+            isMenuOpen={isMenuOpen} 
+            toggleMenu={() => setIsMenuOpen(false)} 
+          />
+          
           {/* Tabs */}
           <TabNavigation 
             tabs={tabs}
@@ -227,13 +114,15 @@ const AccountPage: React.FC = () => {
                           setIsDebtPaymentOpen(true);
                         }}
                       >
-                        <CreditCard className="mr-2" size={16} />
-                        Pagar
+                        <CreditCard size={16} className="mr-2" />
+                        Pagar dívida
                       </button>
                     </div>
                   ))
                 ) : (
-                  <p className="text-center py-4 text-gray-500">Você não tem dívidas ativas</p>
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">Nenhuma dívida ativa</p>
+                  </div>
                 )}
               </div>
             )}
@@ -242,19 +131,15 @@ const AccountPage: React.FC = () => {
             {accountTab === 'movements' && (
               <div>
                 {userMovements.map((movement) => (
-                  <div key={movement.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-lg mb-4">
+                  <div key={movement.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 mb-4">
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-semibold text-gray-900">{movement.description}</p>
                         <p className="text-gray-600 text-sm">{movement.fundName}</p>
                         <p className="text-gray-500 text-sm">{movement.date}</p>
                       </div>
-                      <p className={`font-bold ${
-                        movement.type === 'deposit' ? 'text-green-500' : 
-                        movement.type === 'debt-payment' ? 'text-blue-500' : 'text-red-500'
-                      }`}>
-                        {movement.type === 'deposit' ? '+' : movement.type === 'debt-payment' ? '' : '-'}
-                        {formatCurrency(Math.abs(movement.value), hideValues)}
+                      <p className={`font-bold ${movement.type === 'deposit' ? 'text-green-500' : 'text-red-500'}`}>
+                        {movement.type === 'deposit' ? '+' : '-'}{formatCurrency(movement.value, hideValues)}
                       </p>
                     </div>
                   </div>
@@ -267,40 +152,53 @@ const AccountPage: React.FC = () => {
               <div>
                 {userApprovals.length > 0 ? (
                   userApprovals.map((approval) => (
-                    <div key={approval.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-lg mb-4">
+                    <div key={approval.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 mb-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <p className="font-semibold text-gray-900">{approval.description}</p>
                           <p className="text-gray-600 text-sm">{approval.fundName}</p>
                           <p className="text-gray-500 text-sm">{approval.date}</p>
                         </div>
-                        {approval.value && (
-                          <p className="font-bold text-gray-900">
-                            {formatCurrency(approval.value, hideValues)}
-                          </p>
-                        )}
+                        <div className="text-right">
+                          {approval.value && (
+                            <p className="font-bold text-gray-900 mb-1">
+                              {formatCurrency(approval.value, hideValues)}
+                            </p>
+                          )}
+                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                            approval.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                            approval.status === 'approved' ? 'bg-green-100 text-green-700' :
+                            'bg-red-100 text-red-700'
+                          }`}>
+                            {approval.status === 'pending' ? 'Pendente' :
+                             approval.status === 'approved' ? 'Aprovado' : 'Rejeitado'}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex space-x-2">
-                        <button className="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2.5 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-sm">
-                          <Check className="mr-2" size={16} />
-                          Aprovar
-                        </button>
-                        <button className="flex-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2.5 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-sm">
-                          <X className="mr-2" size={16} />
-                          Recusar
-                        </button>
-                      </div>
+                      {approval.status === 'pending' && (
+                        <div className="flex gap-2">
+                          <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg flex items-center justify-center flex-1 text-sm">
+                            <Check size={16} className="mr-1" />
+                            Aprovar
+                          </button>
+                          <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg flex items-center justify-center flex-1 text-sm">
+                            <X size={16} className="mr-1" />
+                            Rejeitar
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ))
                 ) : (
-                  <p className="text-center py-4 text-gray-500">Nenhuma aprovação pendente</p>
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">Nenhuma aprovação pendente</p>
+                  </div>
                 )}
               </div>
             )}
           </div>
         </div>
       </div>
-      <BottomNavigation />
     </div>
   );
 };

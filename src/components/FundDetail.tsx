@@ -8,6 +8,7 @@ import FundBalanceCard from './FundBalanceCard';
 import TabNavigation from './TabNavigation';
 import TopNavbar from './TopNavbar';
 import HeaderSection from './HeaderSection';
+import SidebarMenu from './MainMenu';
 import { formatCurrency } from '@/utils/formatCurrency';
 
 const FundDetail: React.FC = () => {
@@ -93,6 +94,12 @@ const FundDetail: React.FC = () => {
       {/* Seção de Conteúdo - Fundo Branco */}
       <div className="bg-white min-h-screen">
         <div className="max-w-md mx-auto px-4 pt-8 pb-28">
+          
+          {/* Menu Lateral */}
+          <SidebarMenu 
+            isMenuOpen={isMenuOpen} 
+            toggleMenu={() => setIsMenuOpen(false)} 
+          />
 
           {/* Action Buttons */}
           <div className="flex justify-between mb-6">
