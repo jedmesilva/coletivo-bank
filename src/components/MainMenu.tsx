@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
 import { X, Home, CreditCard, PieChart, Settings, HelpCircle, LogOut, User, Wallet, Bell } from 'lucide-react';
+import { useApp } from '@/context/AppContext';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMenu: () => void }) => {
+  const { currentUser } = useApp();
   // Prevenir scroll do body quando o menu estiver aberto
   useEffect(() => {
     if (isMenuOpen) {
@@ -63,11 +66,14 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
           
           {/* Profile Section */}
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-              <User size={20} className="text-white" />
-            </div>
+            <Avatar className="w-12 h-12 border-2 border-white/20 shadow-lg">
+              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
+              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                {currentUser.name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
             <div>
-              <h3 className="text-white font-semibold">Lucas</h3>
+              <h3 className="text-white font-semibold">{currentUser.name}</h3>
               <p className="text-blue-200/80 text-sm">Coletivo Bank</p>
             </div>
           </div>
