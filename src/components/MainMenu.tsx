@@ -21,20 +21,10 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
   }, [isMenuOpen]);
   const menuItems = [
     { icon: Home, label: 'Início', active: true },
-    { icon: Wallet, label: 'Meus Fundos', badge: '2' },
-    { icon: CreditCard, label: 'Transações' },
-    { icon: PieChart, label: 'Relatórios' },
+    { icon: User, label: 'Conta' },
     { icon: Bell, label: 'Notificações', badge: '3' },
     { icon: Settings, label: 'Configurações' },
-    { icon: HelpCircle, label: 'Ajuda' },
-    { icon: User, label: 'Perfil' },
-    { icon: CreditCard, label: 'Cartões' },
-    { icon: PieChart, label: 'Investimentos' },
-    { icon: Wallet, label: 'Carteira Digital' },
-    { icon: Settings, label: 'Privacidade' },
-    { icon: Bell, label: 'Alertas' },
     { icon: HelpCircle, label: 'Suporte' },
-    { icon: User, label: 'Conta' },
   ];
 
   return (
