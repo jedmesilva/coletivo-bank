@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Home, ArrowUp, DollarSign } from 'lucide-react';
+import React from 'react';
+import { Home } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import IconScroller from './IconScroller';
 import { useApp } from '@/context/AppContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
 
 const BottomNavigation: React.FC = () => {
   const navigate = useNavigate();
@@ -52,8 +51,8 @@ const BottomNavigation: React.FC = () => {
               location.pathname === '/account' ? 'border-white' : 'border-gray-200'
             }`}>
               <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover rounded-2xl" />
-              <AvatarFallback className={`text-sm font-semibold rounded-2xl ${
-                location.pathname === '/account' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+              <AvatarFallback className={`text-sm font-semibold ${
+                location.pathname === '/account' ? 'bg-white/20 text-white rounded-2xl' : 'bg-gray-100 text-gray-600 rounded-2xl'
               }`}>{currentUser.name.charAt(0)}</AvatarFallback>
             </Avatar>
           </button>
