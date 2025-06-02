@@ -91,14 +91,16 @@ const DebtPaymentSheet = () => {
         className="p-0 h-[100dvh] overflow-hidden flex flex-col max-w-full"
         aria-describedby="debt-payment-description"
       >
-        <div className="flex-1 overflow-y-auto pb-40 h-full">
-          <header className="border-b border-gray-200">
-            <div className="h-10 px-4 flex items-center">
+        {/* Scrollable Content with Header included */}
+        <div className="flex-0 overflow-y-auto pb-0">
+          {/* Header com gradiente seguindo o padrão do app */}
+          <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
+            <div className="px-4 flex items-center mb-4">
               {step === 'payment' && (
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-8 w-8 mr-2" 
+                  className="h-8 w-8 mr-2 text-white hover:bg-white/10" 
                   onClick={() => {
                     setStep('select');
                     setSelectedDebtId(null);
@@ -107,10 +109,12 @@ const DebtPaymentSheet = () => {
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
-              <SheetTitle className="text-xl">Pagar Dívidas</SheetTitle>
+              <SheetTitle className="text-xl text-white font-semibold">
+                {step === 'select' ? 'Pagar dívidas' : 'Escolha o método'}
+              </SheetTitle>
             </div>
-            <div className="px-4 pb-3">
-              <SheetDescription>
+            <div className="px-4">
+              <SheetDescription className="text-white/70">
                 {step === 'select' 
                   ? "Selecione a dívida que deseja pagar" 
                   : "Escolha um método de pagamento"}
@@ -118,151 +122,171 @@ const DebtPaymentSheet = () => {
             </div>
           </header>
 
-          <div className="px-4 pt-4">
-            {step === 'select' && (
-              <div className="space-y-3">
+          {/* Main Content - Com espaçamento consistente */}
+          <div className="p-4">
+            {step === 'select' ? (
+              <div className="space-y-4">
                 {filteredDebts.length > 0 ? (
-                  filteredDebts.map((debt) => (
-                    <div 
-                      key={debt.id}
-                      className="border rounded-lg p-4 cursor-pointer transition-colors hover:bg-gray-50"
-                      onClick={() => handleDebtSelect(debt.id)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium">{debt.description}</p>
-                          <p className="text-sm text-gray-500">{debt.fundName}</p>
+                  <div className="space-y-3">
+                    {filteredDebts.map((debt) => (
+                      <div 
+                        key={debt.id}
+                        className="flex items-center p-4 border border-gray-200 rounded-xl cursor-pointer 
+                                hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm hover:shadow-md"
+                        onClick={() => handleDebtSelect(debt.id)}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-gray-900 truncate">{debt.description}</p>
+                          <p className="text-sm text-gray-600">{debt.fundName}</p>
                           <p className="text-sm text-gray-500">Vencimento: {debt.dueDate}</p>
                         </div>
-                        <p className="font-bold text-lg">{formatCurrency(debt.amount)}</p>
+                        <div className="flex-shrink-0 ml-3">
+                          <p className="font-bold text-lg text-primary">{formatCurrency(debt.amount)}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    ))}
+                  </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
-                    Nenhuma dívida encontrada.
+                    <p>Nenhuma dívida encontrada.</p>
                   </div>
                 )}
               </div>
-            )}
+            ) : (
+              selectedDebt && (
+                <div className="space-y-6">
+                  <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 shadow-sm">
+                    <p className="text-xs text-gray-500 uppercase font-medium tracking-wide mb-1">Resumo do pagamento</p>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm text-gray-600">Total a pagar:</p>
+                        <p className="font-bold text-lg text-primary">{formatCurrency(selectedDebt.amount)}</p>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm text-gray-600">Dívida:</p>
+                        <p className="font-medium text-gray-900">{selectedDebt.description}</p>
+                      </div>
+                    </div>
+                  </div>
 
-            {step === 'payment' && selectedDebt && (
-              <div className="space-y-6">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex justify-between mb-2">
-                    <p className="text-gray-500">Total a pagar:</p>
-                    <p className="font-bold">{formatCurrency(selectedDebt.amount)}</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-gray-500">Dívida:</p>
-                    <p>{selectedDebt.description}</p>
-                  </div>
+                  <Tabs defaultValue="pix" onValueChange={(value) => setPaymentMethod(value as 'pix' | 'boleto')}>
+                    <TabsList className="grid w-full grid-cols-2 rounded-xl">
+                      <TabsTrigger value="pix" className="rounded-lg">PIX</TabsTrigger>
+                      <TabsTrigger value="boleto" className="rounded-lg">Boleto</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="pix" className="mt-4 space-y-4">
+                      <div className="border border-gray-200 rounded-xl p-6 text-center space-y-4 shadow-sm">
+                        <div className="bg-gray-100 mx-auto w-48 h-48 flex items-center justify-center mb-2 rounded-xl">
+                          <div className="border border-gray-400 w-36 h-36 grid grid-cols-5 grid-rows-5 rounded-lg overflow-hidden">
+                            {Array(25).fill(0).map((_, i) => (
+                              <div key={i} className={`${Math.random() > 0.5 ? 'bg-black' : 'bg-white'}`}></div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <p className="text-sm font-semibold text-gray-900">Código PIX</p>
+                          <div className="relative">
+                            <div className="bg-gray-100 rounded-xl p-3 text-xs break-all font-mono border border-gray-200">
+                              {mockPixCode}
+                            </div>
+                            <button 
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/80 rounded-md transition-colors"
+                              onClick={handleCopyCode}
+                            >
+                              {isCopied ? (
+                                <Check className="h-4 w-4 text-green-500" />
+                              ) : (
+                                <Copy className="h-4 w-4 text-gray-500" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-blue-800">
+                        <p className="text-sm leading-relaxed text-center">
+                          Escaneie o QR code ou copie o código acima para pagar pelo seu aplicativo de banco
+                        </p>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="boleto" className="mt-4 space-y-4">
+                      <div className="border border-gray-200 rounded-xl p-6 space-y-4 shadow-sm">
+                        <div className="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+                          <CreditCard className="h-6 w-6 mr-3 text-gray-500" />
+                          <div className="flex-1">
+                            <p className="font-semibold text-gray-900">Boleto Bancário</p>
+                            <p className="text-sm text-gray-600">Vencimento em 3 dias úteis</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <p className="text-sm font-semibold text-gray-900">Código do boleto</p>
+                          <div className="relative">
+                            <div className="bg-gray-100 rounded-xl p-3 text-xs break-all font-mono border border-gray-200">
+                              {mockBoletoCode}
+                            </div>
+                            <button 
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/80 rounded-md transition-colors"
+                              onClick={handleCopyCode}
+                            >
+                              {isCopied ? (
+                                <Check className="h-4 w-4 text-green-500" />
+                              ) : (
+                                <Copy className="h-4 w-4 text-gray-500" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
+                        <Button className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200">
+                          Baixar boleto em PDF
+                        </Button>
+                      </div>
+
+                      <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-blue-800">
+                        <p className="text-sm leading-relaxed text-center">
+                          Você também pode copiar o código e pagar pelo internet banking
+                        </p>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </div>
-
-                <Tabs defaultValue="pix" onValueChange={(value) => setPaymentMethod(value as 'pix' | 'boleto')}>
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="pix">PIX</TabsTrigger>
-                    <TabsTrigger value="boleto">Boleto</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="pix" className="mt-4 space-y-4">
-                    <div className="border rounded-lg p-6 text-center space-y-4">
-                      <div className="bg-gray-100 mx-auto w-48 h-48 flex items-center justify-center mb-2">
-                        <div className="border border-gray-400 w-36 h-36 grid grid-cols-5 grid-rows-5">
-                          {Array(25).fill(0).map((_, i) => (
-                            <div key={i} className={`${Math.random() > 0.5 ? 'bg-black' : 'bg-white'}`}></div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <p className="text-sm text-gray-500">Código PIX</p>
-                        <div className="relative">
-                          <div className="bg-gray-100 rounded-md p-2 text-xs break-all">
-                            {mockPixCode}
-                          </div>
-                          <button 
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                            onClick={handleCopyCode}
-                          >
-                            {isCopied ? (
-                              <Check className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <Copy className="h-4 w-4 text-gray-500" />
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <p className="text-sm text-gray-500 text-center">
-                      Escaneie o QR code ou copie o código acima para pagar pelo seu aplicativo de banco
-                    </p>
-                  </TabsContent>
-
-                  <TabsContent value="boleto" className="mt-4 space-y-4">
-                    <div className="border rounded-lg p-6 space-y-4">
-                      <div className="flex items-center p-4 bg-gray-100 rounded-md">
-                        <CreditCard className="h-6 w-6 mr-3 text-gray-500" />
-                        <div className="flex-1">
-                          <p className="font-medium">Boleto Bancário</p>
-                          <p className="text-sm text-gray-500">Vencimento em 3 dias úteis</p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <p className="text-sm text-gray-500">Código do boleto</p>
-                        <div className="relative">
-                          <div className="bg-gray-100 rounded-md p-2 text-xs break-all">
-                            {mockBoletoCode}
-                          </div>
-                          <button 
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                            onClick={handleCopyCode}
-                          >
-                            {isCopied ? (
-                              <Check className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <Copy className="h-4 w-4 text-gray-500" />
-                            )}
-                          </button>
-                        </div>
-                      </div>
-
-                      <Button className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200">
-                        Baixar boleto em PDF
-                      </Button>
-                    </div>
-
-                    <p className="text-sm text-gray-500 text-center">
-                      Você também pode copiar o código e pagar pelo internet banking
-                    </p>
-                  </TabsContent>
-                </Tabs>
-              </div>
+              )
             )}
           </div>
         </div>
 
-        {/* Footer with actions */}
+        {/* Footer - fixed - Com espaçamento consistente com o cabeçalho */}
         <div className="border-t border-gray-200 py-3 bg-white w-full fixed bottom-0 left-0 right-0">
-          <div className="px-4 space-y-3">
-            {step === 'payment' && (
+          <div className="px-4">
+            {step === 'select' ? (
               <Button 
-                onClick={handlePaymentComplete}
-                className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+                variant="outline" 
+                className="w-full h-12 font-medium rounded-2xl border-gray-300 hover:bg-gray-50 transition-all duration-200" 
+                onClick={handleCancel}
               >
-                Finalizar pagamento
+                Cancelar
               </Button>
+            ) : (
+              <div className="space-y-3">
+                <Button 
+                  onClick={handlePaymentComplete}
+                  className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+                >
+                  Finalizar pagamento
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full h-12 rounded-2xl border-gray-300 hover:bg-gray-50 transition-all duration-200"
+                  onClick={handleCancel}
+                >
+                  Cancelar
+                </Button>
+              </div>
             )}
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="w-full h-12 rounded-2xl border-gray-300 hover:bg-gray-50 transition-all duration-200"
-              onClick={handleCancel}
-            >
-              Cancelar
-            </Button>
           </div>
         </div>
       </SheetContent>
