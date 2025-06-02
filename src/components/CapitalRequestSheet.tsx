@@ -160,13 +160,15 @@ const CapitalRequestSheet = () => {
           Modal para solicitar capital de fundos coletivos
         </div>
         <div className="flex flex-col h-full">
-          <div className="p-4 flex-1 overflow-y-auto">
-            <SheetHeader className="mb-6 text-left">
-              <SheetTitle className="text-2xl">Solicitar Capital</SheetTitle>
-              <SheetDescription>
+          <header className="bg-gradient-to-br from-blue-50 to-purple-50 border-b border-gray-100 p-6">
+            <SheetHeader className="text-left">
+              <SheetTitle className="text-xl font-bold text-gray-900">Solicitar Capital</SheetTitle>
+              <SheetDescription className="text-gray-600 mt-1">
                 Solicite um empréstimo do fundo coletivo. Administradores precisarão aprovar a solicitação.
               </SheetDescription>
             </SheetHeader>
+          </header>
+          <div className="p-4 flex-1 overflow-y-auto">
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -180,7 +182,7 @@ const CapitalRequestSheet = () => {
                         key={fund.id}
                         type="button"
                         className="flex items-center p-4 border border-gray-200 rounded-xl 
-                                  hover:border-primary/30 hover:bg-primary/5 transition-all"
+                                  hover:border-blue-300 hover:bg-blue-50/50 hover:shadow-md transition-all duration-200"
                         onClick={() => handleFundSelect(fund.id)}
                       >
                         <div className="relative mr-3">
@@ -210,7 +212,7 @@ const CapitalRequestSheet = () => {
                 <div className="space-y-6">
                   {/* Fund display for step 2 */}
                   {selectedFund && (
-                    <div className="flex items-center p-5 border border-primary/20 rounded-xl bg-primary/5 shadow-sm">
+                    <div className="flex items-center p-5 border border-blue-200 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 shadow-sm">
                       <div className="relative mr-4">
                         <img 
                           src={selectedFund.image} 
