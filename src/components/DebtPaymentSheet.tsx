@@ -92,7 +92,7 @@ const DebtPaymentSheet = () => {
         aria-describedby="debt-payment-description"
       >
         {/* Scrollable Content with Header included */}
-        <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div className="flex-1 overflow-y-auto overscroll-contain" style={{ height: 'calc(100dvh - 100px)' }}>
           {/* Header com gradiente seguindo o padrão do app */}
           <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
             <div className="px-4 flex items-center mb-4">
