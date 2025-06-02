@@ -44,22 +44,18 @@ const FundCard: React.FC<FundCardProps> = ({ fund, onClick }) => {
           </p>
           
           {/* Métricas */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1 px-2 py-1 bg-green-100 rounded-lg">
-                <TrendingUp size={12} className="text-green-600" />
-                <span className="text-green-600 font-semibold text-sm">
-                  {hideValues ? "***%" : formatPercentage(fund.growth, hideValues)}
-                </span>
-              </div>
-              <div className="flex items-center gap-1 text-gray-600">
-                <Users size={12} />
-                <span className="text-sm">{fund.members.length} Membros</span>
-              </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-1 px-2 py-1 bg-green-100 rounded-lg">
+              <TrendingUp size={12} className="text-green-600" />
+              <span className="text-green-600 font-semibold text-sm">
+                {hideValues ? "***%" : formatPercentage(fund.growth, hideValues)}
+              </span>
             </div>
-            <div className="text-right">
-              <span className="text-gray-500 text-xs">Desde {fund.date}</span>
+            <div className="flex items-center gap-1 text-gray-600">
+              <Users size={12} />
+              <span className="text-sm">{fund.members.length} Membros</span>
             </div>
+            <span className="text-gray-500 text-xs ml-auto">Desde {fund.date}</span>
           </div>
         </div>
       </div>
