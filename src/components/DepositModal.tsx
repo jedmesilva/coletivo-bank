@@ -101,24 +101,25 @@ const DepositModal: React.FC = () => {
       >
         {/* Scrollable Content with Header included */}
         <div className="flex-0 overflow-y-auto pb-0">
-          <header className="border-b border-gray-200">
-            <div className="h-10 px-4 flex items-center">
+          {/* Header com gradiente seguindo o padrão do app */}
+          <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
+            <div className="px-4 flex items-center mb-4">
               {step === 'deposit-details' && (
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-8 w-8 mr-2" 
+                  className="h-8 w-8 mr-2 text-white hover:bg-white/10" 
                   onClick={handleBack}
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
-              <SheetTitle className="text-xl">
+              <SheetTitle className="text-xl text-white font-semibold">
                 {step === 'select-fund' ? 'Escolha um fundo' : 'Aportar capital'}
               </SheetTitle>
             </div>
-            <div className="px-4 pb-3">
-              <SheetDescription>
+            <div className="px-4">
+              <SheetDescription className="text-white/70">
                 {step === 'select-fund' 
                   ? "Selecione o fundo para realizar o aporte" 
                   : "Defina o valor e a descrição do aporte"}
@@ -127,31 +128,33 @@ const DepositModal: React.FC = () => {
           </header>
 
           {/* Main Content - Com espaçamento consistente */}
-          <div className="pt-3">
+          <div className="p-4">
             {step === 'select-fund' ? (
               <div className="space-y-4">
-                <div className="space-y-3 px-4">
+                <div className="space-y-3">
                   {funds.map((fund) => (
                     <div
                       key={fund.id}
-                      className="flex items-center p-3 border border-gray-200 rounded-xl cursor-pointer 
-                              hover:border-primary/30 hover:bg-primary/5 transition-all"
+                      className="flex items-center p-4 border border-gray-200 rounded-xl cursor-pointer 
+                              hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm hover:shadow-md"
                       onClick={() => handleSelectFund(fund.id)}
                     >
                       <div className="flex-shrink-0 mr-3">
                         <img 
                           src={fund.image} 
                           alt={fund.name} 
-                          className="w-12 h-12 rounded-lg object-cover shadow-sm ring-1 ring-gray-200" 
+                          className="w-14 h-14 rounded-xl object-cover shadow-sm ring-1 ring-gray-200" 
                         />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium text-gray-900 truncate">{fund.name}</p>
+                        <p className="font-semibold text-gray-900 truncate">{fund.name}</p>
                         <p className="text-sm text-gray-600 line-clamp-1">{fund.description}</p>
-                        <div className="flex items-center text-xs text-gray-500 mt-1">
-                          <span>{fund.members.length} membros</span>
-                          <span className="mx-2">•</span>
-                          <span>Desde {fund.date}</span>
+                        <div className="flex items-center justify-between mt-2">
+                          <div className="flex items-center text-xs text-gray-500">
+                            <span>{fund.members.length} membros</span>
+                            <span className="mx-2">•</span>
+                            <span>Desde {fund.date}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -159,8 +162,8 @@ const DepositModal: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="space-y-3 px-4">
-                <div className="bg-primary/5 p-3 rounded-lg border border-primary/20">
+              <div className="space-y-4">
+                <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 shadow-sm">
                   <p className="text-xs text-gray-500 uppercase font-medium tracking-wide mb-1">Fundo selecionado</p>
                   <div className="flex items-center">
                     <p className="font-bold text-primary text-lg truncate">{selectedFundName}</p>
@@ -168,15 +171,15 @@ const DepositModal: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center" htmlFor="deposit-amount">
+                  <label className="text-sm font-semibold text-gray-900 flex items-center" htmlFor="deposit-amount">
                     Valor do aporte
-                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
+                    <span className="text-xs text-gray-500 ml-1.5 font-normal">(obrigatório)</span>
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">R$</span>
                     <Input 
                       id="deposit-amount"
-                      className="pl-8 text-lg font-semibold" 
+                      className="pl-8 text-lg font-semibold rounded-xl border-gray-200 focus:border-primary" 
                       placeholder="0,00" 
                       type="number"
                       inputMode="decimal"
@@ -196,13 +199,13 @@ const DepositModal: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center" htmlFor="deposit-description">
+                  <label className="text-sm font-semibold text-gray-900 flex items-center" htmlFor="deposit-description">
                     Descrição
-                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
+                    <span className="text-xs text-gray-500 ml-1.5 font-normal">(obrigatório)</span>
                   </label>
                   <Input 
                     id="deposit-description"
-                    className="bg-white" 
+                    className="bg-white rounded-xl border-gray-200 focus:border-primary" 
                     placeholder="Ex: Aporte mensal" 
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
