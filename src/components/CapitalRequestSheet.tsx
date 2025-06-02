@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ChevronRight, Calculator, CheckCircle } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Calculator, CheckCircle, Calendar, Plus, X } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { formatCurrency } from '@/utils/formatCurrency';
 
@@ -25,6 +25,12 @@ interface PaymentOption {
   interestRate: number;
 }
 
+interface CustomPayment {
+  id: string;
+  amount: string;
+  date: string;
+}
+
 const CapitalRequestSheet = () => {
   const { 
     isCapitalRequestOpen, 
@@ -39,6 +45,10 @@ const CapitalRequestSheet = () => {
   const [amount, setAmount] = useState<string>('');
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<string>('');
   const [purpose, setPurpose] = useState<string>('');
+  const [isCustomSchedule, setIsCustomSchedule] = useState<boolean>(false);
+  const [customPayments, setCustomPayments] = useState<CustomPayment[]>([]);
+  const [newPaymentAmount, setNewPaymentAmount] = useState<string>('');
+  const [newPaymentDate, setNewPaymentDate] = useState<string>('');
 
   const stepTitles = {
     'amount': 'Valor solicitado',
@@ -78,6 +88,10 @@ const CapitalRequestSheet = () => {
     setAmount('');
     setSelectedPaymentOption('');
     setPurpose('');
+    setIsCustomSchedule(false);
+    setCustomPayments([]);
+    setNewPaymentAmount('');
+    setNewPaymentDate('');
   };
 
   const handleNextStep = () => {
@@ -93,13 +107,35 @@ const CapitalRequestSheet = () => {
       }
       setStep('payment-terms');
     } else if (step === 'payment-terms') {
-      if (!selectedPaymentOption) {
+      if (!selectedPaymentOption && !isCustomSchedule) {
         toast({
           title: "Selecione uma opção",
           description: "Escolha uma forma de pagamento.",
           variant: "destructive"
         });
         return;
+      }
+      if (isCustomSchedule && customPayments.length === 0) {
+        toast({
+          title: "Cronograma vazio",
+          description: "Adicione pelo menos um pagamento ao cronograma.",
+          variant: "destructive"
+        });
+        return;
+      }
+      if (isCustomSchedule) {
+        const totalCustomPayments = customPayments.reduce((sum, payment) => 
+          sum + parseFloat(payment.amount.replace(',', '.')), 0
+        );
+        const amountValue = parseFloat(amount.replace(',', '.'));
+        if (totalCustomPayments < amountValue * 1.02) { // Mínimo 2% de juros
+          toast({
+            title: "Valor insuficiente",
+            description: "O total dos pagamentos deve ser pelo menos 2% maior que o valor solicitado.",
+            variant: "destructive"
+          });
+          return;
+        }
       }
       setStep('purpose');
     } else if (step === 'purpose') {
@@ -127,6 +163,15 @@ const CapitalRequestSheet = () => {
 
   const calculateTotal = () => {
     const amountValue = parseFloat(amount.replace(',', '.'));
+    
+    if (isCustomSchedule) {
+      const total = customPayments.reduce((sum, payment) => 
+        sum + parseFloat(payment.amount.replace(',', '.')), 0
+      );
+      const interest = total - amountValue;
+      return { total, interest, installmentValue: 0 };
+    }
+    
     const option = paymentOptions.find(o => o.id === selectedPaymentOption);
     if (!option || isNaN(amountValue)) return { total: 0, interest: 0, installmentValue: 0 };
 
@@ -141,19 +186,29 @@ const CapitalRequestSheet = () => {
     if (!selectedFund) return;
 
     const amountValue = parseFloat(amount.replace(',', '.'));
-    const option = paymentOptions.find(o => o.id === selectedPaymentOption);
-    if (!option) return;
-
     const { total } = calculateTotal();
     
-    // Calcular data de vencimento baseada na opção selecionada
-    const repaymentDate = new Date();
-    repaymentDate.setDate(repaymentDate.getDate() + (option.installments * 30));
+    let paymentDescription = '';
+    let repaymentDate = new Date();
+    
+    if (isCustomSchedule) {
+      const sortedPayments = customPayments.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      const lastPaymentDate = new Date(sortedPayments[sortedPayments.length - 1].date);
+      repaymentDate = lastPaymentDate;
+      
+      paymentDescription = `${purpose} | Cronograma personalizado (${customPayments.length} pagamentos) | Total com juros: ${formatCurrency(total)}`;
+    } else {
+      const option = paymentOptions.find(o => o.id === selectedPaymentOption);
+      if (!option) return;
+      
+      repaymentDate.setDate(repaymentDate.getDate() + (option.installments * 30));
+      paymentDescription = `${purpose} | Pagamento: ${option.label} | Total com juros: ${formatCurrency(total)}`;
+    }
 
     requestCapitalFromFund(
       selectedFund.id,
       amountValue,
-      `${purpose} | Pagamento: ${option.label} | Total com juros: ${formatCurrency(total)}`,
+      paymentDescription,
       repaymentDate
     );
 
@@ -172,6 +227,40 @@ const CapitalRequestSheet = () => {
       style: 'currency',
       currency: 'BRL'
     });
+  };
+
+  const addCustomPayment = () => {
+    if (!newPaymentAmount || !newPaymentDate) {
+      toast({
+        title: "Campos obrigatórios",
+        description: "Preencha o valor e a data do pagamento.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const newPayment: CustomPayment = {
+      id: Date.now().toString(),
+      amount: newPaymentAmount,
+      date: newPaymentDate
+    };
+
+    setCustomPayments([...customPayments, newPayment]);
+    setNewPaymentAmount('');
+    setNewPaymentDate('');
+  };
+
+  const removeCustomPayment = (id: string) => {
+    setCustomPayments(customPayments.filter(payment => payment.id !== id));
+  };
+
+  const handleCustomScheduleToggle = () => {
+    setIsCustomSchedule(!isCustomSchedule);
+    if (!isCustomSchedule) {
+      setSelectedPaymentOption('');
+    } else {
+      setCustomPayments([]);
+    }
   };
 
   const getStepNumber = () => {
@@ -319,47 +408,191 @@ const CapitalRequestSheet = () => {
                 {/* Opções de pagamento */}
                 <div className="space-y-4">
                   <h3 className="font-semibold text-gray-900">Escolha a forma de pagamento</h3>
-                  <RadioGroup value={selectedPaymentOption} onValueChange={setSelectedPaymentOption}>
-                    {paymentOptions.map((option) => {
-                      const amountValue = parseFloat(amount.replace(',', '.'));
-                      const interest = (amountValue * option.interestRate) / 100;
-                      const total = amountValue + interest;
-                      const installmentValue = total / option.installments;
+                  
+                  {!isCustomSchedule && (
+                    <RadioGroup value={selectedPaymentOption} onValueChange={setSelectedPaymentOption}>
+                      {paymentOptions.map((option) => {
+                        const amountValue = parseFloat(amount.replace(',', '.'));
+                        const interest = (amountValue * option.interestRate) / 100;
+                        const total = amountValue + interest;
+                        const installmentValue = total / option.installments;
 
-                      return (
-                        <div key={option.id} className="space-y-0">
-                          <label 
-                            className={`flex items-center justify-between p-4 border rounded-xl cursor-pointer transition-all ${
-                              selectedPaymentOption === option.id 
-                                ? 'border-primary bg-primary/5 shadow-md' 
-                                : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                          >
-                            <div className="flex items-center space-x-3">
-                              <RadioGroupItem value={option.id} />
-                              <div>
-                                <div className="font-semibold text-gray-900">{option.label}</div>
-                                <div className="text-sm text-gray-600">
-                                  {option.installments > 1 
-                                    ? `${option.installments} parcelas de ${formatCurrency(installmentValue)}`
-                                    : `Pagamento único`
-                                  }
+                        return (
+                          <div key={option.id} className="space-y-0">
+                            <label 
+                              className={`flex items-center justify-between p-4 border rounded-xl cursor-pointer transition-all ${
+                                selectedPaymentOption === option.id 
+                                  ? 'border-primary bg-primary/5 shadow-md' 
+                                  : 'border-gray-200 hover:border-gray-300'
+                              }`}
+                            >
+                              <div className="flex items-center space-x-3">
+                                <RadioGroupItem value={option.id} />
+                                <div>
+                                  <div className="font-semibold text-gray-900">{option.label}</div>
+                                  <div className="text-sm text-gray-600">
+                                    {option.installments > 1 
+                                      ? `${option.installments} parcelas de ${formatCurrency(installmentValue)}`
+                                      : `Pagamento único`
+                                    }
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-lg font-bold text-green-600">
-                                {formatCurrency(total)}
+                              <div className="text-right">
+                                <div className="text-lg font-bold text-green-600">
+                                  {formatCurrency(total)}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  Juros: {option.interestRate}% ({formatCurrency(interest)})
+                                </div>
                               </div>
-                              <div className="text-xs text-gray-500">
-                                Juros: {option.interestRate}% ({formatCurrency(interest)})
-                              </div>
-                            </div>
-                          </label>
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </RadioGroup>
+                  )}
+
+                  {/* Opção de cronograma personalizado */}
+                  <div className="mt-6">
+                    <Button
+                      variant="outline"
+                      className={`w-full h-16 rounded-xl border-2 border-dashed transition-all ${
+                        isCustomSchedule 
+                          ? 'border-primary bg-primary/5 text-primary' 
+                          : 'border-gray-300 hover:border-primary/50 hover:bg-primary/5'
+                      }`}
+                      onClick={handleCustomScheduleToggle}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <Calendar className="h-5 w-5" />
+                        <div className="text-left">
+                          <div className="font-semibold">Criar cronograma personalizado</div>
+                          <div className="text-sm opacity-70">Defina suas próprias datas e valores</div>
                         </div>
-                      );
-                    })}
-                  </RadioGroup>
+                      </div>
+                    </Button>
+                  </div>
+
+                  {/* Interface do cronograma personalizado */}
+                  {isCustomSchedule && (
+                    <div className="mt-6 space-y-4 bg-gray-50 p-4 rounded-xl border">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-semibold text-gray-900">Pagamento Personalizado</h4>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleCustomScheduleToggle}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          Voltar às opções rápidas
+                        </Button>
+                      </div>
+
+                      {/* Adicionar novo pagamento */}
+                      <div className="space-y-3 bg-white p-4 rounded-lg border">
+                        <div className="flex items-center space-x-2 text-primary">
+                          <Plus className="h-4 w-4" />
+                          <span className="font-medium">Adicionar Pagamento</span>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700 block mb-2">
+                              Valor do pagamento
+                            </label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">R$</span>
+                              <Input
+                                type="text"
+                                inputMode="decimal"
+                                placeholder="0,00"
+                                value={newPaymentAmount}
+                                onChange={(e) => {
+                                  const value = e.target.value.replace(/[^\d,]/g, '');
+                                  const commaCount = (value.match(/,/g) || []).length;
+                                  if (commaCount <= 1) {
+                                    setNewPaymentAmount(value);
+                                  }
+                                }}
+                                className="pl-10 rounded-lg border-gray-300 focus:border-primary"
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="text-sm font-medium text-gray-700 block mb-2">
+                              Data do pagamento
+                            </label>
+                            <Input
+                              type="date"
+                              value={newPaymentDate}
+                              onChange={(e) => setNewPaymentDate(e.target.value)}
+                              min={new Date().toISOString().split('T')[0]}
+                              className="rounded-lg border-gray-300 focus:border-primary"
+                            />
+                          </div>
+
+                          <Button
+                            onClick={addCustomPayment}
+                            className="w-full rounded-lg bg-primary hover:bg-primary/90"
+                          >
+                            Adicionar Pagamento
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Lista de pagamentos adicionados */}
+                      {customPayments.length > 0 && (
+                        <div className="space-y-3">
+                          <h5 className="font-semibold text-gray-900">Cronograma de Pagamentos</h5>
+                          <div className="space-y-2">
+                            {customPayments
+                              .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                              .map((payment) => (
+                                <div key={payment.id} className="flex items-center justify-between bg-white p-3 rounded-lg border">
+                                  <div>
+                                    <div className="font-semibold text-gray-900">
+                                      {formatCurrencyInput(payment.amount)}
+                                    </div>
+                                    <div className="text-sm text-gray-600">
+                                      {new Date(payment.date).toLocaleDateString('pt-BR')}
+                                    </div>
+                                  </div>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => removeCustomPayment(payment.id)}
+                                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              ))}
+                          </div>
+
+                          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-green-800">Total a pagar</span>
+                              <span className="text-lg font-bold text-green-600">
+                                {formatCurrency(customPayments.reduce((sum, payment) => 
+                                  sum + parseFloat(payment.amount.replace(',', '.')), 0
+                                ))}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center mt-1">
+                              <span className="text-sm text-green-700">Juros aplicados</span>
+                              <span className="text-sm font-medium text-green-600">
+                                {formatCurrency(customPayments.reduce((sum, payment) => 
+                                  sum + parseFloat(payment.amount.replace(',', '.')), 0
+                                ) - parseFloat(amount.replace(',', '.')))}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {selectedPaymentOptionData && (
@@ -449,10 +682,14 @@ const CapitalRequestSheet = () => {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Forma de pagamento</span>
-                      <span className="font-medium">{selectedPaymentOptionData?.label}</span>
+                      <span className="font-medium">
+                        {isCustomSchedule ? 'Cronograma personalizado' : selectedPaymentOptionData?.label}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Juros ({selectedPaymentOptionData?.interestRate}%)</span>
+                      <span className="text-gray-600">
+                        {isCustomSchedule ? 'Juros (personalizado)' : `Juros (${selectedPaymentOptionData?.interestRate}%)`}
+                      </span>
                       <span className="font-medium text-orange-600">{formatCurrency(calculations.interest)}</span>
                     </div>
                     <div className="border-t pt-2">
@@ -460,12 +697,27 @@ const CapitalRequestSheet = () => {
                         <span className="font-semibold text-gray-900">Total a pagar</span>
                         <span className="text-xl font-bold text-green-600">{formatCurrency(calculations.total)}</span>
                       </div>
-                      {selectedPaymentOptionData && selectedPaymentOptionData.installments > 1 && (
+                      {selectedPaymentOptionData && selectedPaymentOptionData.installments > 1 && !isCustomSchedule && (
                         <div className="flex justify-between items-center mt-1">
                           <span className="text-sm text-gray-600">
                             {selectedPaymentOptionData.installments} parcelas de
                           </span>
                           <span className="text-lg font-semibold">{formatCurrency(calculations.installmentValue)}</span>
+                        </div>
+                      )}
+                      {isCustomSchedule && customPayments.length > 0 && (
+                        <div className="mt-2 space-y-1">
+                          <div className="text-sm text-gray-600 font-medium">Cronograma:</div>
+                          {customPayments
+                            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                            .map((payment, index) => (
+                              <div key={payment.id} className="flex justify-between items-center text-sm">
+                                <span className="text-gray-600">
+                                  {index + 1}º pagamento - {new Date(payment.date).toLocaleDateString('pt-BR')}
+                                </span>
+                                <span className="font-medium">{formatCurrencyInput(payment.amount)}</span>
+                              </div>
+                            ))}
                         </div>
                       )}
                     </div>
@@ -505,7 +757,8 @@ const CapitalRequestSheet = () => {
                   onClick={handleNextStep}
                   disabled={
                     (step === 'amount' && (!amount || parseFloat(amount.replace(',', '.')) <= 0)) ||
-                    (step === 'payment-terms' && !selectedPaymentOption) ||
+                    (step === 'payment-terms' && !selectedPaymentOption && !isCustomSchedule) ||
+                    (step === 'payment-terms' && isCustomSchedule && customPayments.length === 0) ||
                     (step === 'purpose' && !purpose.trim())
                   }
                   className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
