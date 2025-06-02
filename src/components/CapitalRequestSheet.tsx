@@ -456,11 +456,11 @@ const CapitalRequestSheet = () => {
                   {/* Opção de cronograma personalizado */}
                   <div className="mt-6">
                     <Button
-                      variant="outline"
-                      className={`w-full h-16 rounded-xl border-2 border-dashed transition-all ${
+                      variant={isCustomSchedule ? "default" : "outline"}
+                      className={`w-full h-16 rounded-xl transition-all ${
                         isCustomSchedule 
-                          ? 'border-primary bg-primary/5 text-primary' 
-                          : 'border-gray-300 hover:border-primary/50 hover:bg-primary/5'
+                          ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                          : 'border-gray-200 hover:bg-accent hover:text-accent-foreground'
                       }`}
                       onClick={handleCustomScheduleToggle}
                     >
