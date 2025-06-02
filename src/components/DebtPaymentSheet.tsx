@@ -92,7 +92,7 @@ const DebtPaymentSheet = () => {
         aria-describedby="debt-payment-description"
       >
         {/* Scrollable Content with Header included */}
-        <div className="flex-0 overflow-y-auto pb-0">
+        <div className="flex-1 overflow-y-auto">
           {/* Header com gradiente seguindo o padrão do app */}
           <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
             <div className="px-4 flex items-center mb-4">
@@ -123,7 +123,7 @@ const DebtPaymentSheet = () => {
           </header>
 
           {/* Main Content - Com espaçamento consistente */}
-          <div className="p-4">
+          <div className="p-4 pb-32">
             {step === 'select' ? (
               <div className="space-y-4">
                 {filteredDebts.length > 0 ? (
