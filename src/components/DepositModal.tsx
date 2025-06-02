@@ -101,28 +101,28 @@ const DepositModal: React.FC = () => {
       >
         {/* Scrollable Content with Header included */}
         <div className="flex-0 overflow-y-auto pb-0">
-          <header className="bg-gradient-to-br from-blue-50 to-purple-50 border-b border-gray-100">
-            <div className="h-16 px-6 flex items-center">
+          <header className="border-b border-gray-200">
+            <div className="h-10 px-4 flex items-center">
               {step === 'deposit-details' && (
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-10 w-10 mr-3 rounded-xl hover:bg-white/80 text-blue-600" 
+                  className="h-8 w-8 mr-2" 
                   onClick={handleBack}
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
-              <div className="flex-1">
-                <SheetTitle className="text-xl font-bold text-gray-900">
-                  {step === 'select-fund' ? 'Escolher Fundo' : 'Fazer Aporte'}
-                </SheetTitle>
-                <SheetDescription className="text-gray-600 mt-1">
-                  {step === 'select-fund' 
-                    ? "Selecione o fundo para realizar o aporte" 
-                    : "Defina o valor e a descrição do aporte"}
-                </SheetDescription>
-              </div>
+              <SheetTitle className="text-xl">
+                {step === 'select-fund' ? 'Escolha um fundo' : 'Aportar capital'}
+              </SheetTitle>
+            </div>
+            <div className="px-4 pb-3">
+              <SheetDescription>
+                {step === 'select-fund' 
+                  ? "Selecione o fundo para realizar o aporte" 
+                  : "Defina o valor e a descrição do aporte"}
+              </SheetDescription>
             </div>
           </header>
 
@@ -134,8 +134,8 @@ const DepositModal: React.FC = () => {
                   {funds.map((fund) => (
                     <div
                       key={fund.id}
-                      className="flex items-center p-4 border border-gray-200 rounded-xl cursor-pointer 
-                              hover:border-blue-300 hover:bg-blue-50/50 hover:shadow-md transition-all duration-200"
+                      className="flex items-center p-3 border border-gray-200 rounded-xl cursor-pointer 
+                              hover:border-primary/30 hover:bg-primary/5 transition-all"
                       onClick={() => handleSelectFund(fund.id)}
                     >
                       <div className="flex-shrink-0 mr-3">
@@ -160,23 +160,23 @@ const DepositModal: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-3 px-4">
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-xl border border-blue-200">
-                  <p className="text-xs text-gray-600 uppercase font-semibold tracking-wide mb-2">Fundo selecionado</p>
+                <div className="bg-primary/5 p-3 rounded-lg border border-primary/20">
+                  <p className="text-xs text-gray-500 uppercase font-medium tracking-wide mb-1">Fundo selecionado</p>
                   <div className="flex items-center">
-                    <p className="font-bold text-blue-700 text-lg truncate">{selectedFundName}</p>
+                    <p className="font-bold text-primary text-lg truncate">{selectedFundName}</p>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-gray-700 flex items-center" htmlFor="deposit-amount">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center" htmlFor="deposit-amount">
                     Valor do aporte
-                    <span className="text-xs text-gray-500 ml-2">(obrigatório)</span>
+                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">R$</span>
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">R$</span>
                     <Input 
                       id="deposit-amount"
-                      className="pl-10 text-lg font-semibold rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-200 bg-gray-50 focus:bg-white transition-all duration-200" 
+                      className="pl-8 text-lg font-semibold" 
                       placeholder="0,00" 
                       type="number"
                       inputMode="decimal"
@@ -195,14 +195,14 @@ const DepositModal: React.FC = () => {
                   <p className="text-xs text-gray-500">Insira o valor que deseja depositar no fundo</p>
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-gray-700 flex items-center" htmlFor="deposit-description">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center" htmlFor="deposit-description">
                     Descrição
-                    <span className="text-xs text-gray-500 ml-2">(obrigatório)</span>
+                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
                   </label>
                   <Input 
                     id="deposit-description"
-                    className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-200 bg-gray-50 focus:bg-white transition-all duration-200" 
+                    className="bg-white" 
                     placeholder="Ex: Aporte mensal" 
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
