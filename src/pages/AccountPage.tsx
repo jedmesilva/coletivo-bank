@@ -8,6 +8,7 @@ import { formatCurrency } from '@/utils/formatCurrency';
 import TopNavbar from '@/components/TopNavbar';
 import HeaderSection from '@/components/HeaderSection';
 import SidebarMenu from '@/components/MainMenu';
+import GeometricStatusBadge from '@/components/GeometricStatusBadge';
 
 const AccountPage: React.FC = () => {
   const { 
@@ -49,15 +50,18 @@ const AccountPage: React.FC = () => {
       {/* Header Section com cor de destaque */}
       <HeaderSection className="pt-20">
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Avatar className="w-12 h-12 border-2 border-white/20 rounded-2xl">
-              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover rounded-2xl" />
-              <AvatarFallback className="bg-white/20 text-white rounded-2xl">{currentUser.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div>
-              <h2 className="font-semibold text-white text-lg">{currentUser.name}</h2>
-              <p className="text-sm text-white/70">Minha conta</p>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Avatar className="w-12 h-12 border-2 border-white/20 rounded-2xl">
+                <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover rounded-2xl" />
+                <AvatarFallback className="bg-white/20 text-white rounded-2xl">{currentUser.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <h2 className="font-semibold text-white text-lg">{currentUser.name}</h2>
+                <p className="text-sm text-white/70">Minha conta</p>
+              </div>
             </div>
+            <GeometricStatusBadge level={currentUser.accountLevel} />
           </div>
         </div>
         

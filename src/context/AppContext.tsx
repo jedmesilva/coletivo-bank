@@ -5,7 +5,8 @@ import { Fund, Screen, FundTab, AccountTab, DebtItem, HistoryItem, ApprovalItem 
 const currentUser = {
   id: '1',
   name: 'Lucas',
-  profileImage: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=200&h=200'
+  profileImage: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=200&h=200',
+  accountLevel: 'gold' as 'bronze' | 'silver' | 'gold' | 'platinum'
 };
 
 // Update types.ts to include fundName field for these items
