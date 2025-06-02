@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Eye, EyeOff, TrendingUp, TrendingDown, Wallet, Users } from 'lucide-react';
+import { Eye, EyeOff, TrendingUp, TrendingDown, Wallet, Users, AlertCircle } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { formatCurrency, formatPercentage } from '@/utils/formatCurrency';
 
@@ -27,7 +26,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 }) => {
   const { hideValues, setHideValues } = useApp();
   const isPositiveGrowth = growthValue >= 0;
-  
+
   return (
     <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-3xl p-6 border border-white/10 shadow-2xl">
       {/* Header do Card */}
@@ -66,14 +65,14 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       </div>
 
       {/* Estatísticas */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         {(leftLabel && leftValue !== undefined) && (
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl p-4 border border-blue-500/20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                <Wallet size={16} className="text-blue-400" />
+          <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 rounded-2xl p-4 border border-green-500/20">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                <TrendingUp size={16} className="text-green-400 flex-shrink-0" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="text-2xl font-bold text-white">{leftValue}</p>
                 <p className="text-xs text-white/60 uppercase tracking-wide">{leftLabel}</p>
               </div>
@@ -82,12 +81,12 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
         )}
 
         {(rightLabel && rightValue !== undefined) && (
-          <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 rounded-2xl p-4 border border-green-500/20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
-                <Users size={16} className="text-green-400" />
+          <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-2xl p-4 border border-red-500/20">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="text-2xl font-bold text-white">{rightValue}</p>
                 <p className="text-xs text-white/60 uppercase tracking-wide">{rightLabel}</p>
               </div>
