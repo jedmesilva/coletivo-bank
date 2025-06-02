@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force rectangular avatars */
+.avatar-rectangular img {
+  border-radius: 0.5rem !important;
+  object-fit: cover !important;
+}
+
 @keyframes slideUp {
   0% {
     transform: translateY(0);

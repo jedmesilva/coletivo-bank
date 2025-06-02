@@ -50,7 +50,12 @@ const BottomNavigation: React.FC = () => {
             <Avatar className={`w-8 h-8 border-2 transition-colors rounded-lg overflow-hidden ${
               location.pathname === '/account' ? 'border-white' : 'border-gray-200'
             }`}>
-              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover rounded-lg" />
+              <AvatarImage 
+                src={currentUser.profileImage} 
+                alt={currentUser.name} 
+                className="object-cover rounded-lg" 
+                style={{ borderRadius: '0.5rem', objectFit: 'cover' }}
+              />
               <AvatarFallback className={`text-sm font-semibold rounded-lg ${
                 location.pathname === '/account' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
               }`}>{currentUser.name.charAt(0)}</AvatarFallback>
