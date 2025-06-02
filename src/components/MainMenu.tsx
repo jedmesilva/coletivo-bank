@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Home, CreditCard, PieChart, Settings, HelpCircle, LogOut, User, Wallet, Bell } from 'lucide-react';
 
-const SidebarMenu = ({ isMenuOpen, toggleMenu }) => {
+const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMenu: () => void }) => {
   const menuItems = [
     { icon: Home, label: 'Início', active: true },
     { icon: Wallet, label: 'Meus Fundos', badge: '2' },

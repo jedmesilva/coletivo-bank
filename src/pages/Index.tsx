@@ -1,20 +1,11 @@
 import React, { useState } from 'react';
-import { Home, User, ArrowUp, Menu, Settings, MapPin, CreditCard, Bell, Lock, Shield, Palette, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
 import FundCard from '@/components/FundCard';
 import TopNavbar from '@/components/TopNavbar';
 import HeaderSection from '@/components/HeaderSection';
-import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetClose
-} from '@/components/ui/sheet';
-import { Separator } from '@/components/ui/separator';
+import SidebarMenu from '@/components/MainMenu';
 
 const Index: React.FC = () => {
   const navigate = useNavigate();
@@ -67,114 +58,11 @@ const Index: React.FC = () => {
       {/* Seção Fundos - Fundo Branco */}
       <div className="bg-white min-h-screen">
         <div className="max-w-md mx-auto px-4 pt-8">
-          {/* Menu Sheet */}
-          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-            <SheetContent side="left" className="w-[280px] p-0">
-              <SheetHeader className="p-4 border-b">
-                <div className="flex justify-between items-center">
-                  <SheetTitle className="text-lg">Coletivo Bank</SheetTitle>
-                </div>
-              </SheetHeader>
-              <div className="overflow-y-auto h-full py-2">
-                {/* Menu Principal */}
-                <div className="px-2 py-3">
-                  <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                    Menu Principal
-                  </h3>
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      onClick={() => navigate('/')}
-                      className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                    >
-                      <Home className="w-5 h-5" />
-                      <span>Página Inicial</span>
-                    </Button>
-                  </SheetClose>
-                  <Separator className="my-2 mx-3" />
-                </div>
-                
-                {/* Dados Pessoais */}
-                <div className="px-2 py-3">
-                  <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                    Dados Pessoais
-                  </h3>
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      onClick={() => navigate('/account')}
-                      className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                    >
-                      <User className="w-5 h-5" />
-                      <span>Meu Perfil</span>
-                    </Button>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                    >
-                      <MapPin className="w-5 h-5" />
-                      <span>Endereço</span>
-                    </Button>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                    >
-                      <CreditCard className="w-5 h-5" />
-                      <span>Dados Bancários</span>
-                    </Button>
-                  </SheetClose>
-                  <Separator className="my-2 mx-3" />
-                </div>
-                
-                {/* Configurações */}
-                <div className="px-2 py-3">
-                  <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">
-                    Configurações
-                  </h3>
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                    >
-                      <Bell className="w-5 h-5" />
-                      <span>Notificações</span>
-                    </Button>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                    >
-                      <Lock className="w-5 h-5" />
-                      <span>Privacidade</span>
-                    </Button>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                    >
-                      <Shield className="w-5 h-5" />
-                      <span>Segurança</span>
-                    </Button>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start gap-3 px-3 py-5 h-auto text-base"
-                    >
-                      <Palette className="w-5 h-5" />
-                      <span>Tema</span>
-                    </Button>
-                  </SheetClose>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+          {/* Menu Lateral */}
+          <SidebarMenu 
+            isMenuOpen={isMenuOpen} 
+            toggleMenu={() => setIsMenuOpen(false)} 
+          />
 
           {/* Seção Fundos */}
           <div className="mb-8">
