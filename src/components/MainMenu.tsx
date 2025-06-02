@@ -54,17 +54,7 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
         isMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         {/* Header do Menu */}
-        <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-6 pb-8 flex-shrink-0">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-white">Menu</h2>
-            <button 
-              onClick={toggleMenu}
-              className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 transition-all duration-200 flex items-center justify-center group"
-            >
-              <X size={18} className="text-white group-hover:scale-110 transition-transform" />
-            </button>
-          </div>
-          
+        <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-6 flex-shrink-0">
           {/* Profile Section */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
