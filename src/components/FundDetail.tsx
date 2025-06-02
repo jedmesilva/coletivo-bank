@@ -71,7 +71,7 @@ const FundDetail: React.FC = () => {
             <img 
               src={selectedFund.image} 
               alt={selectedFund.name} 
-              className="w-16 h-16 rounded-lg object-cover mr-4 shadow-sm border-2 border-white/20"
+              className="w-16 h-16 rounded-2xl object-cover mr-4 shadow-sm border-2 border-white/20"
             />
             <div>
               <h2 className="text-xl font-bold text-white">{selectedFund.name}</h2>
