@@ -41,11 +41,17 @@ const GeometricStatusBadge: React.FC<GeometricStatusBadgeProps> = ({ level }) =>
   const IconComponent = config.icon;
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${config.bgGradient} backdrop-blur-sm border ${config.borderColor} flex items-center justify-center shadow-lg`}>
-        <IconComponent size={20} className={config.iconColor} strokeWidth={2} />
-      </div>
-      <span className="text-white/90 font-medium text-xs">{config.label}</span>
+    <div className={`inline-flex items-center justify-center w-8 h-8 rounded-lg border-2 ${
+      level === 'bronze' ? 'bg-gradient-to-br from-amber-100 to-orange-100 border-amber-300 text-amber-700' :
+      level === 'silver' ? 'bg-gradient-to-br from-gray-100 to-slate-100 border-gray-300 text-gray-700' :
+      level === 'gold' ? 'bg-gradient-to-br from-yellow-100 to-amber-100 border-yellow-300 text-yellow-700' :
+      'bg-gradient-to-br from-purple-100 to-indigo-100 border-purple-300 text-purple-700'
+    } shadow-sm`}>
+      <span className="text-xs font-bold uppercase tracking-wide">
+        {level === 'bronze' ? 'B' :
+         level === 'silver' ? 'S' :
+         level === 'gold' ? 'G' : 'P'}
+      </span>
     </div>
   );
 };
