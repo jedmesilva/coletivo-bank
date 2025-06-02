@@ -26,11 +26,11 @@ const FundCard: React.FC<FundCardProps> = ({ fund, onClick }) => {
     >
       <div className="flex items-start gap-4">
         {/* Ícone do fundo */}
-        <div className="w-16 h-16 rounded-2xl shadow-lg overflow-hidden">
+        <div className="w-16 h-16 rounded-2xl shadow-lg overflow-hidden flex-shrink-0">
           <img 
             src={fund.image} 
             alt={fund.name} 
-            className="w-full h-full object-cover" 
+            className="w-full h-full object-cover aspect-square" 
           />
         </div>
         
