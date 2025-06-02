@@ -123,7 +123,7 @@ const DebtPaymentSheet = () => {
           </header>
 
           {/* Main Content - Com espaçamento consistente */}
-          <div className="p-4 pb-40"></div>
+          <div className="p-4 pb-40">
             {step === 'select' ? (
               <div className="space-y-4">
                 {filteredDebts.length > 0 ? (
