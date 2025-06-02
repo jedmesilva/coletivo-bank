@@ -200,7 +200,7 @@ const FundCreationModal: React.FC = () => {
             </div>
           </header>
 
-          <div className="p-4 pb-32">
+          <div className="p-4 pb-40"></div>
             {step === 'name' && (
               <div className="space-y-6">
                 <div className="space-y-2">
