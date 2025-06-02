@@ -205,7 +205,7 @@ const DepositModal: React.FC = () => {
             </div>
           </header>
 
-          <div className="p-4 pb-48">
+          <div className="p-4 pb-60">
             {step === 'select-fund' && (
               <div className="space-y-4">
                 {funds.map((fund) => (

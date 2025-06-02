@@ -239,7 +239,7 @@ const CapitalRequestSheet = () => {
             </div>
           </header>
 
-          <div className="p-4 pb-48">
+          <div className="p-4 pb-60">
             {step === 'amount' && (
               <div className="space-y-6">
                 {/* Fundo selecionado */}
