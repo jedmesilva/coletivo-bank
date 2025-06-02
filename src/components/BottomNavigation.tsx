@@ -48,11 +48,11 @@ const BottomNavigation: React.FC = () => {
             }`}
             onClick={() => navigate('/account')}
           >
-            <Avatar className={`w-8 h-8 border-2 transition-colors ${
+            <Avatar className={`w-8 h-8 border-2 transition-colors rounded-2xl ${
               location.pathname === '/account' ? 'border-white' : 'border-gray-200'
             }`}>
-              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover" />
-              <AvatarFallback className={`text-sm font-semibold ${
+              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover rounded-2xl" />
+              <AvatarFallback className={`text-sm font-semibold rounded-2xl ${
                 location.pathname === '/account' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
               }`}>{currentUser.name.charAt(0)}</AvatarFallback>
             </Avatar>
