@@ -10,7 +10,11 @@ export const useScrollDirection = () => {
       const scrollY = window.pageYOffset;
       const direction = scrollY > lastScrollY ? 'down' : 'up';
       
-      if (direction !== scrollDirection && (scrollY - lastScrollY > 1 || scrollY - lastScrollY < -1)) {
+      // Usar thresholds diferentes: 10px para esconder, 1px para aparecer
+      const threshold = direction === 'down' ? 10 : 1;
+      const scrollDiff = Math.abs(scrollY - lastScrollY);
+      
+      if (direction !== scrollDirection && scrollDiff >= threshold) {
         setScrollDirection(direction);
       }
       setLastScrollY(scrollY > 0 ? scrollY : 0);
