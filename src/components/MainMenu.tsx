@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { X, Home, CreditCard, PieChart, Settings, HelpCircle, LogOut, User, Wallet, Bell } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import GeometricStatusBadge from '@/components/GeometricStatusBadge';
 
 const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMenu: () => void }) => {
   const { currentUser } = useApp();
@@ -65,17 +66,20 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
           </div>
           
           {/* Profile Section */}
-          <div className="flex items-center gap-4">
-            <Avatar className="w-12 h-12 border-2 border-white/20 shadow-lg rounded-2xl">
-              <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover rounded-2xl" />
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold rounded-2xl">
-                {currentUser.name.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 className="text-white font-semibold">{currentUser.name}</h3>
-              <p className="text-blue-200/80 text-sm">Coletivo Bank</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Avatar className="w-12 h-12 border-2 border-white/20 shadow-lg rounded-2xl">
+                <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover rounded-2xl" />
+                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold rounded-2xl">
+                  {currentUser.name.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h3 className="text-white font-semibold">{currentUser.name}</h3>
+                <p className="text-blue-200/80 text-sm">Coletivo Bank</p>
+              </div>
             </div>
+            <GeometricStatusBadge level={currentUser.accountLevel} />
           </div>
         </div>
 
