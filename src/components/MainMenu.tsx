@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Home, CreditCard, PieChart, Settings, HelpCircle, LogOut, User, Wallet, Bell } from 'lucide-react';
 
 const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMenu: () => void }) => {
+  // Prevenir scroll do body quando o menu estiver aberto
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup quando o componente for desmontado
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
   const menuItems = [
     { icon: Home, label: 'Início', active: true },
     { icon: Wallet, label: 'Meus Fundos', badge: '2' },
@@ -10,6 +23,14 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
     { icon: Bell, label: 'Notificações', badge: '3' },
     { icon: Settings, label: 'Configurações' },
     { icon: HelpCircle, label: 'Ajuda' },
+    { icon: User, label: 'Perfil' },
+    { icon: CreditCard, label: 'Cartões' },
+    { icon: PieChart, label: 'Investimentos' },
+    { icon: Wallet, label: 'Carteira Digital' },
+    { icon: Settings, label: 'Privacidade' },
+    { icon: Bell, label: 'Alertas' },
+    { icon: HelpCircle, label: 'Suporte' },
+    { icon: User, label: 'Conta' },
   ];
 
   return (
@@ -25,7 +46,7 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
       />
       
       {/* Menu Panel */}
-      <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out overflow-hidden ${
+      <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${
         isMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         {/* Header do Menu */}
@@ -53,7 +74,7 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
         </div>
 
         {/* Menu Items - Scrollable */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4" style={{ touchAction: 'pan-y' }}>
           <nav className="space-y-2">
             {menuItems.map((item, index) => {
               const IconComponent = item.icon;
