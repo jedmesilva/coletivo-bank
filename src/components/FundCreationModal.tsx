@@ -106,64 +106,74 @@ const FundCreationModal: React.FC = () => {
         aria-describedby="fund-creation-description"
       >
         <div className="flex-0 overflow-y-auto pb-0">
-          <header className="border-b border-gray-200">
-            <div className="h-10 px-4 flex items-center">
+          <header className="bg-gradient-to-br from-blue-50 to-purple-50 border-b border-gray-100">
+            <div className="h-16 px-6 flex items-center">
               {step === 'members' && (
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-8 w-8 mr-2" 
+                  className="h-10 w-10 mr-3 rounded-xl hover:bg-white/80 text-blue-600" 
                   onClick={() => setStep('details')}
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
-              <SheetTitle className="text-xl">
-                {step === 'details' ? 'Criar novo fundo' : 'Adicionar membros'}
-              </SheetTitle>
-            </div>
-            <div className="px-4 pb-3">
-              <SheetDescription>
-                {step === 'details' 
-                  ? "Defina as informações básicas do fundo" 
-                  : "Adicione os membros que farão parte do fundo"}
-              </SheetDescription>
+              <div className="flex-1">
+                <SheetTitle className="text-xl font-bold text-gray-900">
+                  {step === 'details' ? 'Criar Novo Fundo' : 'Adicionar Membros'}
+                </SheetTitle>
+                <SheetDescription className="text-gray-600 mt-1">
+                  {step === 'details' 
+                    ? "Defina as informações básicas do fundo" 
+                    : "Adicione os membros que farão parte do fundo"}
+                </SheetDescription>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleClose}
+                className="h-10 w-10 rounded-xl hover:bg-white/80 text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </Button>
             </div>
           </header>
 
           <div className="pt-3 px-4">
             {step === 'details' ? (
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center" htmlFor="fund-name">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-gray-700 flex items-center" htmlFor="fund-name">
                     Nome do fundo
-                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
+                    <span className="text-xs text-gray-500 ml-2">(obrigatório)</span>
                   </label>
                   <Input 
                     id="fund-name"
                     placeholder="Ex: Amigos do futebol" 
                     value={fundData.name}
                     onChange={(e) => setFundData({...fundData, name: e.target.value})}
+                    className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-200 bg-gray-50 focus:bg-white transition-all duration-200"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center" htmlFor="fund-description">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-gray-700 flex items-center" htmlFor="fund-description">
                     Descrição
-                    <span className="text-xs text-gray-500 ml-1">(obrigatório)</span>
+                    <span className="text-xs text-gray-500 ml-2">(obrigatório)</span>
                   </label>
                   <Input 
                     id="fund-description"
                     placeholder="Ex: Para custos de aluguel de quadra" 
                     value={fundData.description}
                     onChange={(e) => setFundData({...fundData, description: e.target.value})}
+                    className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-200 bg-gray-50 focus:bg-white transition-all duration-200"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Imagem</label>
-                  <div className="grid grid-cols-1 gap-4">
-                    <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-colors">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-gray-700">Imagem do Fundo</label>
+                  <div className="space-y-4">
+                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-400 hover:bg-blue-50/30 transition-all duration-200">
                       <label className="flex flex-col items-center justify-center cursor-pointer">
                         <input
                           type="file"
@@ -178,29 +188,34 @@ const FundCreationModal: React.FC = () => {
                           }}
                         />
                         <div className="flex flex-col items-center">
-                          <Plus size={24} className="text-gray-400 mb-2" />
-                          <span className="text-sm text-gray-500">Fazer upload de imagem</span>
+                          <Plus size={28} className="text-blue-500 mb-2" />
+                          <span className="text-sm font-medium text-gray-700">Fazer upload de imagem</span>
+                          <span className="text-xs text-gray-500 mt-1">JPG, PNG até 5MB</span>
                         </div>
                       </label>
                     </div>
 
-                    <p className="text-sm text-gray-500 mb-2">Ou escolha uma das opções abaixo:</p>
+                    <div className="text-center">
+                      <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full border">ou escolha uma opção</span>
+                    </div>
 
                     <div className="grid grid-cols-3 gap-3">
                       {images.map((image, index) => (
-                        <div 
+                        <button 
                           key={index}
-                          className={`cursor-pointer rounded-lg overflow-hidden h-20 border-2 ${
-                            fundData.image === image ? 'border-primary' : 'border-transparent'
+                          className={`rounded-xl overflow-hidden h-20 border-2 transition-all duration-200 hover:scale-105 ${
+                            fundData.image === image 
+                              ? 'border-blue-500 ring-2 ring-blue-200 shadow-lg' 
+                              : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
                           }`}
                           onClick={() => selectImage(image)}
                         >
                           <img 
                             src={image} 
-                            alt={`Option ${index + 1}`} 
+                            alt={`Opção ${index + 1}`} 
                             className="w-full h-full object-cover"
                           />
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </div>
