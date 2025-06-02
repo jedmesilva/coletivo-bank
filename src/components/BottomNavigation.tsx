@@ -48,7 +48,7 @@ const BottomNavigation: React.FC = () => {
             }`}
             onClick={() => navigate('/account')}
           >
-            <Avatar className={`w-8 h-8 border-2 transition-colors rounded-2xl ${
+            <Avatar className={`w-8 h-8 border-2 transition-colors ${
               location.pathname === '/account' ? 'border-white' : 'border-gray-200'
             }`}>
               <AvatarImage src={currentUser.profileImage} alt={currentUser.name} className="object-cover rounded-2xl" />
