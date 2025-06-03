@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUp, ArrowDownCircle, CreditCard, Check, X } from 'lucide-react';
+import { ArrowUp, ArrowDown, CreditCard, Check, X } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useApp } from '@/context/AppContext';
@@ -120,7 +120,7 @@ const FundDetail: React.FC = () => {
               className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 mx-2 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
               onClick={() => handleCapitalRequestClick(selectedFund.id)}
             >
-              <ArrowDownCircle size={20} className="mb-1" />
+              <ArrowDown size={20} className="mb-1" />
               <span className="font-medium">Solicitar capital</span>
             </button>
             <button 
