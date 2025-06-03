@@ -238,6 +238,25 @@ const AccountPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Detail Sheets */}
+      <MovementDetailSheet
+        isOpen={isMovementDetailOpen}
+        onClose={() => setIsMovementDetailOpen(false)}
+        movement={selectedMovement}
+      />
+
+      <DebtDetailSheet
+        isOpen={isDebtDetailOpen}
+        onClose={() => setIsDebtDetailOpen(false)}
+        debt={selectedDebtForDetail}
+      />
+
+      <ApprovalDetailSheet
+        isOpen={isApprovalDetailOpen}
+        onClose={() => setIsApprovalDetailOpen(false)}
+        approval={selectedApproval}
+      />
     </div>
   );
 };
