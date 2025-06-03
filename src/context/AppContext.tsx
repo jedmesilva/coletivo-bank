@@ -160,6 +160,23 @@ interface AppContextType {
   setSelectedDebtId: React.Dispatch<React.SetStateAction<string | null>>;
   handleDebtPaymentClick: (fundId?: string) => void;
   payFundDebt: (fundId: string, debtId: string, amount: number) => void;
+
+  // Detail sheets features
+  isMovementDetailOpen: boolean;
+  setIsMovementDetailOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedMovement: UserHistoryItem | null;
+  setSelectedMovement: React.Dispatch<React.SetStateAction<UserHistoryItem | null>>;
+  isDebtDetailOpen: boolean;
+  setIsDebtDetailOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedDebtForDetail: DebtItem | null;
+  setSelectedDebtForDetail: React.Dispatch<React.SetStateAction<DebtItem | null>>;
+  isApprovalDetailOpen: boolean;
+  setIsApprovalDetailOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedApproval: UserApprovalItem | null;
+  setSelectedApproval: React.Dispatch<React.SetStateAction<UserApprovalItem | null>>;
+  handleMovementClick: (movement: UserHistoryItem) => void;
+  handleDebtDetailClick: (debt: DebtItem) => void;
+  handleApprovalClick: (approval: UserApprovalItem) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -186,6 +203,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [isDebtPaymentOpen, setIsDebtPaymentOpen] = useState<boolean>(false);
   const [selectedFundIdForDebtPayment, setSelectedFundIdForDebtPayment] = useState<string | null>(null);
   const [selectedDebtId, setSelectedDebtId] = useState<string | null>(null);
+
+  // Detail sheets states
+  const [isMovementDetailOpen, setIsMovementDetailOpen] = useState<boolean>(false);
+  const [selectedMovement, setSelectedMovement] = useState<UserHistoryItem | null>(null);
+  const [isDebtDetailOpen, setIsDebtDetailOpen] = useState<boolean>(false);
+  const [selectedDebtForDetail, setSelectedDebtForDetail] = useState<DebtItem | null>(null);
+  const [isApprovalDetailOpen, setIsApprovalDetailOpen] = useState<boolean>(false);
+  const [selectedApproval, setSelectedApproval] = useState<UserApprovalItem | null>(null);
 
   const handleFundClick = (fundId: string) => {
     const fund = funds.find(f => f.id === fundId);
@@ -230,6 +255,21 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setSelectedFundIdForDebtPayment(null);
     }
     setIsDebtPaymentOpen(true);
+  };
+
+  const handleMovementClick = (movement: UserHistoryItem) => {
+    setSelectedMovement(movement);
+    setIsMovementDetailOpen(true);
+  };
+
+  const handleDebtDetailClick = (debt: DebtItem) => {
+    setSelectedDebtForDetail(debt);
+    setIsDebtDetailOpen(true);
+  };
+
+  const handleApprovalClick = (approval: UserApprovalItem) => {
+    setSelectedApproval(approval);
+    setIsApprovalDetailOpen(true);
   };
 
   const formatDate = (): string => {
