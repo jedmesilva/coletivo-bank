@@ -51,8 +51,8 @@ const FundDetail: React.FC = () => {
 
   const tabs = [
     { id: 'approvals', label: 'Aprovações' },
-    { id: 'history', label: 'Histórico' },
     { id: 'debts', label: 'Dívidas' },
+    { id: 'history', label: 'Histórico' },
     { id: 'members', label: 'Membros' }
   ];
 
