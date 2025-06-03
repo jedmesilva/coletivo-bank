@@ -123,11 +123,11 @@
   .safe-area-pb {
     padding-bottom: env(safe-area-inset-bottom);
   }
-  
+
   .safe-area-pt {
     padding-top: max(env(safe-area-inset-top), 16px);
   }
-  
+
   .safe-area-top {
     margin-top: env(safe-area-inset-top);
   }
@@ -164,3 +164,17 @@
     transform: translateY(0);
   }
 }
+
+.scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Smooth scrolling para tabs */
+  .scrollbar-hide {
+    scroll-behavior: smooth;
+  }
