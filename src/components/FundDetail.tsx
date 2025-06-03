@@ -20,12 +20,16 @@ const FundDetail: React.FC = () => {
     fundTab, 
     setFundTab, 
     hideValues,
+    userDebts,
     handleDepositClick,
     handleCapitalRequestClick,
     handleDebtPaymentClick
   } = useApp();
 
   const selectedFund = funds.find(fund => fund.id === fundId);
+  
+  // Get debts related to this fund
+  const fundDebts = userDebts.filter(debt => debt.fundId === fundId);
 
   if (!selectedFund) {
     return (
@@ -193,6 +197,43 @@ const FundDetail: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {fundTab === 'debts' && (
+            <div className="space-y-4">
+              {fundDebts.length > 0 ? (
+                fundDebts.map(debt => (
+                  <div key={debt.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <p className="font-medium text-gray-900">{debt.description}</p>
+                        <p className="text-sm text-gray-500">Vencimento: {debt.dueDate}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-red-600">
+                          {formatCurrency(debt.amount, hideValues)}
+                        </p>
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          Em aberto
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDebtPaymentClick(selectedFund.id)}
+                      className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Pagar dívida
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <CreditCard size={48} className="mx-auto text-gray-300 mb-4" />
+                  <p className="text-gray-500 font-medium">Nenhuma dívida em aberto</p>
+                  <p className="text-gray-400 text-sm mt-1">Este fundo não possui dívidas pendentes</p>
+                </div>
+              )}
             </div>
           )}
 
