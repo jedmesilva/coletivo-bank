@@ -221,7 +221,7 @@ const FundDetail: React.FC = () => {
                     </div>
                     <button
                       onClick={() => handleDebtPaymentClick(selectedFund.id)}
-                      className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                      className="mt-2 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
                     >
                       Pagar dívida
                     </button>
