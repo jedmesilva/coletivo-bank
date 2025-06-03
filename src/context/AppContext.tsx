@@ -108,6 +108,7 @@ interface AppContextType {
     id: string;
     name: string;
     profileImage: string;
+    accountLevel: 'bronze' | 'silver' | 'gold' | 'platinum';
   };
   funds: Fund[];
   userDebts: DebtItem[];
@@ -509,7 +510,24 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     selectedDebtId,
     setSelectedDebtId,
     handleDebtPaymentClick,
-    payFundDebt
+    payFundDebt,
+
+    // Detail sheets features
+    isMovementDetailOpen,
+    setIsMovementDetailOpen,
+    selectedMovement,
+    setSelectedMovement,
+    isDebtDetailOpen,
+    setIsDebtDetailOpen,
+    selectedDebtForDetail,
+    setSelectedDebtForDetail,
+    isApprovalDetailOpen,
+    setIsApprovalDetailOpen,
+    selectedApproval,
+    setSelectedApproval,
+    handleMovementClick,
+    handleDebtDetailClick,
+    handleApprovalClick
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

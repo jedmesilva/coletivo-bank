@@ -9,6 +9,9 @@ import TopNavbar from '@/components/TopNavbar';
 import HeaderSection from '@/components/HeaderSection';
 import SidebarMenu from '@/components/MainMenu';
 import GeometricStatusBadge from '@/components/GeometricStatusBadge';
+import MovementDetailSheet from '@/components/MovementDetailSheet';
+import DebtDetailSheet from '@/components/DebtDetailSheet';
+import ApprovalDetailSheet from '@/components/ApprovalDetailSheet';
 
 const AccountPage: React.FC = () => {
   const { 
@@ -22,7 +25,20 @@ const AccountPage: React.FC = () => {
     getTotalUserDeposits,
     setSelectedDebtId,
     setIsDebtPaymentOpen,
-    handleDebtPaymentClick
+    handleDebtPaymentClick,
+    // Detail sheets
+    isMovementDetailOpen,
+    setIsMovementDetailOpen,
+    selectedMovement,
+    isDebtDetailOpen,
+    setIsDebtDetailOpen,
+    selectedDebtForDetail,
+    isApprovalDetailOpen,
+    setIsApprovalDetailOpen,
+    selectedApproval,
+    handleMovementClick,
+    handleDebtDetailClick,
+    handleApprovalClick
   } = useApp();
 
   // Estado para controlar a abertura/fechamento do menu lateral
@@ -100,7 +116,11 @@ const AccountPage: React.FC = () => {
               <div>
                 {userDebts.length > 0 ? (
                   userDebts.map((debt) => (
-                    <div key={debt.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-lg mb-4">
+                    <div 
+                      key={debt.id} 
+                      className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-lg mb-4 cursor-pointer"
+                      onClick={() => handleDebtDetailClick(debt)}
+                    >
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <p className="font-semibold text-gray-900">{debt.description}</p>
@@ -113,7 +133,8 @@ const AccountPage: React.FC = () => {
                       </div>
                       <button 
                         className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2.5 rounded-2xl w-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 text-sm"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setSelectedDebtId(debt.id);
                           setIsDebtPaymentOpen(true);
                         }}
@@ -135,7 +156,11 @@ const AccountPage: React.FC = () => {
             {accountTab === 'movements' && (
               <div>
                 {userMovements.map((movement) => (
-                  <div key={movement.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 mb-4">
+                  <div 
+                    key={movement.id} 
+                    className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-lg mb-4 cursor-pointer"
+                    onClick={() => handleMovementClick(movement)}
+                  >
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-semibold text-gray-900">{movement.description}</p>
@@ -156,7 +181,11 @@ const AccountPage: React.FC = () => {
               <div>
                 {userApprovals.length > 0 ? (
                   userApprovals.map((approval) => (
-                    <div key={approval.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 mb-4">
+                    <div 
+                      key={approval.id} 
+                      className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-lg mb-4 cursor-pointer"
+                      onClick={() => handleApprovalClick(approval)}
+                    >
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <p className="font-semibold text-gray-900">{approval.description}</p>
@@ -181,11 +210,17 @@ const AccountPage: React.FC = () => {
                       </div>
                       {approval.status === 'pending' && (
                         <div className="flex gap-2">
-                          <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg flex items-center justify-center flex-1 text-sm">
+                          <button 
+                            className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg flex items-center justify-center flex-1 text-sm"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <Check size={16} className="mr-1" />
                             Aprovar
                           </button>
-                          <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg flex items-center justify-center flex-1 text-sm">
+                          <button 
+                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg flex items-center justify-center flex-1 text-sm"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <X size={16} className="mr-1" />
                             Rejeitar
                           </button>
