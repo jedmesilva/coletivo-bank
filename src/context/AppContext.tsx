@@ -129,6 +129,8 @@ interface AppContextType {
   getTotalBalance: () => number;
   getTotalMembers: () => number;
   getTotalUserDeposits: () => number;
+  getFundPercentageOfTotal: (fundBalance: number) => number;
+  getFundDebtCount: (fundId: string) => number;
 
   // Fund creation and deposit features
   isFundCreationOpen: boolean;
@@ -404,6 +406,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       .reduce((sum, movement) => sum + movement.value, 0);
   };
 
+  const getFundPercentageOfTotal = (fundBalance: number): number => {
+    const total = getTotalBalance();
+    if (total === 0) return 0;
+    return (fundBalance / total) * 100;
+  };
+
+  const getFundDebtCount = (fundId: string): number => {
+    return userDebtsState.filter(debt => debt.fundId === fundId).length;
+  };
+
   const value = {
     // User info
     currentUser,
@@ -427,6 +439,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     getTotalBalance,
     getTotalMembers,
     getTotalUserDeposits,
+    getFundPercentageOfTotal,
+    getFundDebtCount,
 
     // Fund creation and deposit features
     isFundCreationOpen,
@@ -456,7 +470,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setSelectedDebtId,
     handleDebtPaymentClick,
     payFundDebt
-    
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

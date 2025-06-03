@@ -12,10 +12,13 @@ interface FundCardProps {
 }
 
 const FundCard: React.FC<FundCardProps> = ({ fund, onClick }) => {
-  const { hideValues, handleDepositClick } = useApp();
+  const { hideValues, handleDepositClick, getFundPercentageOfTotal } = useApp();
   
   // Determine if growth is positive or negative for color styling
   const isPositiveGrowth = fund.growth >= 0;
+  
+  // Calculate percentage of total capital this fund represents
+  const fundPercentage = getFundPercentageOfTotal(fund.balance);
   
   return (
     <div 
@@ -55,7 +58,14 @@ const FundCard: React.FC<FundCardProps> = ({ fund, onClick }) => {
               <Users size={12} />
               <span className="text-sm">{fund.members.length} Membros</span>
             </div>
-            <span className="text-gray-500 text-xs ml-auto">Desde {fund.date}</span>
+          </div>
+          
+          {/* Percentual do capital total */}
+          <div className="mt-2 flex justify-between items-center">
+            <span className="text-xs text-gray-500">
+              {hideValues ? "***%" : `${fundPercentage.toFixed(1)}%`} do capital total
+            </span>
+            <span className="text-gray-500 text-xs">Desde {fund.date}</span>
           </div>
         </div>
       </div>
