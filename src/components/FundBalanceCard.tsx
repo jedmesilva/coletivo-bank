@@ -1,5 +1,5 @@
 import React from 'react';
-import { Eye, EyeOff, Users, PieChart, CreditCard } from 'lucide-react';
+import { Eye, EyeOff, TrendingUp, Users, PieChart, CreditCard } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { formatCurrency, formatPercentage } from '@/utils/formatCurrency';
 
