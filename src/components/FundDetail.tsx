@@ -48,11 +48,12 @@ const FundDetail: React.FC = () => {
   const tabs = [
     { id: 'approvals', label: 'Aprovações' },
     { id: 'history', label: 'Histórico' },
+    { id: 'debts', label: 'Dívidas' },
     { id: 'members', label: 'Membros' }
   ];
 
   const handleTabChange = (tabId: string) => {
-    setFundTab(tabId as 'history' | 'approvals' | 'members');
+    setFundTab(tabId as 'history' | 'approvals' | 'members' | 'debts');
   };
 
   return (
@@ -88,6 +89,7 @@ const FundDetail: React.FC = () => {
           leftValue={selectedFund.members.length}
           showGrowth={true}
           growthValue={selectedFund.growth}
+          fundId={selectedFund.id}
         />
       </HeaderSection>
 

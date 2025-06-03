@@ -49,5 +49,5 @@ export interface Fund {
 }
 
 export type Screen = 'home' | 'fund-detail' | 'account';
-export type FundTab = 'history' | 'approvals' | 'members';
+export type FundTab = 'history' | 'approvals' | 'members' | 'debts';
 export type AccountTab = 'debts' | 'movements' | 'approvals';
