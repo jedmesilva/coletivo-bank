@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreditCard, Check, X, User } from 'lucide-react';
+import { CreditCard, Check, X, User, ArrowUp, ArrowDown, Send } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
@@ -101,6 +101,31 @@ const AccountPage: React.FC = () => {
             isMenuOpen={isMenuOpen} 
             toggleMenu={() => setIsMenuOpen(false)} 
           />
+
+          {/* Action Buttons */}
+          <div className="flex justify-between mb-6">
+            <button 
+              className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 mr-2 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+              onClick={() => console.log('Pagar clicado')}
+            >
+              <CreditCard size={20} className="mb-1" />
+              <span className="font-medium">Pagar</span>
+            </button>
+            <button 
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-xl flex flex-col items-center flex-1 mx-2 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+              onClick={() => console.log('Enviar clicado')}
+            >
+              <Send size={20} className="mb-1" />
+              <span className="font-medium">Enviar</span>
+            </button>
+            <button 
+              className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 ml-2 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+              onClick={() => console.log('Receber clicado')}
+            >
+              <ArrowDown size={20} className="mb-1" />
+              <span className="font-medium">Receber</span>
+            </button>
+          </div>
           
           {/* Tabs */}
           <TabNavigation 
