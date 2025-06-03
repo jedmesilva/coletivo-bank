@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Eye, EyeOff, TrendingUp, TrendingDown, Users, CreditCard } from 'lucide-react';
+import { Eye, EyeOff, Users, PieChart, CreditCard } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { formatCurrency, formatPercentage } from '@/utils/formatCurrency';
 
@@ -29,11 +28,11 @@ const FundBalanceCard: React.FC<FundBalanceCardProps> = ({
 }) => {
   const { hideValues, setHideValues, getFundPercentageOfTotal, getFundDebtCount } = useApp();
   const isPositiveGrowth = growthValue >= 0;
-  
+
   // Calculate percentage and debt count for this fund
   const fundPercentage = getFundPercentageOfTotal(balance);
   const debtCount = fundId ? getFundDebtCount(fundId) : 0;
-  
+
   return (
     <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-3xl p-6 border border-white/10 shadow-2xl">
       {/* Header do Card */}
@@ -85,24 +84,31 @@ const FundBalanceCard: React.FC<FundBalanceCardProps> = ({
               </div>
             </div>
           </div>
-          
+
           {/* Informações adicionais */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl p-3 border border-blue-500/20">
-              <div className="text-center">
-                <p className="text-lg font-bold text-white">
-                  {hideValues ? "***%" : `${fundPercentage.toFixed(1)}%`}
-                </p>
-                <p className="text-xs text-white/60 uppercase tracking-wide">do capital total</p>
+            <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl p-4 border border-blue-500/20">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 min-w-8 min-h-8 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                  <PieChart size={16} className="text-blue-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-2xl font-bold text-white">
+                    {hideValues ? "***%" : `${fundPercentage.toFixed(1)}%`}
+                  </p>
+                  <p className="text-xs text-white/60 uppercase tracking-wide">do total</p>
+                </div>
               </div>
             </div>
-            
+
             {fundId && (
-              <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-xl p-3 border border-orange-500/20">
-                <div className="flex items-center gap-2 justify-center">
-                  <CreditCard size={14} className="text-orange-400" />
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-white">{debtCount}</p>
+              <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl p-4 border border-orange-500/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 min-w-8 min-h-8 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
+                    <CreditCard size={16} className="text-orange-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-2xl font-bold text-white">{debtCount}</p>
                     <p className="text-xs text-white/60 uppercase tracking-wide">dívidas</p>
                   </div>
                 </div>
