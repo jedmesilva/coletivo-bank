@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TrendingUp, Users } from 'lucide-react';
+import { TrendingUp, Users, PieChart } from 'lucide-react';
 import { Fund } from '@/types';
 import { useApp } from '@/context/AppContext';
 import { formatCurrency, formatPercentage } from '@/utils/formatCurrency';
@@ -62,9 +62,12 @@ const FundCard: React.FC<FundCardProps> = ({ fund, onClick }) => {
           
           {/* Percentual do capital total */}
           <div className="mt-2 flex justify-between items-center">
-            <span className="text-xs text-gray-500">
-              {hideValues ? "***%" : `${fundPercentage.toFixed(1)}%`} do capital total
-            </span>
+            <div className="flex items-center gap-1 text-gray-500">
+              <PieChart size={12} />
+              <span className="text-xs">
+                {hideValues ? "***%" : `${fundPercentage.toFixed(1)}%`} do total
+              </span>
+            </div>
             <span className="text-gray-500 text-xs">Desde {fund.date}</span>
           </div>
         </div>
