@@ -15,7 +15,8 @@ const Index: React.FC = () => {
     getTotalMembers,
     getUserFreeBalance,
     setIsFundCreationOpen,
-    handleDepositClick
+    handleDepositClick,
+    userDebts
   } = useApp();
   
   // Estado para controlar a abertura/fechamento do menu lateral
@@ -53,8 +54,8 @@ const Index: React.FC = () => {
           leftValue={funds.length}
           centerLabel="Saldo aplicado"
           centerValue="R$ 25.000,00"
-          rightLabel="Membros"
-          rightValue={getTotalMembers()}
+          rightLabel="Dívidas ativas"
+          rightValue={userDebts.length}
         />
       </HeaderSection>
 
