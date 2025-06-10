@@ -122,11 +122,20 @@ export const payDebt = async (req: Request, res: Response) => {
       })
       .where(eq(debts.id, debtId));
 
+    // Get current fund balance and update it
+    const currentFund = await db
+      .select()
+      .from(funds)
+      .where(eq(funds.id, debt[0].fundId))
+      .limit(1);
+
+    const currentBalance = parseFloat(currentFund[0].balance || '0');
+
     // Update fund balance (add the payment)
     await db
       .update(funds)
       .set({
-        balance: (parseFloat(funds.balance) + paymentAmount).toString(),
+        balance: (currentBalance + paymentAmount).toString(),
         updatedAt: new Date(),
       })
       .where(eq(funds.id, debt[0].fundId));
