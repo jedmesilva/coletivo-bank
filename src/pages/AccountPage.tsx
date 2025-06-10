@@ -89,12 +89,11 @@ const AccountPage: React.FC = () => {
           balance={getUserFreeBalance()}
           leftLabel="Fundos ativos"
           leftValue={funds.length}
+          centerLabel="Saldo aplicado"
+          centerValue="R$ 25.000,00"
           rightLabel="Dívidas ativas"
           rightValue={userDebts.length}
         />
-
-        {/* Applied Balance Card */}
-        <AppliedBalanceCard className="mb-4" />
       </HeaderSection>
 
       {/* Seção de Conteúdo - Fundo Branco */}
@@ -106,9 +105,6 @@ const AccountPage: React.FC = () => {
             isMenuOpen={isMenuOpen} 
             toggleMenu={() => setIsMenuOpen(false)} 
           />
-
-          {/* Saldo Aplicado Card */}
-          <AppliedBalanceCard className="mb-6" />
 
           {/* Action Buttons */}
           <div className="flex justify-between mb-6">

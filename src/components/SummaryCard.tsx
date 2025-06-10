@@ -9,6 +9,8 @@ interface SummaryCardProps {
   balance: number;
   leftLabel?: string;
   leftValue?: string | number;
+  centerLabel?: string;
+  centerValue?: string | number;
   rightLabel?: string;
   rightValue?: string | number;
   showGrowth?: boolean;
@@ -20,6 +22,8 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   balance,
   leftLabel,
   leftValue,
+  centerLabel,
+  centerValue,
   rightLabel,
   rightValue,
   showGrowth = false,
@@ -66,29 +70,43 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       </div>
 
       {/* Estatísticas */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-3">
         {(leftLabel && leftValue !== undefined) && (
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl p-4 border border-blue-500/20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 min-w-8 min-h-8 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                <Wallet size={16} className="text-blue-400" />
+          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl p-3 border border-blue-500/20">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-6 h-6 min-w-6 min-h-6 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                <Wallet size={12} className="text-blue-400" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-2xl font-bold text-white">{leftValue}</p>
+                <p className="text-lg font-bold text-white">{leftValue}</p>
                 <p className="text-xs text-white/60 uppercase tracking-wide">{leftLabel}</p>
               </div>
             </div>
           </div>
         )}
 
-        {(rightLabel && rightValue !== undefined) && (
-          <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 rounded-2xl p-4 border border-green-500/20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 min-w-8 min-h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                <Users size={16} className="text-green-400" />
+        {(centerLabel && centerValue !== undefined) && (
+          <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-3 border border-purple-500/20">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-6 h-6 min-w-6 min-h-6 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                <TrendingUp size={12} className="text-purple-400" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-2xl font-bold text-white">{rightValue}</p>
+                <p className="text-lg font-bold text-white">{centerValue}</p>
+                <p className="text-xs text-white/60 uppercase tracking-wide">{centerLabel}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {(rightLabel && rightValue !== undefined) && (
+          <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 rounded-2xl p-3 border border-green-500/20">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-6 h-6 min-w-6 min-h-6 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                <Users size={12} className="text-green-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-lg font-bold text-white">{rightValue}</p>
                 <p className="text-xs text-white/60 uppercase tracking-wide">{rightLabel}</p>
               </div>
             </div>
