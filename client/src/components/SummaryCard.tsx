@@ -58,7 +58,11 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
         {(centerLabel && centerValue !== undefined) && (
           <div className="text-center">
             <p className="text-sm text-gray-500">{centerLabel}</p>
-            <p className="text-lg font-bold">{centerValue}</p>
+            <p className="text-lg font-bold">
+              {typeof centerValue === 'string' && centerValue.startsWith('R$') 
+                ? (hideValues ? 'R$ ***' : centerValue)
+                : centerValue}
+            </p>
           </div>
         )}
         

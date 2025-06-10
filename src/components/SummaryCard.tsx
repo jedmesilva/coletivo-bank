@@ -79,7 +79,11 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
                 <TrendingUp size={16} className="text-purple-400" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xl font-bold text-white">{centerValue}</p>
+                <p className="text-xl font-bold text-white">
+                  {typeof centerValue === 'string' && centerValue.startsWith('R$') 
+                    ? (hideValues ? 'R$ ***' : centerValue)
+                    : centerValue}
+                </p>
                 <p className="text-xs text-white/60 uppercase tracking-wide">{centerLabel}</p>
               </div>
             </div>
