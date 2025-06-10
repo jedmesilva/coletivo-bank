@@ -71,6 +71,20 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 
       {/* Estatísticas */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {(centerLabel && centerValue !== undefined) && (
+          <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-4 border border-purple-500/20">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 min-w-8 min-h-8 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                <TrendingUp size={16} className="text-purple-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xl font-bold text-white">{centerValue}</p>
+                <p className="text-xs text-white/60 uppercase tracking-wide">{centerLabel}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {(leftLabel && leftValue !== undefined) && (
           <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl p-4 border border-blue-500/20">
             <div className="flex items-center gap-3 mb-2">
@@ -80,20 +94,6 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
               <div className="flex-1 min-w-0">
                 <p className="text-xl font-bold text-white">{leftValue}</p>
                 <p className="text-xs text-white/60 uppercase tracking-wide">{leftLabel}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {(centerLabel && centerValue !== undefined) && (
-          <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-4 border border-purple-500/20 col-span-2 sm:col-span-1">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 min-w-8 min-h-8 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                <TrendingUp size={16} className="text-purple-400" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xl font-bold text-white">{centerValue}</p>
-                <p className="text-xs text-white/60 uppercase tracking-wide">{centerLabel}</p>
               </div>
             </div>
           </div>
@@ -111,7 +111,8 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
               </div>
             </div>
           </div>
-        )}
+        )}</div>
+      </div>
       </div>
     </div>
   );
