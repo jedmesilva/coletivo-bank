@@ -130,6 +130,8 @@ interface AppContextType {
   getTotalBalance: () => number;
   getTotalMembers: () => number;
   getTotalUserDeposits: () => number;
+  getUserFreeBalance: () => number;
+  getUserAppliedBalance: () => number;
   getFundPercentageOfTotal: (fundBalance: number) => number;
   getFundDebtCount: (fundId: string) => number;
 
@@ -447,6 +449,41 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       .reduce((sum, movement) => sum + movement.value, 0);
   };
 
+  // Saldo livre do usuário (valor total depositado menos o que está aplicado em fundos)
+  const getUserFreeBalance = (): number => {
+    const totalDeposits = getTotalUserDeposits();
+    const appliedBalance = getUserAppliedBalance();
+    return totalDeposits - appliedBalance;
+  };
+
+  // Saldo aplicado em fundos (baseado na participação proporcional do usuário em cada fundo)
+  const getUserAppliedBalance = (): number => {
+    let appliedBalance = 0;
+    
+    funds.forEach(fund => {
+      // Calcular a participação do usuário no fundo baseado nos seus depósitos
+      const userDepositsInFund = userMovements
+        .filter(movement => 
+          movement.fundName === fund.name && 
+          movement.type === 'deposit'
+        )
+        .reduce((sum, movement) => sum + movement.value, 0);
+
+      // Calcular o total de depósitos no fundo
+      const totalFundDeposits = fund.history
+        .filter(item => item.type === 'deposit')
+        .reduce((sum, item) => sum + item.value, 0);
+
+      // Se há depósitos no fundo, calcular a participação proporcional
+      if (totalFundDeposits > 0) {
+        const participationRatio = userDepositsInFund / totalFundDeposits;
+        appliedBalance += fund.balance * participationRatio;
+      }
+    });
+
+    return Math.max(0, appliedBalance); // Garantir que não seja negativo
+  };
+
   const getFundPercentageOfTotal = (fundBalance: number): number => {
     const total = getTotalBalance();
     if (total === 0) return 0;
@@ -480,6 +517,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     getTotalBalance,
     getTotalMembers,
     getTotalUserDeposits,
+    getUserFreeBalance,
+    getUserAppliedBalance,
     getFundPercentageOfTotal,
     getFundDebtCount,
 
