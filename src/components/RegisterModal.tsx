@@ -194,8 +194,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
 
   return (
     <Sheet open={isOpen} onOpenChange={handleClose}>
-      <SheetContent side="right" className="w-full p-0 flex flex-col bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-        <div className="flex-1 flex flex-col">
+      <SheetContent side="right" className="w-full h-full p-0 flex flex-col bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+        <div className="flex-1 flex flex-col h-full">
           <SheetHeader className="p-6 border-b border-white/10">
             <div className="flex items-center justify-between">
               {step !== 'cpf' && (
@@ -220,7 +220,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
             </div>
           </SheetHeader>
 
-          <div className="flex-1 flex items-center justify-center px-6 min-h-0">
+          <div className="flex-1 flex items-center justify-center px-6">
             <div className="max-w-sm mx-auto w-full">
               <div className="backdrop-blur-md bg-white/10 rounded-xl p-6 border border-white/20 shadow-2xl">
                 {step === 'cpf' && (
