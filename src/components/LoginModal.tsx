@@ -156,7 +156,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
                         </TabsTrigger>
                       </TabsList>
                       
-                      <TabsContent value="cpf" className="mt-4 space-y-4">
+                      <TabsContent value="cpf" className="mt-4 space-y-4 border-0">
                         <div className="space-y-2">
                           <Label htmlFor="cpf" className="text-white">CPF</Label>
                           <div className="relative">
@@ -178,7 +178,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
                         </div>
                       </TabsContent>
                       
-                      <TabsContent value="email" className="mt-4 space-y-4">
+                      <TabsContent value="email" className="mt-4 space-y-4 border-0">
                         <div className="space-y-2">
                           <Label htmlFor="email" className="text-white">Email</Label>
                           <div className="relative">
