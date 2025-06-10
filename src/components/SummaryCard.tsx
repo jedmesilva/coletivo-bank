@@ -111,8 +111,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
               </div>
             </div>
           </div>
-        )}</div>
-      </div>
+        )}
       </div>
     </div>
   );
