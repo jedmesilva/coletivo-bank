@@ -271,7 +271,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
               {step === 'identifier' && (
                 <Button 
                   onClick={handleNextStep}
-                  className="w-full bg-white text-slate-900 hover:bg-white/90 font-medium"
+                  className="w-full h-12 bg-white text-slate-900 hover:bg-white/90 font-medium rounded-xl shadow-lg transition-all duration-200"
                   disabled={!isIdentifierValid()}
                 >
                   Continuar
@@ -281,7 +281,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
               {step === 'password' && (
                 <Button 
                   onClick={handleLogin}
-                  className="w-full bg-white text-slate-900 hover:bg-white/90 font-medium"
+                  className="w-full h-12 bg-white text-slate-900 hover:bg-white/90 font-medium rounded-xl shadow-lg transition-all duration-200"
                   disabled={!password || isLoading}
                 >
                   {isLoading ? 'Entrando...' : 'Entrar'}

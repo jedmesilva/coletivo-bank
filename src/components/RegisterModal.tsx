@@ -396,7 +396,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
               {step === 'cpf' && (
                 <Button 
                   onClick={handleCPFStep}
-                  className="w-full bg-white text-slate-900 hover:bg-white/90 font-medium"
+                  className="w-full h-12 bg-white text-slate-900 hover:bg-white/90 font-medium rounded-xl shadow-lg transition-all duration-200"
                   disabled={!isStepValid()}
                 >
                   Continuar
@@ -406,7 +406,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
               {step === 'personal-info' && (
                 <Button 
                   onClick={handlePersonalInfoStep}
-                  className="w-full bg-white text-slate-900 hover:bg-white/90 font-medium"
+                  className="w-full h-12 bg-white text-slate-900 hover:bg-white/90 font-medium rounded-xl shadow-lg transition-all duration-200"
                   disabled={!isStepValid()}
                 >
                   Continuar
@@ -416,7 +416,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
               {step === 'password' && (
                 <Button 
                   onClick={handleRegister}
-                  className="w-full bg-white text-slate-900 hover:bg-white/90 font-medium"
+                  className="w-full h-12 bg-white text-slate-900 hover:bg-white/90 font-medium rounded-xl shadow-lg transition-all duration-200"
                   disabled={!isStepValid() || isLoading}
                 >
                   {isLoading ? 'Criando conta...' : 'Criar conta'}
