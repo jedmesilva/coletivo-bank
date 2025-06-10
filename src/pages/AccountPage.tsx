@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreditCard, Check, X, User, ArrowUp, ArrowDown, Send } from 'lucide-react';
+import { CreditCard, Check, X, User, ArrowUp, ArrowDown, Send, TrendingUp, Wallet } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
@@ -12,7 +12,7 @@ import GeometricStatusBadge from '@/components/GeometricStatusBadge';
 import MovementDetailSheet from '@/components/MovementDetailSheet';
 import DebtDetailSheet from '@/components/DebtDetailSheet';
 import ApprovalDetailSheet from '@/components/ApprovalDetailSheet';
-import AppliedBalanceCard from '@/components/AppliedBalanceCard';
+
 
 const AccountPage: React.FC = () => {
   const { 
@@ -24,6 +24,7 @@ const AccountPage: React.FC = () => {
     setAccountTab,
     hideValues,
     getUserFreeBalance,
+    getUserAppliedBalance,
     funds,
     setSelectedDebtId,
     setIsDebtPaymentOpen,
@@ -104,8 +105,7 @@ const AccountPage: React.FC = () => {
             toggleMenu={() => setIsMenuOpen(false)} 
           />
 
-          {/* Saldo Aplicado Card */}
-          <AppliedBalanceCard className="mb-6" />
+
 
           {/* Action Buttons */}
           <div className="flex justify-between mb-6">

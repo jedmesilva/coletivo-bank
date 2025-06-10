@@ -11,6 +11,8 @@ interface SummaryCardProps {
   leftValue?: string | number;
   rightLabel?: string;
   rightValue?: string | number;
+  centerLabel?: string;
+  centerValue?: string | number;
   showGrowth?: boolean;
   growthValue?: number;
 }
