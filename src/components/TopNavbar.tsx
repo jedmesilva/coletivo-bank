@@ -20,13 +20,13 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick,
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
   return (
     <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
       scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
     } ${
       isScrolled 
-        ? 'bg-slate-900/80 backdrop-blur-lg border-b border-white/10 shadow-lg' 
+        ? 'bg-slate-900/90 backdrop-blur-lg border-b border-white/10 shadow-lg' 
         : 'bg-transparent'
     }`}>
       <div className="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
@@ -36,7 +36,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick,
         >
           <Menu size={20} className="text-white group-hover:scale-110 transition-transform" />
         </button>
-        
+
         <div className="relative">
           <button 
             onClick={onNotificationClick}
