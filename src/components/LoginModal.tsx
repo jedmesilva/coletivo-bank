@@ -112,8 +112,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
 
   return (
     <Sheet open={isOpen} onOpenChange={handleClose}>
-      <SheetContent side="right" className="w-full p-0 flex flex-col bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-        <div className="flex-1 flex flex-col">
+      <SheetContent side="right" className="w-full h-full p-0 flex flex-col bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+        <div className="flex-1 flex flex-col h-full">
           <SheetHeader className="p-6 border-b border-white/10">
             <div className="flex items-center justify-between">
               {step === 'password' && (
