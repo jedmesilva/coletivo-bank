@@ -141,7 +141,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
             </div>
           </SheetHeader>
 
-          <div className="flex-1 flex items-center justify-center px-6 min-h-0">
+          <div className="flex-1 flex items-center justify-center px-6">
             <div className="max-w-sm mx-auto w-full">
               <div className="backdrop-blur-md bg-white/10 rounded-xl p-6 border border-white/20 shadow-2xl">
                 {step === 'identifier' && (
