@@ -231,6 +231,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
                         <Input
                           id="cpf"
                           type="text"
+                          inputMode="numeric"
                           placeholder="000.000.000-00"
                           value={formData.cpf}
                           onChange={handleCPFChange}

@@ -146,12 +146,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
               <div className="backdrop-blur-md bg-white/10 rounded-xl p-6 border border-white/20 shadow-2xl">
                 {step === 'identifier' && (
                   <div className="space-y-6">
-                    <Tabs value={identifierType} onValueChange={(value) => setIdentifierType(value as IdentifierType)}>
-                      <TabsList className="grid w-full grid-cols-2 bg-white/10">
-                        <TabsTrigger value="cpf" className="text-white data-[state=active]:bg-white data-[state=active]:text-slate-900">
+                    <Tabs value={identifierType} onValueChange={(value) => setIdentifierType(value as IdentifierType)} className="[&>*]:border-0 [&>*]:outline-0 [&>*]:ring-0">
+                      <TabsList className="grid w-full grid-cols-2 bg-white/10 border-0">
+                        <TabsTrigger value="cpf" className="text-white data-[state=active]:bg-white data-[state=active]:text-slate-900 border-0">
                           CPF
                         </TabsTrigger>
-                        <TabsTrigger value="email" className="text-white data-[state=active]:bg-white data-[state=active]:text-slate-900">
+                        <TabsTrigger value="email" className="text-white data-[state=active]:bg-white data-[state=active]:text-slate-900 border-0">
                           Email
                         </TabsTrigger>
                       </TabsList>
@@ -163,6 +163,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
                             <Input
                               id="cpf"
                               type="text"
+                              inputMode="numeric"
                               placeholder="000.000.000-00"
                               value={cpf}
                               onChange={handleCPFChange}
