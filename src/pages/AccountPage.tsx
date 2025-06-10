@@ -90,6 +90,8 @@ const AccountPage: React.FC = () => {
           balance={getUserFreeBalance()}
           leftLabel="Fundos ativos"
           leftValue={funds.length}
+          centerLabel="Saldo aplicado"
+          centerValue={formatCurrency(getUserAppliedBalance(), hideValues)}
           rightLabel="Dívidas ativas"
           rightValue={userDebts.length}
         />
