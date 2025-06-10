@@ -110,8 +110,8 @@ const AccountPage: React.FC = () => {
           <div className="mb-6">
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Pix</h3>
-              <div className="overflow-x-auto scrollbar-hide">
-                <div className="flex gap-3 pb-2" style={{ minWidth: 'max-content' }}>
+              <div className="overflow-x-auto scrollbar-hide px-1 py-2">
+                <div className="flex gap-3" style={{ minWidth: 'max-content' }}>
                   <button 
                     className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center min-w-[80px] shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
                     onClick={() => console.log('Pagar clicado')}
