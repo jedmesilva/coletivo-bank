@@ -12,6 +12,7 @@ import GeometricStatusBadge from '@/components/GeometricStatusBadge';
 import MovementDetailSheet from '@/components/MovementDetailSheet';
 import DebtDetailSheet from '@/components/DebtDetailSheet';
 import ApprovalDetailSheet from '@/components/ApprovalDetailSheet';
+import AppliedBalanceCard from '@/components/AppliedBalanceCard';
 
 const AccountPage: React.FC = () => {
   const { 
@@ -22,7 +23,8 @@ const AccountPage: React.FC = () => {
     accountTab, 
     setAccountTab,
     hideValues,
-    getTotalUserDeposits,
+    getUserFreeBalance,
+    funds,
     setSelectedDebtId,
     setIsDebtPaymentOpen,
     handleDebtPaymentClick,
@@ -83,10 +85,10 @@ const AccountPage: React.FC = () => {
         
         {/* Account Summary Card dentro do header */}
         <SummaryCard 
-          title="Meus Aportes" 
-          balance={getTotalUserDeposits()}
+          title="Saldo Livre" 
+          balance={getUserFreeBalance()}
           leftLabel="Fundos ativos"
-          leftValue={2}
+          leftValue={funds.length}
           rightLabel="Dívidas ativas"
           rightValue={userDebts.length}
         />
@@ -101,6 +103,9 @@ const AccountPage: React.FC = () => {
             isMenuOpen={isMenuOpen} 
             toggleMenu={() => setIsMenuOpen(false)} 
           />
+
+          {/* Saldo Aplicado Card */}
+          <AppliedBalanceCard className="mb-6" />
 
           {/* Action Buttons */}
           <div className="flex justify-between mb-6">
