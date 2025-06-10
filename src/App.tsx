@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/context/AppContext";
 import Index from "./pages/Index";
 import AccountPage from "./pages/AccountPage";
+import AuthPage from "./pages/AuthPage";
 import FundDetail from "./components/FundDetail";
 import FundCreationModal from "./components/FundCreationModal";
 import DepositModal from "./components/DepositModal";
@@ -23,6 +24,7 @@ const App = () => {
             <main className="flex-1 w-full max-w-[1200px] mx-auto">
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<AuthPage />} />
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/fund/:fundId" element={<FundDetail />} />
               </Routes>
