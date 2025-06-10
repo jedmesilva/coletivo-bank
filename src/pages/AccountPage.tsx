@@ -82,22 +82,25 @@ const AccountPage: React.FC = () => {
             <GeometricStatusBadge level={currentUser.accountLevel} />
           </div>
         </div>
-        
-        {/* Account Summary Card dentro do header */}
+
+        {/* Account Summary Card */}
         <SummaryCard 
-          title="Saldo Livre" 
+          title="Saldo livre" 
           balance={getUserFreeBalance()}
           leftLabel="Fundos ativos"
           leftValue={funds.length}
           rightLabel="Dívidas ativas"
           rightValue={userDebts.length}
         />
+
+        {/* Applied Balance Card */}
+        <AppliedBalanceCard className="mb-4" />
       </HeaderSection>
 
       {/* Seção de Conteúdo - Fundo Branco */}
       <div className="bg-white min-h-screen">
         <div className="max-w-md mx-auto px-4 pt-8 pb-28">
-          
+
           {/* Menu Lateral */}
           <SidebarMenu 
             isMenuOpen={isMenuOpen} 
@@ -131,7 +134,7 @@ const AccountPage: React.FC = () => {
               <span className="font-medium">Receber</span>
             </button>
           </div>
-          
+
           {/* Tabs */}
           <TabNavigation 
             tabs={tabs}
