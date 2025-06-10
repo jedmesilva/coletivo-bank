@@ -61,15 +61,16 @@ const FundDetail: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans w-full overflow-x-hidden">
-      {/* Top Navbar */}
-      <TopNavbar 
-        onMenuClick={() => setIsMenuOpen(true)}
-        onNotificationClick={() => console.log('Notificações')}
-      />
+    <div className="fixed inset-0 bg-gray-50 font-sans overflow-hidden">
+      <div className="h-full overflow-y-auto">
+        {/* Top Navbar */}
+        <TopNavbar 
+          onMenuClick={() => setIsMenuOpen(true)}
+          onNotificationClick={() => console.log('Notificações')}
+        />
 
-      {/* Header Section */}
-      <HeaderSection className="pt-20">
+        {/* Header Section */}
+        <HeaderSection className="pt-20">
         <div className="mb-6">
           {/* Fund info header */}
           <div className="flex items-center mb-6">
@@ -264,6 +265,7 @@ const FundDetail: React.FC = () => {
           )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

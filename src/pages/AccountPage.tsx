@@ -57,16 +57,17 @@ const AccountPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans w-full overflow-x-hidden">
-      {/* Top Navbar */}
-      <TopNavbar 
-        onMenuClick={() => setIsMenuOpen(true)}
-        onNotificationClick={() => console.log('Notificações')}
-        notificationCount={3}
-      />
+    <div className="fixed inset-0 bg-gray-50 font-sans overflow-hidden">
+      <div className="h-full overflow-y-auto">
+        {/* Top Navbar */}
+        <TopNavbar 
+          onMenuClick={() => setIsMenuOpen(true)}
+          onNotificationClick={() => console.log('Notificações')}
+          notificationCount={3}
+        />
 
-      {/* Header Section com cor de destaque */}
-      <HeaderSection className="pt-20">
+        {/* Header Section com cor de destaque */}
+        <HeaderSection className="pt-20">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -282,24 +283,25 @@ const AccountPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Detail Sheets */}
-      <MovementDetailSheet
-        isOpen={isMovementDetailOpen}
-        onClose={() => setIsMovementDetailOpen(false)}
-        movement={selectedMovement}
-      />
+        {/* Detail Sheets */}
+        <MovementDetailSheet
+          isOpen={isMovementDetailOpen}
+          onClose={() => setIsMovementDetailOpen(false)}
+          movement={selectedMovement}
+        />
 
-      <DebtDetailSheet
-        isOpen={isDebtDetailOpen}
-        onClose={() => setIsDebtDetailOpen(false)}
-        debt={selectedDebtForDetail}
-      />
+        <DebtDetailSheet
+          isOpen={isDebtDetailOpen}
+          onClose={() => setIsDebtDetailOpen(false)}
+          debt={selectedDebtForDetail}
+        />
 
-      <ApprovalDetailSheet
-        isOpen={isApprovalDetailOpen}
-        onClose={() => setIsApprovalDetailOpen(false)}
-        approval={selectedApproval}
-      />
+        <ApprovalDetailSheet
+          isOpen={isApprovalDetailOpen}
+          onClose={() => setIsApprovalDetailOpen(false)}
+          approval={selectedApproval}
+        />
+      </div>
     </div>
   );
 };
