@@ -106,29 +106,41 @@ const AccountPage: React.FC = () => {
             toggleMenu={() => setIsMenuOpen(false)} 
           />
 
-          {/* Action Buttons */}
-          <div className="flex justify-between mb-6">
-            <button 
-              className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 mr-2 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-              onClick={() => console.log('Pagar clicado')}
-            >
-              <CreditCard size={20} className="mb-1" />
-              <span className="font-medium">Pagar</span>
-            </button>
-            <button 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-xl flex flex-col items-center flex-1 mx-2 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
-              onClick={() => console.log('Enviar clicado')}
-            >
-              <Send size={20} className="mb-1" />
-              <span className="font-medium">Enviar</span>
-            </button>
-            <button 
-              className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 ml-2 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-              onClick={() => console.log('Receber clicado')}
-            >
-              <ArrowDown size={20} className="mb-1" />
-              <span className="font-medium">Receber</span>
-            </button>
+          {/* Pix Section */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Pix</h3>
+            <div className="overflow-x-auto">
+              <div className="flex gap-3 pb-2" style={{ minWidth: 'max-content' }}>
+                <button 
+                  className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center min-w-[80px] shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+                  onClick={() => console.log('Pagar clicado')}
+                >
+                  <CreditCard size={20} className="mb-1" />
+                  <span className="font-medium">Pagar</span>
+                </button>
+                <button 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-xl flex flex-col items-center min-w-[80px] shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+                  onClick={() => console.log('Enviar clicado')}
+                >
+                  <Send size={20} className="mb-1" />
+                  <span className="font-medium">Enviar</span>
+                </button>
+                <button 
+                  className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center min-w-[80px] shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+                  onClick={() => console.log('Receber clicado')}
+                >
+                  <ArrowDown size={20} className="mb-1" />
+                  <span className="font-medium">Receber</span>
+                </button>
+                <button 
+                  className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center min-w-[80px] shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+                  onClick={() => console.log('Chaves pix clicado')}
+                >
+                  <User size={20} className="mb-1" />
+                  <span className="font-medium">Chaves pix</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Tabs */}
