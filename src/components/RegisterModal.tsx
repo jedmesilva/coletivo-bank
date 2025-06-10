@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { ArrowLeft, FileText, User, Mail, Eye, EyeOff, Check } from 'lucide-react';
+import { ArrowLeft, FileText, User, Mail, Eye, EyeOff } from 'lucide-react';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -184,223 +184,225 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            {step !== 'cpf' && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleBack}
-                className="h-8 w-8"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
+    <Sheet open={isOpen} onOpenChange={handleClose}>
+      <SheetContent side="right" className="w-full p-0 flex flex-col">
+        <div className="flex-1 flex flex-col">
+          <SheetHeader className="p-6 border-b">
+            <div className="flex items-center justify-between">
+              {step !== 'cpf' && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleBack}
+                  className="h-8 w-8"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              )}
+              <div className="flex-1 text-center">
+                <SheetTitle className="text-xl font-semibold">
+                  {stepTitles[step]}
+                </SheetTitle>
+                <SheetDescription className="mt-1">
+                  {stepDescriptions[step]}
+                </SheetDescription>
+              </div>
+              {step === 'cpf' && <div className="h-8 w-8" />}
+            </div>
+          </SheetHeader>
+
+          <div className="flex-1 p-6 space-y-6">
+            {step === 'cpf' && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="cpf">CPF</Label>
+                  <div className="relative">
+                    <Input
+                      id="cpf"
+                      type="text"
+                      placeholder="000.000.000-00"
+                      value={formData.cpf}
+                      onChange={handleCPFChange}
+                      className={errors.cpf ? 'border-red-500' : ''}
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <FileText className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                  </div>
+                  {errors.cpf && (
+                    <p className="text-sm text-red-500">{errors.cpf}</p>
+                  )}
+                </div>
+
+                <Button 
+                  onClick={handleCPFStep}
+                  className="w-full"
+                  disabled={!formData.cpf.trim()}
+                >
+                  Continuar
+                </Button>
+              </div>
             )}
-            <div className="flex-1 text-center">
-              <DialogTitle className="text-xl font-semibold">
-                {stepTitles[step]}
-              </DialogTitle>
-              <DialogDescription className="mt-1">
-                {stepDescriptions[step]}
-              </DialogDescription>
-            </div>
-            {step === 'cpf' && <div className="h-8 w-8" />}
-          </div>
-        </DialogHeader>
 
-        <div className="space-y-6 py-4">
-          {step === 'cpf' && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="cpf">CPF</Label>
-                <div className="relative">
-                  <Input
-                    id="cpf"
-                    type="text"
-                    placeholder="000.000.000-00"
-                    value={formData.cpf}
-                    onChange={handleCPFChange}
-                    className={errors.cpf ? 'border-red-500' : ''}
-                  />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
+            {step === 'personal-info' && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Nome completo</Label>
+                  <div className="relative">
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="Seu nome completo"
+                      value={formData.name}
+                      onChange={(e) => {
+                        setFormData({ ...formData, name: e.target.value });
+                        setErrors({ ...errors, name: '' });
+                      }}
+                      className={errors.name ? 'border-red-500' : ''}
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                  </div>
+                  {errors.name && (
+                    <p className="text-sm text-red-500">{errors.name}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <div className="relative">
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={formData.email}
+                      onChange={(e) => {
+                        setFormData({ ...formData, email: e.target.value });
+                        setErrors({ ...errors, email: '' });
+                      }}
+                      className={errors.email ? 'border-red-500' : ''}
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                  </div>
+                  {errors.email && (
+                    <p className="text-sm text-red-500">{errors.email}</p>
+                  )}
+                </div>
+
+                <Button 
+                  onClick={handlePersonalInfoStep}
+                  className="w-full"
+                  disabled={!formData.name.trim() || !formData.email.trim()}
+                >
+                  Continuar
+                </Button>
+              </div>
+            )}
+
+            {step === 'password' && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="password">Senha</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Mínimo 8 caracteres"
+                      value={formData.password}
+                      onChange={(e) => {
+                        setFormData({ ...formData, password: e.target.value });
+                        setErrors({ ...errors, password: '' });
+                      }}
+                      className={errors.password ? 'border-red-500' : ''}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-red-500">{errors.password}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirmar senha</Label>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder="Digite a senha novamente"
+                      value={formData.confirmPassword}
+                      onChange={(e) => {
+                        setFormData({ ...formData, confirmPassword: e.target.value });
+                        setErrors({ ...errors, confirmPassword: '' });
+                      }}
+                      className={errors.confirmPassword ? 'border-red-500' : ''}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="text-sm text-red-500">{errors.confirmPassword}</p>
+                  )}
+                </div>
+
+                <div className="text-xs text-muted-foreground space-y-1">
+                  <div className="flex items-center gap-2">
+                    <div className={`h-2 w-2 rounded-full ${validatePassword(formData.password) ? 'bg-green-500' : 'bg-gray-300'}`} />
+                    <span>Mínimo 8 caracteres</span>
                   </div>
                 </div>
-                {errors.cpf && (
-                  <p className="text-sm text-red-500">{errors.cpf}</p>
-                )}
-              </div>
 
-              <Button 
-                onClick={handleCPFStep}
-                className="w-full"
-                disabled={!formData.cpf.trim()}
-              >
-                Continuar
-              </Button>
+                <Button 
+                  onClick={handleRegister}
+                  className="w-full"
+                  disabled={!formData.password || !formData.confirmPassword || isLoading}
+                >
+                  {isLoading ? 'Criando conta...' : 'Criar conta'}
+                </Button>
+              </div>
+            )}
+
+            <div className="text-center pt-4 border-t">
+              <p className="text-sm text-muted-foreground">
+                Já tem uma conta?{' '}
+                <Button 
+                  variant="link" 
+                  className="p-0 h-auto text-sm"
+                  onClick={onSwitchToLogin}
+                >
+                  Entrar
+                </Button>
+              </p>
             </div>
-          )}
-
-          {step === 'personal-info' && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Nome completo</Label>
-                <div className="relative">
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Seu nome completo"
-                    value={formData.name}
-                    onChange={(e) => {
-                      setFormData({ ...formData, name: e.target.value });
-                      setErrors({ ...errors, name: '' });
-                    }}
-                    className={errors.name ? 'border-red-500' : ''}
-                  />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                </div>
-                {errors.name && (
-                  <p className="text-sm text-red-500">{errors.name}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={formData.email}
-                    onChange={(e) => {
-                      setFormData({ ...formData, email: e.target.value });
-                      setErrors({ ...errors, email: '' });
-                    }}
-                    className={errors.email ? 'border-red-500' : ''}
-                  />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                </div>
-                {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email}</p>
-                )}
-              </div>
-
-              <Button 
-                onClick={handlePersonalInfoStep}
-                className="w-full"
-                disabled={!formData.name.trim() || !formData.email.trim()}
-              >
-                Continuar
-              </Button>
-            </div>
-          )}
-
-          {step === 'password' && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Mínimo 8 caracteres"
-                    value={formData.password}
-                    onChange={(e) => {
-                      setFormData({ ...formData, password: e.target.value });
-                      setErrors({ ...errors, password: '' });
-                    }}
-                    className={errors.password ? 'border-red-500' : ''}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-                {errors.password && (
-                  <p className="text-sm text-red-500">{errors.password}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirmar senha</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="Digite a senha novamente"
-                    value={formData.confirmPassword}
-                    onChange={(e) => {
-                      setFormData({ ...formData, confirmPassword: e.target.value });
-                      setErrors({ ...errors, confirmPassword: '' });
-                    }}
-                    className={errors.confirmPassword ? 'border-red-500' : ''}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-                {errors.confirmPassword && (
-                  <p className="text-sm text-red-500">{errors.confirmPassword}</p>
-                )}
-              </div>
-
-              <div className="text-xs text-muted-foreground space-y-1">
-                <div className="flex items-center gap-2">
-                  <div className={`h-2 w-2 rounded-full ${validatePassword(formData.password) ? 'bg-green-500' : 'bg-gray-300'}`} />
-                  <span>Mínimo 8 caracteres</span>
-                </div>
-              </div>
-
-              <Button 
-                onClick={handleRegister}
-                className="w-full"
-                disabled={!formData.password || !formData.confirmPassword || isLoading}
-              >
-                {isLoading ? 'Criando conta...' : 'Criar conta'}
-              </Button>
-            </div>
-          )}
-
-          <div className="text-center pt-4 border-t">
-            <p className="text-sm text-muted-foreground">
-              Já tem uma conta?{' '}
-              <Button 
-                variant="link" 
-                className="p-0 h-auto text-sm"
-                onClick={onSwitchToLogin}
-              >
-                Entrar
-              </Button>
-            </p>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 };
 

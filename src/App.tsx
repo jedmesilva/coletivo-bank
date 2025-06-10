@@ -21,15 +21,21 @@ const App = () => {
       <AppProvider>
         <BrowserRouter>
           <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
-            <main className="flex-1 w-full max-w-[1200px] mx-auto">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<AuthPage />} />
-                <Route path="/account" element={<AccountPage />} />
-                <Route path="/fund/:fundId" element={<FundDetail />} />
-              </Routes>
-            </main>
-            <BottomNavigation />
+            <Routes>
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/*" element={
+                <>
+                  <main className="flex-1 w-full max-w-[1200px] mx-auto">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/account" element={<AccountPage />} />
+                      <Route path="/fund/:fundId" element={<FundDetail />} />
+                    </Routes>
+                  </main>
+                  <BottomNavigation />
+                </>
+              } />
+            </Routes>
             <FundCreationModal />
             <DepositModal />
             <CapitalRequestSheet />
