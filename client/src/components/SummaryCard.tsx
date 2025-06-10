@@ -9,6 +9,8 @@ interface SummaryCardProps {
   balance: number;
   leftLabel?: string;
   leftValue?: string | number;
+  centerLabel?: string;
+  centerValue?: string | number;
   rightLabel?: string;
   rightValue?: string | number;
   showGrowth?: boolean;
@@ -20,6 +22,8 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   balance,
   leftLabel,
   leftValue,
+  centerLabel,
+  centerValue,
   rightLabel,
   rightValue,
   showGrowth = false,
@@ -43,15 +47,23 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           {formatCurrency(balance, hideValues)}
         </p>
       </div>
-      <div className="flex justify-between">
+      <div className="grid grid-cols-3 gap-4">
         {(leftLabel && leftValue !== undefined) && (
-          <div>
-            <p className="text-lg font-bold">{leftValue} {leftLabel}</p>
+          <div className="text-center">
+            <p className="text-sm text-gray-500">{leftLabel}</p>
+            <p className="text-lg font-bold">{leftValue}</p>
+          </div>
+        )}
+        
+        {(centerLabel && centerValue !== undefined) && (
+          <div className="text-center">
+            <p className="text-sm text-gray-500">{centerLabel}</p>
+            <p className="text-lg font-bold">{centerValue}</p>
           </div>
         )}
         
         {showGrowth ? (
-          <div className="flex items-center text-green-500">
+          <div className="flex items-center justify-center text-green-500">
             <TrendingUp className="mr-1" size={20} />
             <p className="text-lg font-bold">
               {hideValues ? "***%" : `+${growthValue}%`}
@@ -59,8 +71,9 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           </div>
         ) : (
           (rightLabel && rightValue !== undefined) && (
-            <div>
-              <p className="text-lg font-bold">{rightValue} {rightLabel}</p>
+            <div className="text-center">
+              <p className="text-sm text-gray-500">{rightLabel}</p>
+              <p className="text-lg font-bold">{rightValue}</p>
             </div>
           )
         )}
