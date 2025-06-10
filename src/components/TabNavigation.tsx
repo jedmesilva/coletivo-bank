@@ -32,9 +32,9 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   onTabChange,
 }) => {
   return (
-    <div className="mb-6">
-      <div className="bg-gray-100 p-1 rounded-2xl overflow-x-auto scrollbar-hide">
-        <div className="flex gap-2" style={{ width: 'max-content', minWidth: '100%' }}>
+    <div className="mb-6 overflow-x-auto scrollbar-hide">
+      <div className="bg-gray-100 p-1 rounded-2xl" style={{ width: 'max-content', minWidth: '100%' }}>
+        <div className="flex gap-2">
           {tabs.map(tab => (
             <Tab
               key={tab.id}
