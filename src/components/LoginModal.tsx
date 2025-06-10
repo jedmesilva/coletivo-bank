@@ -166,7 +166,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
                               placeholder="000.000.000-00"
                               value={cpf}
                               onChange={handleCPFChange}
-                              className={`bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/50 ${errors.cpf ? 'border-red-400' : ''}`}
+                              className={`bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 ${errors.cpf ? 'border-red-400' : ''}`}
                             />
                             <div className="absolute right-3 top-1/2 -translate-y-1/2">
                               <FileText className="h-4 w-4 text-white/50" />
@@ -191,7 +191,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
                                 setEmail(e.target.value);
                                 setErrors({ ...errors, email: '' });
                               }}
-                              className={`bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/50 ${errors.email ? 'border-red-400' : ''}`}
+                              className={`bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 ${errors.email ? 'border-red-400' : ''}`}
                             />
                             <div className="absolute right-3 top-1/2 -translate-y-1/2">
                               <Mail className="h-4 w-4 text-white/50" />
@@ -220,7 +220,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
                             setPassword(e.target.value);
                             setErrors({ ...errors, password: '' });
                           }}
-                          className={`bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/50 ${errors.password ? 'border-red-400' : ''}`}
+                          className={`bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 ${errors.password ? 'border-red-400' : ''}`}
                         />
                         <Button
                           type="button"
