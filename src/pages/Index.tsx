@@ -13,6 +13,7 @@ const Index: React.FC = () => {
     funds, 
     getTotalBalance,
     getTotalMembers,
+    getUserFreeBalance,
     setIsFundCreationOpen,
     handleDepositClick
   } = useApp();
@@ -46,8 +47,8 @@ const Index: React.FC = () => {
         
         {/* Summary Card dentro do header */}
         <SummaryCard
-          title="Resumo"
-          balance={getTotalBalance()}
+          title="Saldo livre"
+          balance={getUserFreeBalance()}
           leftLabel="Fundos ativos"
           leftValue={funds.length}
           centerLabel="Saldo aplicado"
