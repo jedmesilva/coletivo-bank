@@ -48,8 +48,10 @@ const Index: React.FC = () => {
         <SummaryCard
           title="Resumo"
           balance={getTotalBalance()}
-          leftLabel="Fundos"
+          leftLabel="Fundos ativos"
           leftValue={funds.length}
+          centerLabel="Saldo aplicado"
+          centerValue="R$ 25.000,00"
           rightLabel="Membros"
           rightValue={getTotalMembers()}
         />
