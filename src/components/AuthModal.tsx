@@ -1,3 +1,7 @@
+Refactored code to use a separate state for display validation, updating the onBlur event for CPF and removing onChange validation logic to prevent focus issues.
+```
+
+```replit_final_file
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Eye, EyeOff, User, Lock, ArrowRight, Check, AlertCircle, Mail, Calendar, ArrowLeft, CheckCircle, X } from 'lucide-react';
 
@@ -22,6 +26,15 @@ export default function AuthScreen() {
     email: { isValid: null, message: '', touched: false },
     password: { isValid: null, message: '', touched: false }
   });
+
+    // Estado separado para não interferir na digitação
+    const [displayValidation, setDisplayValidation] = useState({
+      cpf: { isValid: null, message: '', touched: false },
+      name: { isValid: null, message: '', touched: false },
+      birthDate: { isValid: null, message: '', touched: false },
+      email: { isValid: null, message: '', touched: false },
+      password: { isValid: null, message: '', touched: false }
+    });
 
   // Refs para debounce de validação
   const validationTimeouts = useRef({});
@@ -69,7 +82,7 @@ export default function AuthScreen() {
           const birthDate = new Date(value);
           const today = new Date();
           const age = today.getFullYear() - birthDate.getFullYear();
-          
+
           if (age < 18) {
             validation = { isValid: false, message: 'Você deve ter pelo menos 18 anos' };
           } else if (age > 120) {
@@ -106,58 +119,24 @@ export default function AuthScreen() {
     return validation;
   }, []);
 
-  // Função para atualizar validação de campo com debounce
-  const updateFieldValidation = useCallback((fieldName, value, touched = true, immediate = false) => {
-    // Limpar timeout anterior
-    if (validationTimeouts.current[fieldName]) {
-      clearTimeout(validationTimeouts.current[fieldName]);
-    }
-
-    const performValidation = () => {
-      const validation = validateField(fieldName, value);
-      
-      // Só atualizar se a validação mudou para evitar re-renders desnecessários
-      setFieldValidation(prev => {
-        const currentValidation = prev[fieldName];
-        if (
-          currentValidation.isValid === validation.isValid &&
-          currentValidation.message === validation.message &&
-          currentValidation.touched === touched
-        ) {
-          return prev; // Não atualizar se nada mudou
-        }
-        
-        return {
-          ...prev,
-          [fieldName]: { ...validation, touched }
-        };
-      });
-      return validation;
-    };
-
-    if (immediate) {
-      return performValidation();
-    }
-
-    // Para CPF, usar delay maior para evitar validação a cada caractere
-    const delay = fieldName === 'cpf' ? 1200 : 800;
-    
-    // Aplicar debounce apenas se não for execução imediata
-    validationTimeouts.current[fieldName] = setTimeout(() => {
-      performValidation();
-    }, delay);
-
-    return null;
+// Função que só atualiza o display de validação (não interfere na digitação)
+  const updateDisplayValidation = useCallback((fieldName, value) => {
+    const validation = validateField(fieldName, value);
+    setDisplayValidation(prev => ({
+      ...prev,
+      [fieldName]: { ...validation, touched: true }
+    }));
+    return validation;
   }, [validateField]);
 
   // Função de validação de CPF simplificada
   const isValidCPF = useCallback((cpf) => {
     const numbers = cpf.replace(/\D/g, '');
     if (numbers.length !== 11) return false;
-    
+
     // Verifica se todos os dígitos são iguais
     if (/^(\d)\1{10}$/.test(numbers)) return false;
-    
+
     return true; // Implementar validação completa em produção
   }, []);
 
@@ -169,28 +148,26 @@ export default function AuthScreen() {
   const handleCPFChange = useCallback((e) => {
     const value = e.target.value;
     const numbers = value.replace(/\D/g, '');
-    
+
     if (numbers.length <= 11) {
       const formattedCPF = formatCPF(numbers);
       setCpf(formattedCPF);
       setError('');
-      
-      // Validar com debounce para não afetar o foco
-      updateFieldValidation('cpf', formattedCPF, true, false);
-      
+// Não validar durante a digitação - só ao sair do campo
+
       if (numbers.length === 11 && isValidCPF(numbers)) {
         setTimeout(() => checkCPF(numbers), 1000);
       }
     }
-  }, [formatCPF, isValidCPF, updateFieldValidation]);
+  }, [formatCPF, isValidCPF]);
 
   const checkCPF = useCallback(async (cpfNumbers) => {
     setIsLoading(true);
     setError('');
-    
+
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       if (existingUsers[cpfNumbers]) {
         setStep('login');
       } else {
@@ -205,27 +182,26 @@ export default function AuthScreen() {
 
   const handleManualCPFCheck = useCallback(() => {
     const numbers = cpf.replace(/\D/g, '');
-    const validation = updateFieldValidation('cpf', cpf, true, true); // Validação imediata
-    
+    updateDisplayValidation('cpf', cpf); // Validação imediata
+    const validation = validateField('cpf', cpf);
+
     if (!validation || !validation.isValid) {
       return;
     }
     checkCPF(numbers);
-  }, [cpf, updateFieldValidation, checkCPF]);
+  }, [cpf, validateField, checkCPF, updateDisplayValidation]);
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
-    
-    // Validar com debounce para não afetar o foco
-    updateFieldValidation(name, value, true, false);
-  }, [updateFieldValidation]);
+    // Sem validação durante a digitação - só no onBlur
+  }, []);
 
   const handleInputBlur = useCallback((e) => {
     const { name, value } = e.target;
-    updateFieldValidation(name, value, true, true); // Validação imediata no blur
-  }, [updateFieldValidation]);
+    updateDisplayValidation(name, value); // Validação imediata no blur
+  }, [updateDisplayValidation]);
 
   // Validação de email
   const isValidEmail = useCallback((email) => {
@@ -239,10 +215,10 @@ export default function AuthScreen() {
 
   const handleLogin = useCallback(async () => {
     if (!formData.password) {
-      updateFieldValidation('password', formData.password, true, true); // Validação imediata
+      updateDisplayValidation('password', formData.password); // Validação imediata
       return;
     }
-    
+
     setIsLoading(true);
     try {
       // Simular login
@@ -254,29 +230,33 @@ export default function AuthScreen() {
     } finally {
       setIsLoading(false);
     }
-  }, [cpf, formData.password, updateFieldValidation]);
+  }, [cpf, formData.password, updateDisplayValidation]);
 
   const handleSignupStep1 = useCallback(() => {
     // Validar todos os campos obrigatórios com validação imediata
-    const nameValidation = updateFieldValidation('name', formData.name, true, true);
-    const birthDateValidation = updateFieldValidation('birthDate', formData.birthDate, true, true);
-    
+    updateDisplayValidation('name', formData.name);
+    updateDisplayValidation('birthDate', formData.birthDate);
+    const nameValidation = validateField('name', formData.name);
+    const birthDateValidation = validateField('birthDate', formData.birthDate);
+
     if (!nameValidation || !birthDateValidation || !nameValidation.isValid || !birthDateValidation.isValid) {
       return;
     }
-    
+
     setStep('signup-step2');
-  }, [formData.name, formData.birthDate, updateFieldValidation]);
+  }, [formData.name, formData.birthDate, validateField, updateDisplayValidation]);
 
   const handleSignupComplete = useCallback(async () => {
     // Validar todos os campos com validação imediata
-    const emailValidation = updateFieldValidation('email', formData.email, true, true);
-    const passwordValidation = updateFieldValidation('password', formData.password, true, true);
-    
+    updateDisplayValidation('email', formData.email);
+    updateDisplayValidation('password', formData.password);
+    const emailValidation = validateField('email', formData.email);
+    const passwordValidation = validateField('password', formData.password);
+
     if (!emailValidation || !passwordValidation || !emailValidation.isValid || !passwordValidation.isValid) {
       return;
     }
-    
+
     setIsLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -287,7 +267,7 @@ export default function AuthScreen() {
     } finally {
       setIsLoading(false);
     }
-  }, [cpf, formData, updateFieldValidation]);
+  }, [cpf, formData, validateField, updateDisplayValidation]);
 
   const handleBack = useCallback(() => {
     const transitions = {
@@ -295,7 +275,7 @@ export default function AuthScreen() {
       'signup-step1': () => { setStep('cpf'); setCpf(''); },
       'signup-step2': () => setStep('signup-step1')
     };
-    
+
     transitions[step]?.();
     setFormData({ name: '', birthDate: '', email: '', password: '' });
     setError('');
@@ -306,7 +286,7 @@ export default function AuthScreen() {
       email: { isValid: null, message: '', touched: false },
       password: { isValid: null, message: '', touched: false }
     });
-    
+
     // Limpar todos os timeouts de validação
     Object.values(validationTimeouts.current).forEach(timeout => {
       if (timeout) clearTimeout(timeout);
@@ -340,15 +320,15 @@ export default function AuthScreen() {
     inputMode,
     max
   }) => {
-    const validation = fieldValidation[name];
+    const validation = displayValidation[name];
     const hasError = validation.touched && validation.isValid === false;
     const hasSuccess = validation.touched && validation.isValid === true;
-    
+
     // Memoizar as funções para evitar re-renderizações
     const handleInputRef = useCallback((el) => {
       if (el) inputRefs.current[name] = el;
     }, [name]);
-    
+
     const inputClassName = useMemo(() => {
       return `w-full ${Icon ? 'pl-10' : 'pl-4'} ${showToggle ? 'pr-12' : 'pr-4'} py-3 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:border-transparent backdrop-blur-sm transition-all duration-300 ${
         hasError ? 
@@ -358,7 +338,7 @@ export default function AuthScreen() {
           'bg-white/10 border border-white/20 focus:ring-blue-400'
       } ${name === 'cpf' ? 'text-center text-lg tracking-wider' : ''}`;
     }, [hasError, hasSuccess, Icon, showToggle, name]);
-    
+
     const iconClassName = useMemo(() => {
       return `h-5 w-5 transition-colors ${
         hasError ? 'text-red-400' : 
@@ -366,7 +346,7 @@ export default function AuthScreen() {
         'text-blue-300'
       }`;
     }, [hasError, hasSuccess]);
-    
+
     return (
       <div className="space-y-2">
         <div className="relative">
@@ -390,7 +370,7 @@ export default function AuthScreen() {
             className={inputClassName}
             autoComplete="off"
           />
-          
+
           {/* Ícone de status */}
           {validation.touched && validation.isValid !== null && (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -420,7 +400,7 @@ export default function AuthScreen() {
               )}
             </div>
           )}
-          
+
           {/* Loading spinner para CPF */}
           {name === 'cpf' && isLoading && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -428,7 +408,7 @@ export default function AuthScreen() {
             </div>
           )}
         </div>
-        
+
         {/* Mensagem de validação */}
         {validation.touched && validation.message && (
           <div className={`flex items-center space-x-2 text-sm p-2 rounded-lg transition-all duration-300 ${
@@ -452,7 +432,7 @@ export default function AuthScreen() {
       prevProps.value === nextProps.value &&
       prevProps.disabled === nextProps.disabled &&
       prevProps.showPassword === nextProps.showPassword &&
-      JSON.stringify(fieldValidation[prevProps.name]) === JSON.stringify(fieldValidation[nextProps.name])
+      JSON.stringify(displayValidation[prevProps.name]) === JSON.stringify(displayValidation[nextProps.name])
     );
   });
 
@@ -535,6 +515,7 @@ export default function AuthScreen() {
                     inputMode="numeric"
                     value={cpf}
                     onChange={handleCPFChange}
+                    onBlur={() => updateDisplayValidation('cpf', cpf)}
                     placeholder="000.000.000-00"
                     maxLength={14}
                     disabled={isLoading}
@@ -542,7 +523,7 @@ export default function AuthScreen() {
 
                   <button
                     onClick={handleManualCPFCheck}
-                    disabled={isLoading || !fieldValidation.cpf.isValid}
+                    disabled={isLoading || !displayValidation.cpf.isValid}
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                   >
                     {isLoading ? 'Verificando...' : 'Continuar'}
@@ -644,7 +625,7 @@ export default function AuthScreen() {
                     </button>
                     <button
                       onClick={handleSignupStep1}
-                      disabled={isLoading || !fieldValidation.name.isValid || !fieldValidation.birthDate.isValid}
+                      disabled={isLoading || !displayValidation.name.isValid || !displayValidation.birthDate.isValid}
                       className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                     >
                       Continuar
@@ -698,7 +679,7 @@ export default function AuthScreen() {
                     </button>
                     <button
                       onClick={handleSignupComplete}
-                      disabled={isLoading || !fieldValidation.email.isValid || !fieldValidation.password.isValid}
+                      disabled={isLoading || !displayValidation.email.isValid || !displayValidation.password.isValid}
                       className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                     >
                       {isLoading ? 'Criando conta...' : 'Criar Conta'}
