@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { Eye, EyeOff, User, Lock, ArrowRight, Check, AlertCircle, Mail, Calendar, ArrowLeft, CheckCircle, X } from 'lucide-react';
+import { Eye, EyeOff, User, Lock, ArrowRight, Check, AlertCircle, Mail, Calendar, ArrowLeft, CheckCircle, X, Loader2 } from 'lucide-react';
 
 export default function AuthScreen() {
   const [step, setStep] = useState('cpf');
@@ -15,25 +15,16 @@ export default function AuthScreen() {
     password: ''
   });
 
-  // Sistema de validação para cada campo
-  const [fieldValidation, setFieldValidation] = useState({
-    cpf: { isValid: null, message: '', touched: false },
-    name: { isValid: null, message: '', touched: false },
-    birthDate: { isValid: null, message: '', touched: false },
-    email: { isValid: null, message: '', touched: false },
-    password: { isValid: null, message: '', touched: false }
+  // Sistema de validação inspirado no exemplo
+  const [fieldValidations, setFieldValidations] = useState({
+    cpf: { status: 'idle', message: '', showMessage: false },
+    name: { status: 'idle', message: '', showMessage: false },
+    birthDate: { status: 'idle', message: '', showMessage: false },
+    email: { status: 'idle', message: '', showMessage: false },
+    password: { status: 'idle', message: '', showMessage: false }
   });
 
-  // Estado separado para não interferir na digitação
-  const [displayValidation, setDisplayValidation] = useState({
-    cpf: { isValid: null, message: '', touched: false },
-    name: { isValid: null, message: '', touched: false },
-    birthDate: { isValid: null, message: '', touched: false },
-    email: { isValid: null, message: '', touched: false },
-    password: { isValid: null, message: '', touched: false }
-  });
-
-  // Refs para debounce de validação
+  // Refs para timeouts de validação
   const validationTimeouts = useRef({});
   const inputRefs = useRef({});
 
@@ -42,125 +33,109 @@ export default function AuthScreen() {
     '98765432100': { name: 'Maria Santos', email: 'maria@email.com' }
   }), []);
 
-  // Função para validar campo
-  const validateField = useCallback((fieldName, value) => {
-    let validation = { isValid: null, message: '' };
-
-    switch (fieldName) {
-      case 'cpf':
-        const numbers = value.replace(/\D/g, '');
-        if (!value) {
-          validation = { isValid: null, message: '' };
-        } else if (numbers.length < 11) {
-          validation = { isValid: false, message: 'CPF incompleto' };
-        } else if (/^(\d)\1{10}$/.test(numbers)) {
-          validation = { isValid: false, message: 'CPF inválido' };
-        } else {
-          validation = { isValid: true, message: 'CPF válido' };
-        }
-        break;
-
-      case 'name':
-        if (!value.trim()) {
-          validation = { isValid: false, message: 'Nome é obrigatório' };
-        } else if (value.trim().length < 3) {
-          validation = { isValid: false, message: 'Nome muito curto' };
-        } else if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(value)) {
-          validation = { isValid: false, message: 'Nome deve conter apenas letras' };
-        } else {
-          validation = { isValid: true, message: 'Nome válido' };
-        }
-        break;
-
-      case 'birthDate':
-        if (!value) {
-          validation = { isValid: false, message: 'Data de nascimento é obrigatória' };
-        } else {
-          const birthDate = new Date(value);
-          const today = new Date();
-          const age = today.getFullYear() - birthDate.getFullYear();
-
-          if (age < 18) {
-            validation = { isValid: false, message: 'Você deve ter pelo menos 18 anos' };
-          } else if (age > 120) {
-            validation = { isValid: false, message: 'Data inválida' };
-          } else {
-            validation = { isValid: true, message: 'Data válida' };
-          }
-        }
-        break;
-
-      case 'email':
-        if (!value) {
-          validation = { isValid: false, message: 'Email é obrigatório' };
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-          validation = { isValid: false, message: 'Formato de email inválido' };
-        } else {
-          validation = { isValid: true, message: 'Email válido' };
-        }
-        break;
-
-      case 'password':
-        if (!value) {
-          validation = { isValid: false, message: 'Senha é obrigatória' };
-        } else if (value.length < 6) {
-          validation = { isValid: false, message: 'Senha deve ter pelo menos 6 caracteres' };
-        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
-          validation = { isValid: false, message: 'Senha deve ter maiúscula, minúscula e número' };
-        } else {
-          validation = { isValid: true, message: 'Senha forte' };
-        }
-        break;
-    }
-
-    return validation;
-  }, []);
-
-  // Função que só atualiza o display de validação (não interfere na digitação)
-  const updateDisplayValidation = useCallback((fieldName, value) => {
-    const validation = validateField(fieldName, value);
-    setDisplayValidation(prev => ({
-      ...prev,
-      [fieldName]: { ...validation, touched: true }
-    }));
-    return validation;
-  }, [validateField]);
-
-  // Função de validação de CPF simplificada
-  const isValidCPF = useCallback((cpf) => {
-    const numbers = cpf.replace(/\D/g, '');
-    if (numbers.length !== 11) return false;
-
-    // Verifica se todos os dígitos são iguais
-    if (/^(\d)\1{10}$/.test(numbers)) return false;
-
-    return true; // Implementar validação completa em produção
-  }, []);
-
+  // Funções de formatação
   const formatCPF = useCallback((value) => {
     const numbers = value.replace(/\D/g, '');
     return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   }, []);
 
+  // Funções de validação pura (sem side effects)
+  const validateField = useCallback((fieldName, value) => {
+    switch (fieldName) {
+      case 'cpf':
+        const numbers = value.replace(/\D/g, '');
+        if (!numbers) return { status: 'idle', message: '', showMessage: false };
+        if (numbers.length < 11) return { status: 'incomplete', message: `CPF incompleto (${numbers.length}/11 dígitos)`, showMessage: true };
+        if (/^(\d)\1{10}$/.test(numbers)) return { status: 'invalid', message: 'CPF inválido', showMessage: true };
+        return { status: 'valid', message: 'CPF válido', showMessage: true };
+
+      case 'name':
+        if (!value.trim()) return { status: 'idle', message: '', showMessage: false };
+        if (value.trim().length < 3) return { status: 'invalid', message: 'Nome muito curto (mínimo 3 caracteres)', showMessage: true };
+        if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(value)) return { status: 'invalid', message: 'Nome deve conter apenas letras', showMessage: true };
+        return { status: 'valid', message: 'Nome válido', showMessage: true };
+
+      case 'birthDate':
+        if (!value) return { status: 'idle', message: '', showMessage: false };
+        const birthDate = new Date(value);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        if (age < 18) return { status: 'invalid', message: 'Você deve ter pelo menos 18 anos', showMessage: true };
+        if (age > 120) return { status: 'invalid', message: 'Data inválida', showMessage: true };
+        return { status: 'valid', message: 'Data válida', showMessage: true };
+
+      case 'email':
+        if (!value) return { status: 'idle', message: '', showMessage: false };
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return { status: 'invalid', message: 'Formato de email inválido', showMessage: true };
+        return { status: 'valid', message: 'Email válido', showMessage: true };
+
+      case 'password':
+        if (!value) return { status: 'idle', message: '', showMessage: false };
+        if (value.length < 6) return { status: 'invalid', message: 'Senha deve ter pelo menos 6 caracteres', showMessage: true };
+        if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) return { status: 'invalid', message: 'Senha deve ter maiúscula, minúscula e número', showMessage: true };
+        return { status: 'valid', message: 'Senha forte', showMessage: true };
+
+      default:
+        return { status: 'idle', message: '', showMessage: false };
+    }
+  }, []);
+
+  // Função para atualizar validação de um campo
+  const updateFieldValidation = useCallback((fieldName, value) => {
+    const validation = validateField(fieldName, value);
+    setFieldValidations(prev => ({
+      ...prev,
+      [fieldName]: validation
+    }));
+    return validation;
+  }, [validateField]);
+
+  // Função para validação com debounce
+  const performValidationWithDebounce = useCallback((fieldName, value, delay = 500) => {
+    // Limpar timeout anterior
+    if (validationTimeouts.current[fieldName]) {
+      clearTimeout(validationTimeouts.current[fieldName]);
+    }
+    
+    // Agendar nova validação
+    validationTimeouts.current[fieldName] = setTimeout(() => {
+      updateFieldValidation(fieldName, value);
+    }, delay);
+  }, [updateFieldValidation]);
+
+  // Simulação de verificação de CPF no servidor
   const checkCPF = useCallback(async (cpfNumbers) => {
-    setIsLoading(true);
-    setError('');
+    setFieldValidations(prev => ({
+      ...prev,
+      cpf: { status: 'checking', message: 'Verificando CPF...', showMessage: true }
+    }));
 
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       if (existingUsers[cpfNumbers]) {
-        setStep('login');
+        setFieldValidations(prev => ({
+          ...prev,
+          cpf: { status: 'valid', message: 'CPF encontrado! Redirecionando para login...', showMessage: true }
+        }));
+        setTimeout(() => setStep('login'), 1500);
       } else {
-        setStep('signup-step1');
+        setFieldValidations(prev => ({
+          ...prev,
+          cpf: { status: 'valid', message: 'CPF válido! Prosseguindo com cadastro...', showMessage: true }
+        }));
+        setTimeout(() => setStep('signup-step1'), 1500);
       }
     } catch (err) {
+      setFieldValidations(prev => ({
+        ...prev,
+        cpf: { status: 'invalid', message: 'Erro ao verificar CPF. Tente novamente.', showMessage: true }
+      }));
       setError('Erro ao verificar CPF. Tente novamente.');
-    } finally {
-      setIsLoading(false);
     }
   }, [existingUsers]);
 
+  // Handler para CPF
   const handleCPFChange = useCallback((e) => {
     const value = e.target.value;
     const numbers = value.replace(/\D/g, '');
@@ -169,108 +144,87 @@ export default function AuthScreen() {
       const formattedCPF = formatCPF(numbers);
       setCpf(formattedCPF);
       setError('');
-      // Removido: não fazer validação ou checkCPF durante a digitação
+      
+      // Validação com debounce
+      performValidationWithDebounce('cpf', formattedCPF);
     }
-  }, [formatCPF]);
+  }, [formatCPF, performValidationWithDebounce]);
 
   const handleCPFBlur = useCallback(() => {
-    const numbers = cpf.replace(/\D/g, '');
-    updateDisplayValidation('cpf', cpf);
+    // Validação imediata no blur
+    if (validationTimeouts.current.cpf) {
+      clearTimeout(validationTimeouts.current.cpf);
+    }
+    const validation = updateFieldValidation('cpf', cpf);
     
-    // Só fazer checkCPF se o CPF for válido e tiver 11 dígitos
-    if (numbers.length === 11 && isValidCPF(numbers)) {
+    // Se CPF é válido, fazer verificação no servidor
+    const numbers = cpf.replace(/\D/g, '');
+    if (validation.status === 'valid' && numbers.length === 11) {
       checkCPF(numbers);
     }
-  }, [cpf, updateDisplayValidation, isValidCPF, checkCPF]);
+  }, [cpf, updateFieldValidation, checkCPF]);
 
-  const handleManualCPFCheck = useCallback(() => {
-    const numbers = cpf.replace(/\D/g, '');
-    updateDisplayValidation('cpf', cpf); // Validação imediata
-    const validation = validateField('cpf', cpf);
-
-    if (!validation || !validation.isValid) {
-      return;
-    }
-    checkCPF(numbers);
-  }, [cpf, validateField, checkCPF, updateDisplayValidation]);
-
+  // Handler genérico para outros campos
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
-    // Sem validação durante a digitação - só no onBlur
-  }, []);
+    
+    // Validação com debounce
+    performValidationWithDebounce(name, value);
+  }, [performValidationWithDebounce]);
 
   const handleInputBlur = useCallback((e) => {
     const { name, value } = e.target;
-    updateDisplayValidation(name, value); // Validação imediata no blur
-  }, [updateDisplayValidation]);
-
-  // Validação de email
-  const isValidEmail = useCallback((email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }, []);
-
-  // Validação de senha
-  const isValidPassword = useCallback((password) => {
-    return password.length >= 6 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password);
-  }, []);
-
-  const handleLogin = useCallback(async () => {
-    if (!formData.password) {
-      updateDisplayValidation('password', formData.password); // Validação imediata
-      return;
+    
+    // Validação imediata no blur
+    if (validationTimeouts.current[name]) {
+      clearTimeout(validationTimeouts.current[name]);
     }
+    updateFieldValidation(name, value);
+  }, [updateFieldValidation]);
+
+  // Funções de navegação
+  const handleLogin = useCallback(async () => {
+    const passwordValidation = updateFieldValidation('password', formData.password);
+    if (passwordValidation.status !== 'valid') return;
 
     setIsLoading(true);
     try {
-      // Simular login
       await new Promise(resolve => setTimeout(resolve, 1000));
       console.log('Login:', { cpf, password: formData.password });
-      // Aqui você redirecionaria para a aplicação
     } catch (err) {
       setError('Credenciais inválidas');
     } finally {
       setIsLoading(false);
     }
-  }, [cpf, formData.password, updateDisplayValidation]);
+  }, [cpf, formData.password, updateFieldValidation]);
 
   const handleSignupStep1 = useCallback(() => {
-    // Validar todos os campos obrigatórios com validação imediata
-    updateDisplayValidation('name', formData.name);
-    updateDisplayValidation('birthDate', formData.birthDate);
-    const nameValidation = validateField('name', formData.name);
-    const birthDateValidation = validateField('birthDate', formData.birthDate);
+    const nameValidation = updateFieldValidation('name', formData.name);
+    const birthDateValidation = updateFieldValidation('birthDate', formData.birthDate);
 
-    if (!nameValidation || !birthDateValidation || !nameValidation.isValid || !birthDateValidation.isValid) {
-      return;
+    if (nameValidation.status === 'valid' && birthDateValidation.status === 'valid') {
+      setStep('signup-step2');
     }
-
-    setStep('signup-step2');
-  }, [formData.name, formData.birthDate, validateField, updateDisplayValidation]);
+  }, [formData.name, formData.birthDate, updateFieldValidation]);
 
   const handleSignupComplete = useCallback(async () => {
-    // Validar todos os campos com validação imediata
-    updateDisplayValidation('email', formData.email);
-    updateDisplayValidation('password', formData.password);
-    const emailValidation = validateField('email', formData.email);
-    const passwordValidation = validateField('password', formData.password);
+    const emailValidation = updateFieldValidation('email', formData.email);
+    const passwordValidation = updateFieldValidation('password', formData.password);
 
-    if (!emailValidation || !passwordValidation || !emailValidation.isValid || !passwordValidation.isValid) {
-      return;
-    }
+    if (emailValidation.status !== 'valid' || passwordValidation.status !== 'valid') return;
 
     setIsLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       console.log('Cadastro completo:', { cpf, ...formData });
-      // Aqui você faria o cadastro e redirecionaria
     } catch (err) {
       setError('Erro ao criar conta. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
-  }, [cpf, formData, validateField, updateDisplayValidation]);
+  }, [cpf, formData, updateFieldValidation]);
 
   const handleBack = useCallback(() => {
     const transitions = {
@@ -282,22 +236,22 @@ export default function AuthScreen() {
     transitions[step]?.();
     setFormData({ name: '', birthDate: '', email: '', password: '' });
     setError('');
-    setFieldValidation({
-      cpf: { isValid: null, message: '', touched: false },
-      name: { isValid: null, message: '', touched: false },
-      birthDate: { isValid: null, message: '', touched: false },
-      email: { isValid: null, message: '', touched: false },
-      password: { isValid: null, message: '', touched: false }
+    setFieldValidations({
+      cpf: { status: 'idle', message: '', showMessage: false },
+      name: { status: 'idle', message: '', showMessage: false },
+      birthDate: { status: 'idle', message: '', showMessage: false },
+      email: { status: 'idle', message: '', showMessage: false },
+      password: { status: 'idle', message: '', showMessage: false }
     });
 
-    // Limpar todos os timeouts de validação
+    // Limpar timeouts
     Object.values(validationTimeouts.current).forEach(timeout => {
       if (timeout) clearTimeout(timeout);
     });
     validationTimeouts.current = {};
   }, [step]);
 
-  // Cleanup effect para limpar timeouts ao desmontar
+  // Cleanup
   useEffect(() => {
     return () => {
       Object.values(validationTimeouts.current).forEach(timeout => {
@@ -306,7 +260,7 @@ export default function AuthScreen() {
     };
   }, []);
 
-  // Componente para renderizar input com validação
+  // Componente ValidatedInput otimizado
   const ValidatedInput = React.memo(({ 
     name, 
     type = 'text', 
@@ -323,32 +277,64 @@ export default function AuthScreen() {
     inputMode,
     max
   }) => {
-    const validation = displayValidation[name];
-    const hasError = validation.touched && validation.isValid === false;
-    const hasSuccess = validation.touched && validation.isValid === true;
+    const validation = fieldValidations[name] || { status: 'idle', message: '', showMessage: false };
 
-    // Memoizar as funções para evitar re-renderizações
-    const handleInputRef = useCallback((el) => {
-      if (el) inputRefs.current[name] = el;
-    }, [name]);
+    const getInputClasses = () => {
+      const baseClasses = `w-full ${Icon ? 'pl-10' : 'pl-4'} ${showToggle ? 'pr-12' : 'pr-4'} py-3 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:border-transparent backdrop-blur-sm transition-all duration-300 ${name === 'cpf' ? 'text-center text-lg tracking-wider font-mono' : ''}`;
+      
+      switch (validation.status) {
+        case 'invalid':
+          return `${baseClasses} bg-red-900/20 border-2 border-red-500/50 focus:ring-red-400`;
+        case 'valid':
+          return `${baseClasses} bg-green-900/20 border-2 border-green-500/50 focus:ring-green-400`;
+        case 'checking':
+          return `${baseClasses} bg-blue-900/20 border-2 border-blue-500/50 focus:ring-blue-400`;
+        case 'incomplete':
+          return `${baseClasses} bg-orange-900/20 border-2 border-orange-500/50 focus:ring-orange-400`;
+        default:
+          return `${baseClasses} bg-white/10 border border-white/20 focus:ring-blue-400`;
+      }
+    };
 
-    const inputClassName = useMemo(() => {
-      return `w-full ${Icon ? 'pl-10' : 'pl-4'} ${showToggle ? 'pr-12' : 'pr-4'} py-3 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:border-transparent backdrop-blur-sm transition-all duration-300 ${
-        hasError ? 
-          'bg-red-900/20 border-2 border-red-500/50 focus:ring-red-400' :
-        hasSuccess ?
-          'bg-green-900/20 border-2 border-green-500/50 focus:ring-green-400' :
-          'bg-white/10 border border-white/20 focus:ring-blue-400'
-      } ${name === 'cpf' ? 'text-center text-lg tracking-wider' : ''}`;
-    }, [hasError, hasSuccess, Icon, showToggle, name]);
+    const getStatusIcon = () => {
+      switch (validation.status) {
+        case 'valid':
+          return <CheckCircle className="w-5 h-5 text-green-400" />;
+        case 'invalid':
+          return <AlertCircle className="w-5 h-5 text-red-400" />;
+        case 'checking':
+          return <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />;
+        case 'incomplete':
+          return <AlertCircle className="w-5 h-5 text-orange-400" />;
+        default:
+          return null;
+      }
+    };
 
-    const iconClassName = useMemo(() => {
-      return `h-5 w-5 transition-colors ${
-        hasError ? 'text-red-400' : 
-        hasSuccess ? 'text-green-400' : 
-        'text-blue-300'
-      }`;
-    }, [hasError, hasSuccess]);
+    const getMessageClasses = () => {
+      const baseClasses = "flex items-center space-x-2 text-sm p-2 rounded-lg transition-all duration-300";
+      
+      switch (validation.status) {
+        case 'valid':
+          return `${baseClasses} text-green-300 bg-green-900/20 border border-green-500/20`;
+        case 'invalid':
+          return `${baseClasses} text-red-300 bg-red-900/20 border border-red-500/20`;
+        case 'checking':
+          return `${baseClasses} text-blue-300 bg-blue-900/20 border border-blue-500/20`;
+        case 'incomplete':
+          return `${baseClasses} text-orange-300 bg-orange-900/20 border border-orange-500/20`;
+        default:
+          return `${baseClasses} text-gray-300 bg-gray-900/20 border border-gray-500/20`;
+      }
+    };
+
+    const iconClassName = `h-5 w-5 transition-colors ${
+      validation.status === 'invalid' ? 'text-red-400' : 
+      validation.status === 'valid' ? 'text-green-400' :
+      validation.status === 'checking' ? 'text-blue-400' :
+      validation.status === 'incomplete' ? 'text-orange-400' :
+      'text-blue-300'
+    }`;
 
     return (
       <div className="space-y-2">
@@ -358,8 +344,9 @@ export default function AuthScreen() {
               <Icon className={iconClassName} />
             </div>
           )}
+          
           <input
-            ref={handleInputRef}
+            ref={(el) => { if (el) inputRefs.current[name] = el; }}
             type={type}
             name={name}
             value={value}
@@ -370,77 +357,38 @@ export default function AuthScreen() {
             maxLength={maxLength}
             inputMode={inputMode}
             max={max}
-            className={inputClassName}
+            className={getInputClasses()}
             autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
           />
 
-          {/* Ícone de status */}
-          {validation.touched && validation.isValid !== null && (
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-              {showToggle ? (
-                <div className="flex items-center space-x-2">
-                  {validation.isValid ? (
-                    <CheckCircle className="h-4 w-4 text-green-400" />
-                  ) : (
-                    <X className="h-4 w-4 text-red-400" />
-                  )}
-                  <button
-                    type="button"
-                    onClick={onToggle}
-                    className="text-blue-300 hover:text-blue-200 transition-colors"
-                  >
-                    {showPass ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-              ) : (
-                <>
-                  {validation.isValid ? (
-                    <CheckCircle className="h-5 w-5 text-green-400" />
-                  ) : (
-                    <X className="h-5 w-5 text-red-400" />
-                  )}
-                </>
-              )}
-            </div>
-          )}
-
-          {/* Loading spinner para CPF */}
-          {name === 'cpf' && isLoading && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          )}
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+            {showToggle ? (
+              <div className="flex items-center space-x-2">
+                {getStatusIcon()}
+                <button
+                  type="button"
+                  onClick={onToggle}
+                  className="text-blue-300 hover:text-blue-200 transition-colors"
+                >
+                  {showPass ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            ) : (
+              getStatusIcon()
+            )}
+          </div>
         </div>
 
-        {/* Mensagem de validação */}
-        {validation.touched && validation.message && (
-          <div className={`flex items-center space-x-2 text-sm p-2 rounded-lg transition-all duration-300 ${
-            validation.isValid ? 
-              'text-green-300 bg-green-900/20 border border-green-500/20' :
-              'text-red-300 bg-red-900/20 border border-red-500/20'
-          }`}>
-            {validation.isValid ? (
-              <CheckCircle className="w-4 h-4 flex-shrink-0" />
-            ) : (
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            )}
+        {validation.showMessage && validation.message && (
+          <div className={getMessageClasses()}>
+            {getStatusIcon()}
             <span>{validation.message}</span>
           </div>
         )}
       </div>
-    );
-  }, (prevProps, nextProps) => {
-    // Comparação customizada para evitar re-renderizações desnecessárias
-    const prevValidation = displayValidation[prevProps.name] || { isValid: null, message: '', touched: false };
-    const nextValidation = displayValidation[nextProps.name] || { isValid: null, message: '', touched: false };
-    
-    return (
-      prevProps.value === nextProps.value &&
-      prevProps.disabled === nextProps.disabled &&
-      prevProps.showPassword === nextProps.showPassword &&
-      prevValidation.isValid === nextValidation.isValid &&
-      prevValidation.message === nextValidation.message &&
-      prevValidation.touched === nextValidation.touched
     );
   });
 
@@ -526,16 +474,22 @@ export default function AuthScreen() {
                     onBlur={handleCPFBlur}
                     placeholder="000.000.000-00"
                     maxLength={14}
-                    disabled={isLoading}
+                    disabled={isLoading || fieldValidations.cpf.status === 'checking'}
                   />
 
                   <button
-                    onClick={handleManualCPFCheck}
-                    disabled={isLoading || !displayValidation.cpf.isValid}
+                    onClick={() => {
+                      const validation = updateFieldValidation('cpf', cpf);
+                      const numbers = cpf.replace(/\D/g, '');
+                      if (validation.status === 'valid' && numbers.length === 11) {
+                        checkCPF(numbers);
+                      }
+                    }}
+                    disabled={isLoading || fieldValidations.cpf.status !== 'valid'}
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                   >
-                    {isLoading ? 'Verificando...' : 'Continuar'}
-                    {!isLoading && <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
+                    {fieldValidations.cpf.status === 'checking' ? 'Verificando...' : 'Continuar'}
+                    {fieldValidations.cpf.status !== 'checking' && <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
                   </button>
                 </>
               )}
@@ -578,7 +532,7 @@ export default function AuthScreen() {
                     </button>
                     <button
                       onClick={handleLogin}
-                      disabled={isLoading || !formData.password}
+                      disabled={isLoading || fieldValidations.password.status !== 'valid'}
                       className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                     >
                       {isLoading ? 'Entrando...' : 'Entrar'}
@@ -633,7 +587,7 @@ export default function AuthScreen() {
                     </button>
                     <button
                       onClick={handleSignupStep1}
-                      disabled={isLoading || !displayValidation.name.isValid || !displayValidation.birthDate.isValid}
+                      disabled={isLoading || fieldValidations.name.status !== 'valid' || fieldValidations.birthDate.status !== 'valid'}
                       className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                     >
                       Continuar
@@ -687,7 +641,7 @@ export default function AuthScreen() {
                     </button>
                     <button
                       onClick={handleSignupComplete}
-                      disabled={isLoading || !displayValidation.email.isValid || !displayValidation.password.isValid}
+                      disabled={isLoading || fieldValidations.email.status !== 'valid' || fieldValidations.password.status !== 'valid'}
                       className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                     >
                       {isLoading ? 'Criando conta...' : 'Criar Conta'}
