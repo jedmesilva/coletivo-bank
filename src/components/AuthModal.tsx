@@ -169,13 +169,19 @@ export default function AuthScreen() {
       const formattedCPF = formatCPF(numbers);
       setCpf(formattedCPF);
       setError('');
-
-      // Não validar durante a digitação - só ao sair do campo
-      if (numbers.length === 11 && isValidCPF(numbers)) {
-        setTimeout(() => checkCPF(numbers), 1000);
-      }
+      // Removido: não fazer validação ou checkCPF durante a digitação
     }
-  }, [formatCPF, isValidCPF, checkCPF]);
+  }, [formatCPF]);
+
+  const handleCPFBlur = useCallback(() => {
+    const numbers = cpf.replace(/\D/g, '');
+    updateDisplayValidation('cpf', cpf);
+    
+    // Só fazer checkCPF se o CPF for válido e tiver 11 dígitos
+    if (numbers.length === 11 && isValidCPF(numbers)) {
+      checkCPF(numbers);
+    }
+  }, [cpf, updateDisplayValidation, isValidCPF, checkCPF]);
 
   const handleManualCPFCheck = useCallback(() => {
     const numbers = cpf.replace(/\D/g, '');
@@ -425,11 +431,16 @@ export default function AuthScreen() {
     );
   }, (prevProps, nextProps) => {
     // Comparação customizada para evitar re-renderizações desnecessárias
+    const prevValidation = displayValidation[prevProps.name] || { isValid: null, message: '', touched: false };
+    const nextValidation = displayValidation[nextProps.name] || { isValid: null, message: '', touched: false };
+    
     return (
       prevProps.value === nextProps.value &&
       prevProps.disabled === nextProps.disabled &&
       prevProps.showPassword === nextProps.showPassword &&
-      JSON.stringify(displayValidation[prevProps.name]) === JSON.stringify(displayValidation[nextProps.name])
+      prevValidation.isValid === nextValidation.isValid &&
+      prevValidation.message === nextValidation.message &&
+      prevValidation.touched === nextValidation.touched
     );
   });
 
@@ -512,7 +523,7 @@ export default function AuthScreen() {
                     inputMode="numeric"
                     value={cpf}
                     onChange={handleCPFChange}
-                    onBlur={() => updateDisplayValidation('cpf', cpf)}
+                    onBlur={handleCPFBlur}
                     placeholder="000.000.000-00"
                     maxLength={14}
                     disabled={isLoading}
