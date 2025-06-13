@@ -632,7 +632,7 @@ export default function AuthScreen() {
                     }
                   }}
                   disabled={isLoading || cpfValidation.status !== 'valid'}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                 >
                   {cpfValidation.status === 'checking' ? 'Verificando...' : 'Continuar'}
                   {cpfValidation.status !== 'checking' && <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
@@ -704,7 +704,7 @@ export default function AuthScreen() {
                   <button
                     onClick={handleLogin}
                     disabled={isLoading || passwordValidation.status !== 'valid'}
-                    className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                    className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                   >
                     {isLoading ? 'Entrando...' : 'Entrar'}
                     {!isLoading && <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
@@ -796,7 +796,7 @@ export default function AuthScreen() {
                   <button
                     onClick={handleSignupStep1}
                     disabled={isLoading || nameValidation.status !== 'valid' || birthDateValidation.status !== 'valid'}
-                    className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                    className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                   >
                     Continuar
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -896,7 +896,7 @@ export default function AuthScreen() {
                   <button
                     onClick={handleSignupComplete}
                     disabled={isLoading || emailValidation.status !== 'valid' || passwordValidation.status !== 'valid'}
-                    className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                    className="flex-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                   >
                     {isLoading ? 'Criando conta...' : 'Criar Conta'}
                     {!isLoading && <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
