@@ -20,25 +20,25 @@ export default function AuthScreen() {
     message: '',
     showMessage: false
   });
-  
+
   const [nameValidation, setNameValidation] = useState({
     status: 'idle',
     message: '',
     showMessage: false
   });
-  
+
   const [birthDateValidation, setBirthDateValidation] = useState({
     status: 'idle',
     message: '',
     showMessage: false
   });
-  
+
   const [emailValidation, setEmailValidation] = useState({
     status: 'idle',
     message: '',
     showMessage: false
   });
-  
+
   const [passwordValidation, setPasswordValidation] = useState({
     status: 'idle',
     message: '',
@@ -51,7 +51,7 @@ export default function AuthScreen() {
   const birthDateTimeoutRef = useRef(null);
   const emailTimeoutRef = useRef(null);
   const passwordTimeoutRef = useRef(null);
-  
+
   // Refs para inputs
   const cpfInputRef = useRef(null);
   const nameInputRef = useRef(null);
@@ -86,7 +86,7 @@ export default function AuthScreen() {
   // Função principal de validação de CPF com debounce (igual ao exemplo)
   const performCPFValidation = useCallback(async (value) => {
     const numbers = value.replace(/\D/g, '');
-    
+
     if (!numbers) {
       setCpfValidation({
         status: 'idle',
@@ -122,7 +122,7 @@ export default function AuthScreen() {
 
     try {
       const userData = await checkCPFExists(numbers);
-      
+
       if (userData) {
         setCpfValidation({
           status: 'valid',
@@ -196,7 +196,7 @@ export default function AuthScreen() {
     const birth = new Date(value);
     const today = new Date();
     const age = today.getFullYear() - birth.getFullYear();
-    
+
     if (age < 18) {
       setBirthDateValidation({
         status: 'invalid',
@@ -287,17 +287,17 @@ export default function AuthScreen() {
   const handleCPFChange = useCallback((e) => {
     const value = e.target.value;
     const numbers = value.replace(/\D/g, '');
-    
+
     if (numbers.length <= 11) {
       const formattedValue = formatCPF(numbers);
       setCpf(formattedValue);
       setError('');
-      
+
       // Limpar timeout anterior
       if (cpfTimeoutRef.current) {
         clearTimeout(cpfTimeoutRef.current);
       }
-      
+
       // Agendar nova validação
       cpfTimeoutRef.current = setTimeout(() => {
         performCPFValidation(formattedValue);
@@ -320,11 +320,11 @@ export default function AuthScreen() {
     const value = e.target.value;
     setFormData(prev => ({ ...prev, name: value }));
     setError('');
-    
+
     if (nameTimeoutRef.current) {
       clearTimeout(nameTimeoutRef.current);
     }
-    
+
     nameTimeoutRef.current = setTimeout(() => {
       performNameValidation(value);
     }, 500);
@@ -342,11 +342,11 @@ export default function AuthScreen() {
     const value = e.target.value;
     setFormData(prev => ({ ...prev, birthDate: value }));
     setError('');
-    
+
     if (birthDateTimeoutRef.current) {
       clearTimeout(birthDateTimeoutRef.current);
     }
-    
+
     birthDateTimeoutRef.current = setTimeout(() => {
       performBirthDateValidation(value);
     }, 500);
@@ -364,11 +364,11 @@ export default function AuthScreen() {
     const value = e.target.value;
     setFormData(prev => ({ ...prev, email: value }));
     setError('');
-    
+
     if (emailTimeoutRef.current) {
       clearTimeout(emailTimeoutRef.current);
     }
-    
+
     emailTimeoutRef.current = setTimeout(() => {
       performEmailValidation(value);
     }, 500);
@@ -386,11 +386,11 @@ export default function AuthScreen() {
     const value = e.target.value;
     setFormData(prev => ({ ...prev, password: value }));
     setError('');
-    
+
     if (passwordTimeoutRef.current) {
       clearTimeout(passwordTimeoutRef.current);
     }
-    
+
     passwordTimeoutRef.current = setTimeout(() => {
       performPasswordValidation(value);
     }, 500);
@@ -497,7 +497,7 @@ export default function AuthScreen() {
 
     // Delay focus to ensure DOM is ready
     const timeoutId = setTimeout(focusInput, 100);
-    
+
     return () => clearTimeout(timeoutId);
   }, [step, cpf, formData.name, formData.email, formData.password]);
 
@@ -513,7 +513,7 @@ export default function AuthScreen() {
   // Funções auxiliares para determinar classes CSS (igual ao exemplo)
   const getInputClasses = useCallback((validationState, isSpecial = false) => {
     const baseClasses = `w-full pl-12 pr-12 py-4 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:border-transparent backdrop-blur-sm transition-all duration-300 ${isSpecial ? 'text-center text-lg tracking-wider font-mono' : ''}`;
-    
+
     switch (validationState.status) {
       case 'invalid':
         return `${baseClasses} bg-red-900/20 border-2 border-red-500/50 focus:ring-red-400`;
@@ -545,7 +545,7 @@ export default function AuthScreen() {
 
   const getMessageClasses = useCallback((validationState) => {
     const baseClasses = "flex items-center space-x-2 text-sm p-3 rounded-lg transition-all duration-300 mt-3";
-    
+
     switch (validationState.status) {
       case 'valid':
         return `${baseClasses} text-green-300 bg-green-900/20 border border-green-500/20`;
