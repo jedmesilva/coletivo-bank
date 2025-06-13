@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Eye, EyeOff, User, Lock, ArrowRight, Check, AlertCircle, Mail, Calendar, ArrowLeft, CheckCircle, X } from 'lucide-react';
 
 export default function AuthScreen() {
@@ -13,9 +13,6 @@ export default function AuthScreen() {
     email: '',
     password: ''
   });
-
-  // Refs para debounce
-  const validationTimeouts = useRef({});
 
   // Sistema de validação para cada campo
   const [fieldValidation, setFieldValidation] = useState({
@@ -51,7 +48,7 @@ export default function AuthScreen() {
 
       case 'name':
         if (!value.trim()) {
-          validation = { isValid: null, message: '' };
+          validation = { isValid: false, message: 'Nome é obrigatório' };
         } else if (value.trim().length < 3) {
           validation = { isValid: false, message: 'Nome muito curto' };
         } else if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(value)) {
@@ -63,7 +60,7 @@ export default function AuthScreen() {
 
       case 'birthDate':
         if (!value) {
-          validation = { isValid: null, message: '' };
+          validation = { isValid: false, message: 'Data de nascimento é obrigatória' };
         } else {
           const birthDate = new Date(value);
           const today = new Date();
@@ -81,7 +78,7 @@ export default function AuthScreen() {
 
       case 'email':
         if (!value) {
-          validation = { isValid: null, message: '' };
+          validation = { isValid: false, message: 'Email é obrigatório' };
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
           validation = { isValid: false, message: 'Formato de email inválido' };
         } else {
@@ -91,7 +88,7 @@ export default function AuthScreen() {
 
       case 'password':
         if (!value) {
-          validation = { isValid: null, message: '' };
+          validation = { isValid: false, message: 'Senha é obrigatória' };
         } else if (value.length < 6) {
           validation = { isValid: false, message: 'Senha deve ter pelo menos 6 caracteres' };
         } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
@@ -105,40 +102,15 @@ export default function AuthScreen() {
     return validation;
   }, []);
 
-  // Função para atualizar validação de campo com debounce
-  const updateFieldValidation = useCallback((fieldName, value, touched = false, immediate = false) => {
-    // Limpar timeout anterior
-    if (validationTimeouts.current[fieldName]) {
-      clearTimeout(validationTimeouts.current[fieldName]);
-    }
-
-    const performValidation = () => {
-      const validation = validateField(fieldName, value);
-      setFieldValidation(prev => ({
-        ...prev,
-        [fieldName]: { ...validation, touched }
-      }));
-      return validation;
-    };
-
-    if (immediate || touched) {
-      // Validação imediata para onBlur ou quando explicitamente solicitado
-      return performValidation();
-    } else {
-      // Debounce para validação em tempo real (durante digitação)
-      const delay = fieldName === 'cpf' ? 800 : 1000; // CPF com delay menor
-      validationTimeouts.current[fieldName] = setTimeout(performValidation, delay);
-    }
+  // Função para atualizar validação de campo
+  const updateFieldValidation = useCallback((fieldName, value, touched = true) => {
+    const validation = validateField(fieldName, value);
+    setFieldValidation(prev => ({
+      ...prev,
+      [fieldName]: { ...validation, touched }
+    }));
+    return validation;
   }, [validateField]);
-
-  // Limpar timeouts ao desmontar
-  useEffect(() => {
-    return () => {
-      Object.values(validationTimeouts.current).forEach(timeout => {
-        if (timeout) clearTimeout(timeout);
-      });
-    };
-  }, []);
 
   // Função de validação de CPF simplificada
   const isValidCPF = useCallback((cpf) => {
@@ -165,30 +137,14 @@ export default function AuthScreen() {
       setCpf(formattedCPF);
       setError('');
       
-      // Validar com debounce apenas se tiver conteúdo
-      if (numbers.length > 0) {
-        updateFieldValidation('cpf', formattedCPF, false);
-      } else {
-        // Limpar validação se campo estiver vazio
-        setFieldValidation(prev => ({
-          ...prev,
-          cpf: { isValid: null, message: '', touched: false }
-        }));
-      }
-    }
-  }, [formatCPF, updateFieldValidation]);
-
-  const handleCPFBlur = useCallback(() => {
-    if (cpf) {
-      const validation = updateFieldValidation('cpf', cpf, true, true);
+      // Validar em tempo real
+      updateFieldValidation('cpf', formattedCPF, true);
       
-      // Auto-check CPF se estiver válido
-      if (validation && validation.isValid) {
-        const numbers = cpf.replace(/\D/g, '');
-        setTimeout(() => checkCPF(numbers), 300);
+      if (numbers.length === 11 && isValidCPF(numbers)) {
+        setTimeout(() => checkCPF(numbers), 500);
       }
     }
-  }, [cpf, updateFieldValidation]);
+  }, [formatCPF, isValidCPF, updateFieldValidation]);
 
   const checkCPF = useCallback(async (cpfNumbers) => {
     setIsLoading(true);
@@ -211,9 +167,9 @@ export default function AuthScreen() {
 
   const handleManualCPFCheck = useCallback(() => {
     const numbers = cpf.replace(/\D/g, '');
-    const validation = updateFieldValidation('cpf', cpf, true, true);
+    const validation = updateFieldValidation('cpf', cpf, true);
     
-    if (!validation || !validation.isValid) {
+    if (!validation.isValid) {
       return;
     }
     checkCPF(numbers);
@@ -224,28 +180,28 @@ export default function AuthScreen() {
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
     
-    // Validar com debounce apenas se tiver conteúdo
-    if (value.trim()) {
-      updateFieldValidation(name, value, false);
-    } else {
-      // Limpar validação se campo estiver vazio
-      setFieldValidation(prev => ({
-        ...prev,
-        [name]: { isValid: null, message: '', touched: false }
-      }));
-    }
+    // Validar em tempo real
+    updateFieldValidation(name, value, true);
   }, [updateFieldValidation]);
 
   const handleInputBlur = useCallback((e) => {
     const { name, value } = e.target;
-    if (value.trim()) {
-      updateFieldValidation(name, value, true, true);
-    }
+    updateFieldValidation(name, value, true);
   }, [updateFieldValidation]);
+
+  // Validação de email
+  const isValidEmail = useCallback((email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }, []);
+
+  // Validação de senha
+  const isValidPassword = useCallback((password) => {
+    return password.length >= 6 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password);
+  }, []);
 
   const handleLogin = useCallback(async () => {
     if (!formData.password) {
-      updateFieldValidation('password', formData.password, true, true);
+      updateFieldValidation('password', formData.password, true);
       return;
     }
     
@@ -264,10 +220,10 @@ export default function AuthScreen() {
 
   const handleSignupStep1 = useCallback(() => {
     // Validar todos os campos obrigatórios
-    const nameValidation = updateFieldValidation('name', formData.name, true, true);
-    const birthDateValidation = updateFieldValidation('birthDate', formData.birthDate, true, true);
+    const nameValidation = updateFieldValidation('name', formData.name, true);
+    const birthDateValidation = updateFieldValidation('birthDate', formData.birthDate, true);
     
-    if (!nameValidation?.isValid || !birthDateValidation?.isValid) {
+    if (!nameValidation.isValid || !birthDateValidation.isValid) {
       return;
     }
     
@@ -276,10 +232,10 @@ export default function AuthScreen() {
 
   const handleSignupComplete = useCallback(async () => {
     // Validar todos os campos
-    const emailValidation = updateFieldValidation('email', formData.email, true, true);
-    const passwordValidation = updateFieldValidation('password', formData.password, true, true);
+    const emailValidation = updateFieldValidation('email', formData.email, true);
+    const passwordValidation = updateFieldValidation('password', formData.password, true);
     
-    if (!emailValidation?.isValid || !passwordValidation?.isValid) {
+    if (!emailValidation.isValid || !passwordValidation.isValid) {
       return;
     }
     
@@ -503,7 +459,6 @@ export default function AuthScreen() {
                     inputMode="numeric"
                     value={cpf}
                     onChange={handleCPFChange}
-                    onBlur={handleCPFBlur}
                     placeholder="000.000.000-00"
                     maxLength={14}
                     disabled={isLoading}
