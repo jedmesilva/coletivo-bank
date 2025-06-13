@@ -208,9 +208,16 @@ export default function AuthScreen() {
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
     
+    // Limpar timeout anterior se existir
+    if (validationTimeouts.current[name]) {
+      clearTimeout(validationTimeouts.current[name]);
+    }
+    
     // Validar com debounce apenas se tiver conteúdo
     if (value.trim()) {
-      updateFieldValidation(name, value, false);
+      validationTimeouts.current[name] = setTimeout(() => {
+        updateFieldValidation(name, value, false);
+      }, 500); // 500ms de debounce
     } else {
       // Limpar validação se campo estiver vazio
       setFieldValidation(prev => ({
