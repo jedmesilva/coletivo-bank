@@ -128,24 +128,6 @@ export default function AuthScreen() {
     return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   }, []);
 
-  const handleCPFChange = useCallback((e) => {
-    const value = e.target.value;
-    const numbers = value.replace(/\D/g, '');
-    
-    if (numbers.length <= 11) {
-      const formattedCPF = formatCPF(numbers);
-      setCpf(formattedCPF);
-      setError('');
-      
-      // Validar em tempo real
-      updateFieldValidation('cpf', formattedCPF, true);
-      
-      if (numbers.length === 11 && isValidCPF(numbers)) {
-        setTimeout(() => checkCPF(numbers), 500);
-      }
-    }
-  }, [formatCPF, isValidCPF, updateFieldValidation]);
-
   const checkCPF = useCallback(async (cpfNumbers) => {
     setIsLoading(true);
     setError('');
@@ -165,6 +147,34 @@ export default function AuthScreen() {
     }
   }, [existingUsers]);
 
+  const handleCPFChange = useCallback((e) => {
+    const value = e.target.value;
+    const numbers = value.replace(/\D/g, '');
+    
+    if (numbers.length <= 11) {
+      const formattedCPF = formatCPF(numbers);
+      setCpf(formattedCPF);
+      setError('');
+      
+      // Limpar timeout anterior se existir
+      if (validationTimeouts.current['cpf']) {
+        clearTimeout(validationTimeouts.current['cpf']);
+      }
+      
+      // Validar com debounce
+      if (formattedCPF.trim()) {
+        validationTimeouts.current['cpf'] = setTimeout(() => {
+          updateFieldValidation('cpf', formattedCPF, false);
+        }, 300);
+      }
+      
+      // Auto-verificar CPF completo
+      if (numbers.length === 11 && isValidCPF(numbers)) {
+        setTimeout(() => checkCPF(numbers), 800);
+      }
+    }
+  }, [formatCPF, isValidCPF, updateFieldValidation, checkCPF]);
+
   const handleManualCPFCheck = useCallback(() => {
     const numbers = cpf.replace(/\D/g, '');
     const validation = updateFieldValidation('cpf', cpf, true);
@@ -180,8 +190,23 @@ export default function AuthScreen() {
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
     
-    // Validar em tempo real
-    updateFieldValidation(name, value, true);
+    // Limpar timeout anterior se existir
+    if (validationTimeouts.current[name]) {
+      clearTimeout(validationTimeouts.current[name]);
+    }
+    
+    // Validar com debounce apenas se tiver conteúdo
+    if (value.trim()) {
+      validationTimeouts.current[name] = setTimeout(() => {
+        updateFieldValidation(name, value, false);
+      }, 500); // 500ms de debounce
+    } else {
+      // Limpar validação se campo estiver vazio
+      setFieldValidation(prev => ({
+        ...prev,
+        [name]: { isValid: null, message: '', touched: false }
+      }));
+    }
   }, [updateFieldValidation]);
 
   const handleInputBlur = useCallback((e) => {
