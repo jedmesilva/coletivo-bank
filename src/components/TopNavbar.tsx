@@ -44,7 +44,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick,
       scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
     } ${
       isScrolled 
-        ? 'bg-slate-900/90 backdrop-blur-lg border-b border-white/10 shadow-lg' 
+        ? 'bg-slate-900/70 backdrop-blur-lg border-b border-white/10 shadow-lg' 
         : 'bg-transparent'
     }`}>
       <div className="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
