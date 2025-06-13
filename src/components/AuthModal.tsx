@@ -115,10 +115,23 @@ export default function AuthScreen() {
 
     const performValidation = () => {
       const validation = validateField(fieldName, value);
-      setFieldValidation(prev => ({
-        ...prev,
-        [fieldName]: { ...validation, touched }
-      }));
+      
+      // Só atualizar se a validação mudou para evitar re-renders desnecessários
+      setFieldValidation(prev => {
+        const currentValidation = prev[fieldName];
+        if (
+          currentValidation.isValid === validation.isValid &&
+          currentValidation.message === validation.message &&
+          currentValidation.touched === touched
+        ) {
+          return prev; // Não atualizar se nada mudou
+        }
+        
+        return {
+          ...prev,
+          [fieldName]: { ...validation, touched }
+        };
+      });
       return validation;
     };
 
@@ -126,10 +139,13 @@ export default function AuthScreen() {
       return performValidation();
     }
 
+    // Para CPF, usar delay maior para evitar validação a cada caractere
+    const delay = fieldName === 'cpf' ? 1200 : 800;
+    
     // Aplicar debounce apenas se não for execução imediata
     validationTimeouts.current[fieldName] = setTimeout(() => {
       performValidation();
-    }, 800); // 800ms de delay para validação automática
+    }, delay);
 
     return null;
   }, [validateField]);
@@ -328,22 +344,39 @@ export default function AuthScreen() {
     const hasError = validation.touched && validation.isValid === false;
     const hasSuccess = validation.touched && validation.isValid === true;
     
+    // Memoizar as funções para evitar re-renderizações
+    const handleInputRef = useCallback((el) => {
+      if (el) inputRefs.current[name] = el;
+    }, [name]);
+    
+    const inputClassName = useMemo(() => {
+      return `w-full ${Icon ? 'pl-10' : 'pl-4'} ${showToggle ? 'pr-12' : 'pr-4'} py-3 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:border-transparent backdrop-blur-sm transition-all duration-300 ${
+        hasError ? 
+          'bg-red-900/20 border-2 border-red-500/50 focus:ring-red-400' :
+        hasSuccess ?
+          'bg-green-900/20 border-2 border-green-500/50 focus:ring-green-400' :
+          'bg-white/10 border border-white/20 focus:ring-blue-400'
+      } ${name === 'cpf' ? 'text-center text-lg tracking-wider' : ''}`;
+    }, [hasError, hasSuccess, Icon, showToggle, name]);
+    
+    const iconClassName = useMemo(() => {
+      return `h-5 w-5 transition-colors ${
+        hasError ? 'text-red-400' : 
+        hasSuccess ? 'text-green-400' : 
+        'text-blue-300'
+      }`;
+    }, [hasError, hasSuccess]);
+    
     return (
       <div className="space-y-2">
         <div className="relative">
           {Icon && (
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Icon className={`h-5 w-5 transition-colors ${
-                hasError ? 'text-red-400' : 
-                hasSuccess ? 'text-green-400' : 
-                'text-blue-300'
-              }`} />
+              <Icon className={iconClassName} />
             </div>
           )}
           <input
-            ref={(el) => {
-              if (el) inputRefs.current[name] = el;
-            }}
+            ref={handleInputRef}
             type={type}
             name={name}
             value={value}
@@ -354,13 +387,8 @@ export default function AuthScreen() {
             maxLength={maxLength}
             inputMode={inputMode}
             max={max}
-            className={`w-full ${Icon ? 'pl-10' : 'pl-4'} ${showToggle ? 'pr-12' : 'pr-4'} py-3 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:border-transparent backdrop-blur-sm transition-all duration-300 ${
-              hasError ? 
-                'bg-red-900/20 border-2 border-red-500/50 focus:ring-red-400' :
-              hasSuccess ?
-                'bg-green-900/20 border-2 border-green-500/50 focus:ring-green-400' :
-                'bg-white/10 border border-white/20 focus:ring-blue-400'
-            } ${name === 'cpf' ? 'text-center text-lg tracking-wider' : ''}`}
+            className={inputClassName}
+            autoComplete="off"
           />
           
           {/* Ícone de status */}
@@ -417,6 +445,14 @@ export default function AuthScreen() {
           </div>
         )}
       </div>
+    );
+  }, (prevProps, nextProps) => {
+    // Comparação customizada para evitar re-renderizações desnecessárias
+    return (
+      prevProps.value === nextProps.value &&
+      prevProps.disabled === nextProps.disabled &&
+      prevProps.showPassword === nextProps.showPassword &&
+      JSON.stringify(fieldValidation[prevProps.name]) === JSON.stringify(fieldValidation[nextProps.name])
     );
   });
 
