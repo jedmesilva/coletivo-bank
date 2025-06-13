@@ -1,7 +1,4 @@
-Refactored code to use a separate state for display validation, updating the onBlur event for CPF and removing onChange validation logic to prevent focus issues.
-```
 
-```replit_final_file
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Eye, EyeOff, User, Lock, ArrowRight, Check, AlertCircle, Mail, Calendar, ArrowLeft, CheckCircle, X } from 'lucide-react';
 
@@ -27,14 +24,14 @@ export default function AuthScreen() {
     password: { isValid: null, message: '', touched: false }
   });
 
-    // Estado separado para não interferir na digitação
-    const [displayValidation, setDisplayValidation] = useState({
-      cpf: { isValid: null, message: '', touched: false },
-      name: { isValid: null, message: '', touched: false },
-      birthDate: { isValid: null, message: '', touched: false },
-      email: { isValid: null, message: '', touched: false },
-      password: { isValid: null, message: '', touched: false }
-    });
+  // Estado separado para não interferir na digitação
+  const [displayValidation, setDisplayValidation] = useState({
+    cpf: { isValid: null, message: '', touched: false },
+    name: { isValid: null, message: '', touched: false },
+    birthDate: { isValid: null, message: '', touched: false },
+    email: { isValid: null, message: '', touched: false },
+    password: { isValid: null, message: '', touched: false }
+  });
 
   // Refs para debounce de validação
   const validationTimeouts = useRef({});
@@ -119,7 +116,7 @@ export default function AuthScreen() {
     return validation;
   }, []);
 
-// Função que só atualiza o display de validação (não interfere na digitação)
+  // Função que só atualiza o display de validação (não interfere na digitação)
   const updateDisplayValidation = useCallback((fieldName, value) => {
     const validation = validateField(fieldName, value);
     setDisplayValidation(prev => ({
@@ -145,22 +142,6 @@ export default function AuthScreen() {
     return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   }, []);
 
-  const handleCPFChange = useCallback((e) => {
-    const value = e.target.value;
-    const numbers = value.replace(/\D/g, '');
-
-    if (numbers.length <= 11) {
-      const formattedCPF = formatCPF(numbers);
-      setCpf(formattedCPF);
-      setError('');
-// Não validar durante a digitação - só ao sair do campo
-
-      if (numbers.length === 11 && isValidCPF(numbers)) {
-        setTimeout(() => checkCPF(numbers), 1000);
-      }
-    }
-  }, [formatCPF, isValidCPF]);
-
   const checkCPF = useCallback(async (cpfNumbers) => {
     setIsLoading(true);
     setError('');
@@ -179,6 +160,22 @@ export default function AuthScreen() {
       setIsLoading(false);
     }
   }, [existingUsers]);
+
+  const handleCPFChange = useCallback((e) => {
+    const value = e.target.value;
+    const numbers = value.replace(/\D/g, '');
+
+    if (numbers.length <= 11) {
+      const formattedCPF = formatCPF(numbers);
+      setCpf(formattedCPF);
+      setError('');
+
+      // Não validar durante a digitação - só ao sair do campo
+      if (numbers.length === 11 && isValidCPF(numbers)) {
+        setTimeout(() => checkCPF(numbers), 1000);
+      }
+    }
+  }, [formatCPF, isValidCPF, checkCPF]);
 
   const handleManualCPFCheck = useCallback(() => {
     const numbers = cpf.replace(/\D/g, '');
