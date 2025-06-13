@@ -468,6 +468,39 @@ export default function AuthScreen() {
     });
   }, [step]);
 
+  // Auto-focus inputs when steps change
+  useEffect(() => {
+    const focusInput = () => {
+      switch (step) {
+        case 'cpf':
+          if (!cpf && cpfInputRef.current) {
+            cpfInputRef.current.focus();
+          }
+          break;
+        case 'login':
+          if (!formData.password && passwordInputRef.current) {
+            passwordInputRef.current.focus();
+          }
+          break;
+        case 'signup-step1':
+          if (!formData.name && nameInputRef.current) {
+            nameInputRef.current.focus();
+          }
+          break;
+        case 'signup-step2':
+          if (!formData.email && emailInputRef.current) {
+            emailInputRef.current.focus();
+          }
+          break;
+      }
+    };
+
+    // Delay focus to ensure DOM is ready
+    const timeoutId = setTimeout(focusInput, 100);
+    
+    return () => clearTimeout(timeoutId);
+  }, [step, cpf, formData.name, formData.email, formData.password]);
+
   // Cleanup
   useEffect(() => {
     return () => {
