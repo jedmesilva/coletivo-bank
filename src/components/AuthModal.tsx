@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Eye, EyeOff, User, Lock, ArrowRight, Check, AlertCircle, Mail, Calendar, ArrowLeft, CheckCircle, X } from 'lucide-react';
 
 export default function AuthScreen() {
@@ -22,6 +22,10 @@ export default function AuthScreen() {
     email: { isValid: null, message: '', touched: false },
     password: { isValid: null, message: '', touched: false }
   });
+
+  // Refs para debounce de validação
+  const validationTimeouts = useRef({});
+  const inputRefs = useRef({});
 
   const existingUsers = useMemo(() => ({
     '12345678901': { name: 'João Silva', email: 'joao@email.com' },
@@ -102,14 +106,32 @@ export default function AuthScreen() {
     return validation;
   }, []);
 
-  // Função para atualizar validação de campo
-  const updateFieldValidation = useCallback((fieldName, value, touched = true) => {
-    const validation = validateField(fieldName, value);
-    setFieldValidation(prev => ({
-      ...prev,
-      [fieldName]: { ...validation, touched }
-    }));
-    return validation;
+  // Função para atualizar validação de campo com debounce
+  const updateFieldValidation = useCallback((fieldName, value, touched = true, immediate = false) => {
+    // Limpar timeout anterior
+    if (validationTimeouts.current[fieldName]) {
+      clearTimeout(validationTimeouts.current[fieldName]);
+    }
+
+    const performValidation = () => {
+      const validation = validateField(fieldName, value);
+      setFieldValidation(prev => ({
+        ...prev,
+        [fieldName]: { ...validation, touched }
+      }));
+      return validation;
+    };
+
+    if (immediate) {
+      return performValidation();
+    }
+
+    // Aplicar debounce apenas se não for execução imediata
+    validationTimeouts.current[fieldName] = setTimeout(() => {
+      performValidation();
+    }, 800); // 800ms de delay para validação automática
+
+    return null;
   }, [validateField]);
 
   // Função de validação de CPF simplificada
@@ -137,11 +159,11 @@ export default function AuthScreen() {
       setCpf(formattedCPF);
       setError('');
       
-      // Validar em tempo real
-      updateFieldValidation('cpf', formattedCPF, true);
+      // Validar com debounce para não afetar o foco
+      updateFieldValidation('cpf', formattedCPF, true, false);
       
       if (numbers.length === 11 && isValidCPF(numbers)) {
-        setTimeout(() => checkCPF(numbers), 500);
+        setTimeout(() => checkCPF(numbers), 1000);
       }
     }
   }, [formatCPF, isValidCPF, updateFieldValidation]);
@@ -167,9 +189,9 @@ export default function AuthScreen() {
 
   const handleManualCPFCheck = useCallback(() => {
     const numbers = cpf.replace(/\D/g, '');
-    const validation = updateFieldValidation('cpf', cpf, true);
+    const validation = updateFieldValidation('cpf', cpf, true, true); // Validação imediata
     
-    if (!validation.isValid) {
+    if (!validation || !validation.isValid) {
       return;
     }
     checkCPF(numbers);
@@ -180,13 +202,13 @@ export default function AuthScreen() {
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
     
-    // Validar em tempo real
-    updateFieldValidation(name, value, true);
+    // Validar com debounce para não afetar o foco
+    updateFieldValidation(name, value, true, false);
   }, [updateFieldValidation]);
 
   const handleInputBlur = useCallback((e) => {
     const { name, value } = e.target;
-    updateFieldValidation(name, value, true);
+    updateFieldValidation(name, value, true, true); // Validação imediata no blur
   }, [updateFieldValidation]);
 
   // Validação de email
@@ -201,7 +223,7 @@ export default function AuthScreen() {
 
   const handleLogin = useCallback(async () => {
     if (!formData.password) {
-      updateFieldValidation('password', formData.password, true);
+      updateFieldValidation('password', formData.password, true, true); // Validação imediata
       return;
     }
     
@@ -219,11 +241,11 @@ export default function AuthScreen() {
   }, [cpf, formData.password, updateFieldValidation]);
 
   const handleSignupStep1 = useCallback(() => {
-    // Validar todos os campos obrigatórios
-    const nameValidation = updateFieldValidation('name', formData.name, true);
-    const birthDateValidation = updateFieldValidation('birthDate', formData.birthDate, true);
+    // Validar todos os campos obrigatórios com validação imediata
+    const nameValidation = updateFieldValidation('name', formData.name, true, true);
+    const birthDateValidation = updateFieldValidation('birthDate', formData.birthDate, true, true);
     
-    if (!nameValidation.isValid || !birthDateValidation.isValid) {
+    if (!nameValidation || !birthDateValidation || !nameValidation.isValid || !birthDateValidation.isValid) {
       return;
     }
     
@@ -231,11 +253,11 @@ export default function AuthScreen() {
   }, [formData.name, formData.birthDate, updateFieldValidation]);
 
   const handleSignupComplete = useCallback(async () => {
-    // Validar todos os campos
-    const emailValidation = updateFieldValidation('email', formData.email, true);
-    const passwordValidation = updateFieldValidation('password', formData.password, true);
+    // Validar todos os campos com validação imediata
+    const emailValidation = updateFieldValidation('email', formData.email, true, true);
+    const passwordValidation = updateFieldValidation('password', formData.password, true, true);
     
-    if (!emailValidation.isValid || !passwordValidation.isValid) {
+    if (!emailValidation || !passwordValidation || !emailValidation.isValid || !passwordValidation.isValid) {
       return;
     }
     
@@ -268,10 +290,25 @@ export default function AuthScreen() {
       email: { isValid: null, message: '', touched: false },
       password: { isValid: null, message: '', touched: false }
     });
+    
+    // Limpar todos os timeouts de validação
+    Object.values(validationTimeouts.current).forEach(timeout => {
+      if (timeout) clearTimeout(timeout);
+    });
+    validationTimeouts.current = {};
   }, [step]);
 
+  // Cleanup effect para limpar timeouts ao desmontar
+  useEffect(() => {
+    return () => {
+      Object.values(validationTimeouts.current).forEach(timeout => {
+        if (timeout) clearTimeout(timeout);
+      });
+    };
+  }, []);
+
   // Componente para renderizar input com validação
-  const ValidatedInput = ({ 
+  const ValidatedInput = React.memo(({ 
     name, 
     type = 'text', 
     placeholder, 
@@ -304,6 +341,9 @@ export default function AuthScreen() {
             </div>
           )}
           <input
+            ref={(el) => {
+              if (el) inputRefs.current[name] = el;
+            }}
             type={type}
             name={name}
             value={value}
@@ -378,7 +418,7 @@ export default function AuthScreen() {
         )}
       </div>
     );
-  };
+  });
 
   const stepConfig = useMemo(() => ({
     cpf: {
