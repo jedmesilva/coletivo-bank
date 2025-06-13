@@ -13,12 +13,30 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick,
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+    const findScrollContainer = () => {
+      const containers = document.querySelectorAll('.h-full.overflow-y-auto');
+      return containers[0] as HTMLElement || window;
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      const container = findScrollContainer();
+      const scrollY = container === window ? window.pageYOffset : container.scrollTop;
+      setIsScrolled(scrollY > 20);
+    };
+
+    const container = findScrollContainer();
+    
+    if (container === window) {
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    } else {
+      container.addEventListener('scroll', handleScroll);
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+      };
+    }
   }, []);
 
   return (
