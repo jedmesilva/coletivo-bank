@@ -440,21 +440,27 @@ export default function AuthScreen() {
 
   const handleBack = useCallback(() => {
     const transitions = {
-      'login': () => { setStep('cpf'); setCpf(''); },
-      'signup-step1': () => { setStep('cpf'); setCpf(''); },
-      'signup-step2': () => setStep('signup-step1')
+      'login': () => { 
+        setStep('cpf'); 
+        // Limpar apenas a senha do login, manter CPF
+        setFormData(prev => ({ ...prev, password: '' }));
+        setPasswordValidation({ status: 'idle', message: '', showMessage: false });
+      },
+      'signup-step1': () => { 
+        setStep('cpf'); 
+        // Manter todos os dados preenchidos, apenas voltar para CPF
+      },
+      'signup-step2': () => {
+        setStep('signup-step1');
+        // Manter nome e data de nascimento, limpar apenas email e senha
+        setFormData(prev => ({ ...prev, email: '', password: '' }));
+        setEmailValidation({ status: 'idle', message: '', showMessage: false });
+        setPasswordValidation({ status: 'idle', message: '', showMessage: false });
+      }
     };
 
     transitions[step]?.();
-    setFormData({ name: '', birthDate: '', email: '', password: '' });
     setError('');
-    
-    // Reset validations
-    setCpfValidation({ status: 'idle', message: '', showMessage: false });
-    setNameValidation({ status: 'idle', message: '', showMessage: false });
-    setBirthDateValidation({ status: 'idle', message: '', showMessage: false });
-    setEmailValidation({ status: 'idle', message: '', showMessage: false });
-    setPasswordValidation({ status: 'idle', message: '', showMessage: false });
 
     // Limpar timeouts
     [cpfTimeoutRef, nameTimeoutRef, birthDateTimeoutRef, emailTimeoutRef, passwordTimeoutRef].forEach(ref => {
