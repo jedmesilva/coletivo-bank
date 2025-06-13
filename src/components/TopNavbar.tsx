@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, Bell } from 'lucide-react';
 import { useScrollDirection } from '../hooks/useScrollDirection';
+import NotificationPanel from './NotificationPanel';
 
 interface TopNavbarProps {
   onMenuClick: () => void;
@@ -11,6 +12,7 @@ interface TopNavbarProps {
 const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick, notificationCount = 0 }) => {
   const scrollDirection = useScrollDirection();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
 
   useEffect(() => {
     const findScrollContainer = () => {
@@ -57,7 +59,10 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick,
 
         <div className="relative">
           <button 
-            onClick={onNotificationClick}
+            onClick={() => {
+              setIsNotificationPanelOpen(true);
+              onNotificationClick?.();
+            }}
             className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-200 flex items-center justify-center group"
           >
             <Bell size={20} className="text-white group-hover:scale-110 transition-transform" />
@@ -71,6 +76,12 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick,
           )}
         </div>
       </div>
+
+      {/* Notification Panel */}
+      <NotificationPanel 
+        isOpen={isNotificationPanelOpen}
+        onClose={() => setIsNotificationPanelOpen(false)}
+      />
     </div>
   );
 };
