@@ -49,8 +49,8 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       <button
         {...getButtonProps({ label, action: 'pin' })}
         className={`
-          backdrop-blur-sm text-white border border-white/30 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm transition-all duration-200 flex-1 min-h-[80px] select-none
-          ${isPressed && showOptions ? 'bg-white/50 scale-105 shadow-lg ring-2 ring-blue-300' : 'bg-white/20 hover:bg-white/30 hover:shadow-md'}
+          backdrop-blur-sm text-white border border-white/30 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm transition-all duration-200 flex-1 min-h-[80px] select-none relative
+          ${isPressed && showOptions ? 'bg-white/50 scale-110 ring-4 ring-blue-300' : 'bg-white/20 hover:bg-white/30 hover:shadow-md'}
           ${isPinned ? 'ring-2 ring-yellow-400 bg-white/30' : ''}
           ${className}
         `}
@@ -73,13 +73,13 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         <div className="flex items-center space-x-3">
           <div className={`
             p-2 rounded-full transition-all duration-200
-            ${isHoveringOption ? 'bg-blue-500 scale-110' : 'bg-gray-100'}
+            ${isHoveringOption ? 'bg-blue-500 scale-110' : 'bg-white/10'}
           `}>
-            <Pin size={18} className={isHoveringOption ? 'text-white' : 'text-blue-600'} />
+            <Pin size={18} className={isHoveringOption ? 'text-white' : 'text-white/80'} />
           </div>
           <span className={`
             font-medium transition-all duration-200
-            ${isHoveringOption ? 'text-blue-700 text-lg' : 'text-gray-700 text-base'}
+            ${isHoveringOption ? 'text-white text-lg' : 'text-white/90 text-base'}
           `}>
             Fixar
           </span>

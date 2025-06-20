@@ -25,7 +25,7 @@ export const LongPressOption: React.FC<LongPressOptionProps> = ({
     <>
       {/* Overlay */}
       <div 
-        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+        className="fixed inset-0 bg-black/20 z-[9999]"
         style={{ touchAction: 'none' }}
         onMouseDown={onSelect}
         onTouchStart={(e) => {
@@ -38,15 +38,16 @@ export const LongPressOption: React.FC<LongPressOptionProps> = ({
       <div
         ref={optionsRef}
         className={`
-          fixed z-50 bg-white/95 backdrop-blur-md text-gray-700 px-6 py-4 rounded-2xl shadow-2xl border border-white/30
+          fixed z-[10000] bg-black/80 backdrop-blur-sm text-white px-6 py-4 rounded-xl shadow-xl 
           transition-all duration-200 transform cursor-pointer select-none
-          ${isHovering ? 'scale-110 bg-blue-50/90 ring-2 ring-blue-400 shadow-blue-200/50' : 'scale-100'}
+          ${isHovering ? 'scale-110 bg-blue-500/20 ring-2 ring-blue-400' : 'scale-100'}
           ${className}
         `}
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
           transform: `translateX(-50%) ${isHovering ? 'scale(1.1)' : 'scale(1)'}`,
+          animation: 'fadeInScale 0.2s ease-out'
         }}
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
