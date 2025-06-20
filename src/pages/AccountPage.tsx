@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { CreditCard, Check, X, User, ArrowUp, ArrowDown, Send, Copy, Pin } from 'lucide-react';
+import { CreditCard, Check, X, User, ArrowUp, ArrowDown, Send, Copy } from 'lucide-react';
+import { ActionButton } from '@/components/ActionButton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
@@ -49,25 +50,8 @@ const AccountPage: React.FC = () => {
   // Estado para controlar a cópia da chave
   const [isCopied, setIsCopied] = useState(false);
   
-  // Estados para o menu contextual
-  const [contextMenu, setContextMenu] = useState<{
-    show: boolean;
-    x: number;
-    y: number;
-    buttonId: string;
-    buttonData: any;
-  }>({
-    show: false,
-    x: 0,
-    y: 0,
-    buttonId: '',
-    buttonData: null
-  });
-  
-  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
-  const [pressedButton, setPressedButton] = useState<string | null>(null);
-  const [isHoveringOption, setIsHoveringOption] = useState<boolean>(false);
-  const lastMoveTimeRef = React.useRef<number>(0);
+  // Estado para botão fixado
+  const [pinnedButton, setPinnedButton] = useState<string | null>(null);
 
   // Gerar a chave única do usuário
   const userKey = `${currentUser.name.toLowerCase().replace(/\s+/g, '')}@ColetivoBank.app`;
@@ -83,90 +67,19 @@ const AccountPage: React.FC = () => {
     }
   };
 
-  // Funções para o menu contextual
-  const handleLongPressStart = React.useCallback((e: React.TouchEvent | React.MouseEvent, buttonId: string, buttonData: any) => {
-    e.preventDefault();
+  // Função para fixar botão
+  const handlePinButton = (buttonLabel: string) => {
+    setPinnedButton(buttonLabel);
     
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    
-    setPressedButton(buttonId);
-    
-    const timer = setTimeout(() => {
-      setContextMenu({
-        show: true,
-        x: clientX,
-        y: clientY - 100,
-        buttonId,
-        buttonData
-      });
-    }, 300); // Reduzido para 300ms
-    
-    setLongPressTimer(timer);
-  }, []);
-
-  // Versão simplificada sem throttling excessivo
-  const handleTouchMove = React.useCallback((e: React.TouchEvent) => {
-    if (!contextMenu.show) return;
-    
-    const touch = e.touches[0];
-    const optionBounds = {
-      left: Math.max(20, Math.min(contextMenu.x - 40, window.innerWidth - 100)),
-      top: Math.max(20, contextMenu.y),
-      width: 80,
-      height: 64
-    };
-    
-    const isOverOption = touch.clientX >= optionBounds.left && 
-                        touch.clientX <= optionBounds.left + optionBounds.width && 
-                        touch.clientY >= optionBounds.top && 
-                        touch.clientY <= optionBounds.top + optionBounds.height;
-    
-    if (isOverOption !== isHoveringOption) {
-      setIsHoveringOption(isOverOption);
-    }
-  }, [contextMenu.show, contextMenu.x, contextMenu.y, isHoveringOption]);
-
-  const handleLongPressEnd = React.useCallback(() => {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-    }
-    setPressedButton(null);
-    
-    // Se estiver sobre a opção quando soltar, executar a ação
-    if (contextMenu.show && isHoveringOption) {
-      handlePinButton(contextMenu.buttonData);
-      return;
-    }
-    
-    // Fechar o menu contextual quando parar de pressionar
-    if (contextMenu.show) {
-      setContextMenu(prev => ({ ...prev, show: false }));
-      setIsHoveringOption(false);
-    }
-  }, [longPressTimer, contextMenu.show, isHoveringOption, contextMenu.buttonData]);
-
-  const handleContextMenuClose = React.useCallback(() => {
-    setContextMenu(prev => ({ ...prev, show: false }));
-    setIsHoveringOption(false);
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-    }
-    setPressedButton(null);
-  }, [longPressTimer]);
-
-  const handlePinButton = React.useCallback((buttonData: any) => {
     // Salvar no localStorage para que o BottomNavigation possa acessar
-    localStorage.setItem('pinnedButton', JSON.stringify(buttonData));
+    const buttonData = actionButtons.find(btn => btn.label === buttonLabel);
+    if (buttonData) {
+      localStorage.setItem('pinnedButton', JSON.stringify(buttonData));
+      window.dispatchEvent(new CustomEvent('buttonPinned', { detail: buttonData }));
+    }
     
-    // Disparar evento customizado para notificar o BottomNavigation
-    window.dispatchEvent(new CustomEvent('buttonPinned', { detail: buttonData }));
-    
-    console.log('Botão fixado:', buttonData);
-    handleContextMenuClose();
-  }, [handleContextMenuClose]);
+    console.log('Botão fixado:', buttonLabel);
+  };
 
   // Dados dos botões
   const actionButtons = [
@@ -238,39 +151,16 @@ const AccountPage: React.FC = () => {
         <div className="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 shadow-lg">
           <h3 className="text-lg font-semibold text-white mb-4">Ações</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {actionButtons.map((button) => {
-              const IconComponent = button.icon;
-              const isPressed = pressedButton === button.id;
-              return (
-                <button 
-                  key={button.id}
-                  className={`backdrop-blur-sm text-white border border-white/30 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm transition-all duration-200 flex-1 min-h-[80px] select-none ${
-                    isPressed 
-                      ? 'bg-white/40 scale-95 shadow-lg' 
-                      : 'bg-white/20 hover:bg-white/30 hover:shadow-md'
-                  }`}
-                  onClick={(e) => {
-                    if (!contextMenu.show) {
-                      button.onClick();
-                    }
-                  }}
-                  onTouchStart={(e) => handleLongPressStart(e, button.id, button)}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleLongPressEnd}
-                  onTouchCancel={handleLongPressEnd}
-                  onMouseDown={(e) => handleLongPressStart(e, button.id, button)}
-                  onMouseUp={handleLongPressEnd}
-                  onMouseLeave={handleLongPressEnd}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    handleLongPressStart(e, button.id, button);
-                  }}
-                >
-                  <IconComponent size={18} className="mb-1" />
-                  <span className="font-medium text-xs text-center leading-tight">{button.label}</span>
-                </button>
-              );
-            })}
+            {actionButtons.map((button) => (
+              <ActionButton
+                key={button.id}
+                icon={button.icon}
+                label={button.label}
+                onClick={button.onClick}
+                onPin={handlePinButton}
+                isPinned={pinnedButton === button.label}
+              />
+            ))}
           </div>
         </div>
 
@@ -300,54 +190,6 @@ const AccountPage: React.FC = () => {
           )}
         </div>
       </HeaderSection>
-
-      {/* Menu Contextual Flutuante estilo Pinterest */}
-      {contextMenu.show && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* Background blur/glassmorphism */}
-          <div 
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
-            onTouchStart={handleContextMenuClose}
-            onMouseDown={handleContextMenuClose}
-          />
-          
-          {/* Menu contextual flutuante */}
-          <div 
-            className="relative bg-white/95 backdrop-blur-md rounded-full shadow-2xl border border-white/30 p-2 min-w-[80px] context-menu-animation"
-            style={{ 
-              position: 'fixed',
-              left: Math.max(20, Math.min(contextMenu.x - 40, window.innerWidth - 100)),
-              top: Math.max(20, contextMenu.y)
-            }}
-          >
-            <button
-              id={`context-option-${contextMenu.buttonId}`}
-              className={`w-full h-16 flex flex-col items-center justify-center gap-1 px-3 py-2 text-gray-700 rounded-full transition-all duration-200 ${
-                isHoveringOption 
-                  ? 'bg-blue-100/80 scale-110 shadow-lg' 
-                  : 'hover:bg-gray-100/50 hover:scale-105'
-              }`}
-              onMouseEnter={() => setIsHoveringOption(true)}
-              onMouseLeave={() => setIsHoveringOption(false)}
-              onTouchEnd={(e) => {
-                e.stopPropagation();
-                handlePinButton(contextMenu.buttonData);
-              }}
-              onMouseUp={(e) => {
-                e.stopPropagation();
-                handlePinButton(contextMenu.buttonData);
-              }}
-            >
-              <Pin size={18} className={`transition-colors duration-200 ${
-                isHoveringOption ? 'text-blue-700' : 'text-blue-600'
-              }`} />
-              <span className={`text-xs font-medium transition-colors duration-200 ${
-                isHoveringOption ? 'text-blue-700' : 'text-gray-700'
-              }`}>Fixar</span>
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Seção de Conteúdo - Fundo Branco */}
       <div className="bg-white min-h-screen">
