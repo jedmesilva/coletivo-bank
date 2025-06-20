@@ -67,7 +67,7 @@ const AccountPage: React.FC = () => {
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [pressedButton, setPressedButton] = useState<string | null>(null);
   const [isHoveringOption, setIsHoveringOption] = useState<boolean>(false);
-  const [currentTouchPosition, setCurrentTouchPosition] = useState<{ x: number; y: number } | null>(null);
+  const lastMoveTimeRef = React.useRef<number>(0);
 
   // Gerar a chave única do usuário
   const userKey = `${currentUser.name.toLowerCase().replace(/\s+/g, '')}@ColetivoBank.app`;
@@ -84,68 +84,50 @@ const AccountPage: React.FC = () => {
   };
 
   // Funções para o menu contextual
-  const handleLongPressStart = (e: React.TouchEvent | React.MouseEvent, buttonId: string, buttonData: any) => {
+  const handleLongPressStart = React.useCallback((e: React.TouchEvent | React.MouseEvent, buttonId: string, buttonData: any) => {
     e.preventDefault();
     
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     
     setPressedButton(buttonId);
-    setCurrentTouchPosition({ x: clientX, y: clientY });
     
     const timer = setTimeout(() => {
       setContextMenu({
         show: true,
         x: clientX,
-        y: clientY - 100, // Posicionar acima do dedo
+        y: clientY - 100,
         buttonId,
         buttonData
       });
-    }, 400); // 400ms para ativar o long press (mais rápido)
+    }, 300); // Reduzido para 300ms
     
     setLongPressTimer(timer);
-  };
+  }, []);
 
-  // Função para detectar movimento durante o long press
-  const handleTouchMove = (e: React.TouchEvent) => {
+  // Versão simplificada sem throttling excessivo
+  const handleTouchMove = React.useCallback((e: React.TouchEvent) => {
     if (!contextMenu.show) return;
     
     const touch = e.touches[0];
-    setCurrentTouchPosition({ x: touch.clientX, y: touch.clientY });
+    const optionBounds = {
+      left: Math.max(20, Math.min(contextMenu.x - 40, window.innerWidth - 100)),
+      top: Math.max(20, contextMenu.y),
+      width: 80,
+      height: 64
+    };
     
-    // Verificar se o toque está sobre a opção "Fixar"
-    const optionElement = document.getElementById(`context-option-${contextMenu.buttonId}`);
-    if (optionElement) {
-      const rect = optionElement.getBoundingClientRect();
-      const isOverOption = touch.clientX >= rect.left && 
-                          touch.clientX <= rect.right && 
-                          touch.clientY >= rect.top && 
-                          touch.clientY <= rect.bottom;
-      
+    const isOverOption = touch.clientX >= optionBounds.left && 
+                        touch.clientX <= optionBounds.left + optionBounds.width && 
+                        touch.clientY >= optionBounds.top && 
+                        touch.clientY <= optionBounds.top + optionBounds.height;
+    
+    if (isOverOption !== isHoveringOption) {
       setIsHoveringOption(isOverOption);
     }
-  };
+  }, [contextMenu.show, contextMenu.x, contextMenu.y, isHoveringOption]);
 
-  // Função para detectar movimento do mouse durante o long press
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!contextMenu.show) return;
-    
-    setCurrentTouchPosition({ x: e.clientX, y: e.clientY });
-    
-    // Verificar se o mouse está sobre a opção "Fixar"
-    const optionElement = document.getElementById(`context-option-${contextMenu.buttonId}`);
-    if (optionElement) {
-      const rect = optionElement.getBoundingClientRect();
-      const isOverOption = e.clientX >= rect.left && 
-                          e.clientX <= rect.right && 
-                          e.clientY >= rect.top && 
-                          e.clientY <= rect.bottom;
-      
-      setIsHoveringOption(isOverOption);
-    }
-  };
-
-  const handleLongPressEnd = () => {
+  const handleLongPressEnd = React.useCallback(() => {
     if (longPressTimer) {
       clearTimeout(longPressTimer);
       setLongPressTimer(null);
@@ -160,20 +142,22 @@ const AccountPage: React.FC = () => {
     
     // Fechar o menu contextual quando parar de pressionar
     if (contextMenu.show) {
-      setTimeout(() => {
-        setContextMenu(prev => ({ ...prev, show: false }));
-        setIsHoveringOption(false);
-        setCurrentTouchPosition(null);
-      }, 50);
+      setContextMenu(prev => ({ ...prev, show: false }));
+      setIsHoveringOption(false);
     }
-  };
+  }, [longPressTimer, contextMenu.show, isHoveringOption, contextMenu.buttonData]);
 
-  const handleContextMenuClose = () => {
+  const handleContextMenuClose = React.useCallback(() => {
     setContextMenu(prev => ({ ...prev, show: false }));
-    handleLongPressEnd();
-  };
+    setIsHoveringOption(false);
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+    setPressedButton(null);
+  }, [longPressTimer]);
 
-  const handlePinButton = (buttonData: any) => {
+  const handlePinButton = React.useCallback((buttonData: any) => {
     // Salvar no localStorage para que o BottomNavigation possa acessar
     localStorage.setItem('pinnedButton', JSON.stringify(buttonData));
     
@@ -182,7 +166,7 @@ const AccountPage: React.FC = () => {
     
     console.log('Botão fixado:', buttonData);
     handleContextMenuClose();
-  };
+  }, [handleContextMenuClose]);
 
   // Dados dos botões
   const actionButtons = [
@@ -275,7 +259,6 @@ const AccountPage: React.FC = () => {
                   onTouchEnd={handleLongPressEnd}
                   onTouchCancel={handleLongPressEnd}
                   onMouseDown={(e) => handleLongPressStart(e, button.id, button)}
-                  onMouseMove={handleMouseMove}
                   onMouseUp={handleLongPressEnd}
                   onMouseLeave={handleLongPressEnd}
                   onContextMenu={(e) => {
