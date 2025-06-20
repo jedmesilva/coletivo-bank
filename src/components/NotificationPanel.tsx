@@ -136,8 +136,8 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ isOpen, onClose }
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent 
-        side="right" 
-        className="p-0 h-[100dvh] flex flex-col max-w-full w-full sm:max-w-md"
+        side="bottom" 
+        className="p-0 h-[100dvh] flex flex-col max-w-full"
         aria-describedby="notifications-description"
       >
         <div className="flex-1 overflow-y-auto overscroll-contain" style={{ height: 'calc(100dvh - 100px)' }}>
