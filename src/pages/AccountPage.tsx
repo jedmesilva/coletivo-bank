@@ -114,10 +114,17 @@ const AccountPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-3">
                 <button 
                   className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-                  onClick={() => console.log('QRCODE Pix clicado')}
+                  onClick={() => console.log('Fazer aporte clicado')}
                 >
-                  <CreditCard size={20} className="mb-1" />
-                  <span className="font-medium text-sm">QR CODE Pix</span>
+                  <ArrowUp size={20} className="mb-1" />
+                  <span className="font-medium text-sm">Fazer Aporte</span>
+                </button>
+                <button 
+                  className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+                  onClick={() => console.log('Receber clicado')}
+                >
+                  <ArrowDown size={20} className="mb-1" />
+                  <span className="font-medium text-sm">Receber</span>
                 </button>
                 <button 
                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-xl flex flex-col items-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
@@ -128,17 +135,10 @@ const AccountPage: React.FC = () => {
                 </button>
                 <button 
                   className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-                  onClick={() => console.log('Receber clicado')}
+                  onClick={() => console.log('QRCODE Pix clicado')}
                 >
-                  <ArrowDown size={20} className="mb-1" />
-                  <span className="font-medium text-sm">Receber</span>
-                </button>
-                <button 
-                  className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-                  onClick={() => console.log('Fazer aporte clicado')}
-                >
-                  <ArrowUp size={20} className="mb-1" />
-                  <span className="font-medium text-sm">Fazer Aporte</span>
+                  <CreditCard size={20} className="mb-1" />
+                  <span className="font-medium text-sm">QR CODE Pix</span>
                 </button>
               </div>
             </div>
