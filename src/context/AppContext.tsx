@@ -219,7 +219,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const fund = funds.find(f => f.id === fundId);
     if (fund) {
       setSelectedFund(fund);
-      setFundTab('history'); // Reset to default tab
+      setFundTab('approvals'); // Reset to default tab (first tab)
       setActiveScreen('fund-detail');
     }
   };
