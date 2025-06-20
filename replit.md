@@ -91,6 +91,7 @@ This is a collaborative credit circle application built with React and TypeScrip
 
 ## Changelog
 - June 20, 2025. Initial setup
+- June 20, 2025. Updated account page Pix section: changed title to "Ações", updated button labels to "Receber Pix" and "Enviar Pix", improved responsive layout with grid system
 
 ## User Preferences
 
