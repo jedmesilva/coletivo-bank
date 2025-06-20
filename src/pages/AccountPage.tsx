@@ -66,6 +66,8 @@ const AccountPage: React.FC = () => {
   
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [pressedButton, setPressedButton] = useState<string | null>(null);
+  const [isHoveringOption, setIsHoveringOption] = useState<boolean>(false);
+  const [currentTouchPosition, setCurrentTouchPosition] = useState<{ x: number; y: number } | null>(null);
 
   // Gerar a chave única do usuário
   const userKey = `${currentUser.name.toLowerCase().replace(/\s+/g, '')}@ColetivoBank.app`;
@@ -89,6 +91,7 @@ const AccountPage: React.FC = () => {
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     
     setPressedButton(buttonId);
+    setCurrentTouchPosition({ x: clientX, y: clientY });
     
     const timer = setTimeout(() => {
       setContextMenu({
@@ -103,6 +106,45 @@ const AccountPage: React.FC = () => {
     setLongPressTimer(timer);
   };
 
+  // Função para detectar movimento durante o long press
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!contextMenu.show) return;
+    
+    const touch = e.touches[0];
+    setCurrentTouchPosition({ x: touch.clientX, y: touch.clientY });
+    
+    // Verificar se o toque está sobre a opção "Fixar"
+    const optionElement = document.getElementById(`context-option-${contextMenu.buttonId}`);
+    if (optionElement) {
+      const rect = optionElement.getBoundingClientRect();
+      const isOverOption = touch.clientX >= rect.left && 
+                          touch.clientX <= rect.right && 
+                          touch.clientY >= rect.top && 
+                          touch.clientY <= rect.bottom;
+      
+      setIsHoveringOption(isOverOption);
+    }
+  };
+
+  // Função para detectar movimento do mouse durante o long press
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!contextMenu.show) return;
+    
+    setCurrentTouchPosition({ x: e.clientX, y: e.clientY });
+    
+    // Verificar se o mouse está sobre a opção "Fixar"
+    const optionElement = document.getElementById(`context-option-${contextMenu.buttonId}`);
+    if (optionElement) {
+      const rect = optionElement.getBoundingClientRect();
+      const isOverOption = e.clientX >= rect.left && 
+                          e.clientX <= rect.right && 
+                          e.clientY >= rect.top && 
+                          e.clientY <= rect.bottom;
+      
+      setIsHoveringOption(isOverOption);
+    }
+  };
+
   const handleLongPressEnd = () => {
     if (longPressTimer) {
       clearTimeout(longPressTimer);
@@ -110,10 +152,18 @@ const AccountPage: React.FC = () => {
     }
     setPressedButton(null);
     
-    // Fechar o menu contextual imediatamente quando parar de pressionar
+    // Se estiver sobre a opção quando soltar, executar a ação
+    if (contextMenu.show && isHoveringOption) {
+      handlePinButton(contextMenu.buttonData);
+      return;
+    }
+    
+    // Fechar o menu contextual quando parar de pressionar
     if (contextMenu.show) {
       setTimeout(() => {
         setContextMenu(prev => ({ ...prev, show: false }));
+        setIsHoveringOption(false);
+        setCurrentTouchPosition(null);
       }, 50);
     }
   };
@@ -221,9 +271,11 @@ const AccountPage: React.FC = () => {
                     }
                   }}
                   onTouchStart={(e) => handleLongPressStart(e, button.id, button)}
+                  onTouchMove={handleTouchMove}
                   onTouchEnd={handleLongPressEnd}
                   onTouchCancel={handleLongPressEnd}
                   onMouseDown={(e) => handleLongPressStart(e, button.id, button)}
+                  onMouseMove={handleMouseMove}
                   onMouseUp={handleLongPressEnd}
                   onMouseLeave={handleLongPressEnd}
                   onContextMenu={(e) => {
@@ -286,7 +338,14 @@ const AccountPage: React.FC = () => {
             }}
           >
             <button
-              className="w-full h-16 flex flex-col items-center justify-center gap-1 px-3 py-2 text-gray-700 hover:bg-gray-100/50 rounded-full transition-all duration-200 hover:scale-110"
+              id={`context-option-${contextMenu.buttonId}`}
+              className={`w-full h-16 flex flex-col items-center justify-center gap-1 px-3 py-2 text-gray-700 rounded-full transition-all duration-200 ${
+                isHoveringOption 
+                  ? 'bg-blue-100/80 scale-110 shadow-lg' 
+                  : 'hover:bg-gray-100/50 hover:scale-105'
+              }`}
+              onMouseEnter={() => setIsHoveringOption(true)}
+              onMouseLeave={() => setIsHoveringOption(false)}
               onTouchEnd={(e) => {
                 e.stopPropagation();
                 handlePinButton(contextMenu.buttonData);
@@ -296,8 +355,12 @@ const AccountPage: React.FC = () => {
                 handlePinButton(contextMenu.buttonData);
               }}
             >
-              <Pin size={18} className="text-blue-600" />
-              <span className="text-xs font-medium text-gray-700">Fixar</span>
+              <Pin size={18} className={`transition-colors duration-200 ${
+                isHoveringOption ? 'text-blue-700' : 'text-blue-600'
+              }`} />
+              <span className={`text-xs font-medium transition-colors duration-200 ${
+                isHoveringOption ? 'text-blue-700' : 'text-gray-700'
+              }`}>Fixar</span>
             </button>
           </div>
         </div>
