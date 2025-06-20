@@ -103,7 +103,7 @@ const AccountPage: React.FC = () => {
               <span className="font-medium text-xs text-center leading-tight">Receber Pix</span>
             </button>
             <button 
-              className="bg-gradient-to-r from-blue-500/80 to-purple-500/80 hover:from-blue-600/90 hover:to-purple-600/90 text-white px-3 py-3 rounded-xl flex flex-col items-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 flex-1 min-h-[80px] backdrop-blur-sm"
+              className="bg-white/20 backdrop-blur-sm text-white border border-white/30 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-white/30 hover:shadow-md transition-all duration-200 flex-1 min-h-[80px]"
               onClick={() => console.log('Enviar Pix clicado')}
             >
               <Send size={18} className="mb-1" />
