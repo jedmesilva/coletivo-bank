@@ -94,11 +94,11 @@ const AccountPage: React.FC = () => {
       setContextMenu({
         show: true,
         x: clientX,
-        y: clientY - 80, // Posicionar acima do dedo
+        y: clientY - 100, // Posicionar acima do dedo
         buttonId,
         buttonData
       });
-    }, 500); // 500ms para ativar o long press
+    }, 400); // 400ms para ativar o long press (mais rápido)
     
     setLongPressTimer(timer);
   };
@@ -109,6 +109,13 @@ const AccountPage: React.FC = () => {
       setLongPressTimer(null);
     }
     setPressedButton(null);
+    
+    // Fechar o menu contextual imediatamente quando parar de pressionar
+    if (contextMenu.show) {
+      setTimeout(() => {
+        setContextMenu(prev => ({ ...prev, show: false }));
+      }, 50);
+    }
   };
 
   const handleContextMenuClose = () => {
@@ -117,9 +124,13 @@ const AccountPage: React.FC = () => {
   };
 
   const handlePinButton = (buttonData: any) => {
-    // Aqui você pode implementar a lógica para fixar o botão na navegação inferior
-    console.log('Fixar botão:', buttonData);
-    // TODO: Implementar integração com BottomNavigation
+    // Salvar no localStorage para que o BottomNavigation possa acessar
+    localStorage.setItem('pinnedButton', JSON.stringify(buttonData));
+    
+    // Disparar evento customizado para notificar o BottomNavigation
+    window.dispatchEvent(new CustomEvent('buttonPinned', { detail: buttonData }));
+    
+    console.log('Botão fixado:', buttonData);
     handleContextMenuClose();
   };
 
@@ -255,27 +266,27 @@ const AccountPage: React.FC = () => {
         </div>
       </HeaderSection>
 
-      {/* Menu Contextual Flutuante */}
+      {/* Menu Contextual Flutuante estilo Pinterest */}
       {contextMenu.show && (
-        <>
-          {/* Overlay para fechar o menu */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Background blur/glassmorphism */}
           <div 
-            className="fixed inset-0 z-40"
+            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
             onTouchStart={handleContextMenuClose}
             onMouseDown={handleContextMenuClose}
           />
           
-          {/* Menu contextual */}
+          {/* Menu contextual flutuante */}
           <div 
-            className="fixed z-50 bg-white rounded-2xl shadow-2xl border border-gray-200 p-2 min-w-[120px]"
+            className="relative bg-white/95 backdrop-blur-md rounded-full shadow-2xl border border-white/30 p-2 min-w-[80px] context-menu-animation"
             style={{ 
-              left: Math.max(10, Math.min(contextMenu.x - 60, window.innerWidth - 130)),
-              top: Math.max(10, contextMenu.y),
-              transform: 'translateY(-100%)'
+              position: 'fixed',
+              left: Math.max(20, Math.min(contextMenu.x - 40, window.innerWidth - 100)),
+              top: Math.max(20, contextMenu.y)
             }}
           >
             <button
-              className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+              className="w-full h-16 flex flex-col items-center justify-center gap-1 px-3 py-2 text-gray-700 hover:bg-gray-100/50 rounded-full transition-all duration-200 hover:scale-110"
               onTouchEnd={(e) => {
                 e.stopPropagation();
                 handlePinButton(contextMenu.buttonData);
@@ -285,11 +296,11 @@ const AccountPage: React.FC = () => {
                 handlePinButton(contextMenu.buttonData);
               }}
             >
-              <Pin size={16} className="text-blue-600" />
-              <span className="text-sm font-medium">Fixar</span>
+              <Pin size={18} className="text-blue-600" />
+              <span className="text-xs font-medium text-gray-700">Fixar</span>
             </button>
           </div>
-        </>
+        </div>
       )}
 
       {/* Seção de Conteúdo - Fundo Branco */}
