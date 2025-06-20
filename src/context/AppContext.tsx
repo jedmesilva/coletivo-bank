@@ -180,6 +180,11 @@ interface AppContextType {
   handleMovementClick: (movement: UserHistoryItem) => void;
   handleDebtDetailClick: (debt: DebtItem) => void;
   handleApprovalClick: (approval: UserApprovalItem) => void;
+
+  // Notification panel features
+  isNotificationPanelOpen: boolean;
+  setIsNotificationPanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleNotificationClick: () => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -214,6 +219,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [selectedDebtForDetail, setSelectedDebtForDetail] = useState<DebtItem | null>(null);
   const [isApprovalDetailOpen, setIsApprovalDetailOpen] = useState<boolean>(false);
   const [selectedApproval, setSelectedApproval] = useState<UserApprovalItem | null>(null);
+
+  // Notification panel state
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState<boolean>(false);
 
   const handleFundClick = (fundId: string) => {
     const fund = funds.find(f => f.id === fundId);

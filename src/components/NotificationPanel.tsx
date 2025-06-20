@@ -113,22 +113,31 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ isOpen, onClose }
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <div className={`fixed inset-0 z-[999999] transition-all duration-300 ease-in-out ${
+    <div className={`fixed inset-0 transition-all duration-300 ease-in-out ${
       isOpen ? 'visible' : 'invisible'
-    }`} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, height: '100dvh', width: '100vw', zIndex: 999999 }}>
+    }`} style={{ 
+      position: 'fixed', 
+      top: 0, 
+      left: 0, 
+      right: 0, 
+      bottom: 0, 
+      height: '100dvh', 
+      width: '100vw', 
+      zIndex: 99999999 
+    }}>
       {/* Overlay */}
       <div 
         className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={onClose}
-        style={{ height: '100dvh', width: '100vw', zIndex: 999998 }}
+        style={{ height: '100dvh', width: '100vw', zIndex: 99999998 }}
       />
       
       {/* Notification Panel */}
       <div className={`absolute right-0 top-0 w-full max-w-md bg-white shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      }`} style={{ height: '100dvh', zIndex: 999999 }}>
+      }`} style={{ height: '100dvh', zIndex: 99999999 }}>
         {/* Header */}
         <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-6 flex-shrink-0">
           <div className="flex items-center justify-between">
