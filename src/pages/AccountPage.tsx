@@ -117,7 +117,7 @@ const AccountPage: React.FC = () => {
                   onClick={() => console.log('QRCODE Pix clicado')}
                 >
                   <CreditCard size={20} className="mb-1" />
-                  <span className="font-medium text-sm">QRCODE Pix</span>
+                  <span className="font-medium text-sm">QR CODE Pix</span>
                 </button>
                 <button 
                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-xl flex flex-col items-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
@@ -145,7 +145,7 @@ const AccountPage: React.FC = () => {
                   onClick={() => console.log('Fazer aporte clicado')}
                 >
                   <ArrowUp size={20} className="mb-1" />
-                  <span className="font-medium text-sm">Fazer aporte</span>
+                  <span className="font-medium text-sm">Fazer Aporte</span>
                 </button>
               </div>
             </div>
