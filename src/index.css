@@ -28,17 +28,6 @@
   transform: translateY(200%);
 }
 
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-  }
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;

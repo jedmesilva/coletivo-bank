@@ -10,8 +10,7 @@ const BottomNavigation: React.FC = () => {
   const location = useLocation();
   const { 
     handleDepositClick,
-    currentUser,
-    pinnedButton
+    currentUser
   } = useApp();
 
   return (
@@ -29,14 +28,14 @@ const BottomNavigation: React.FC = () => {
             <Home size={28} />
           </button>
 
-          {/* Center pinned button */}
+          {/* Center deposit button */}
           <div className="flex items-center h-full">
             <button 
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] gap-2"
-              onClick={pinnedButton.onClick}
+              onClick={() => handleDepositClick()}
             >
               <IconScroller />
-              <span className="font-semibold">{pinnedButton.label}</span>
+              <span className="font-semibold">Fazer Aporte</span>
             </button>
           </div>
 
