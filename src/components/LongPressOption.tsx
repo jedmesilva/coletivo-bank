@@ -25,7 +25,7 @@ export const LongPressOption: React.FC<LongPressOptionProps> = ({
     <>
       {/* Overlay */}
       <div 
-        className="fixed inset-0 bg-black/20 z-[9999]"
+        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[9999]"
         style={{ touchAction: 'none' }}
         onMouseDown={onSelect}
         onTouchStart={(e) => {

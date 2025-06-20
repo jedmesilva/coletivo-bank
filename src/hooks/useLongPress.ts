@@ -22,7 +22,7 @@ export const useLongPress = (onLongPress?: (data: any) => void, delay = 400) => 
     
     setOptionsPosition({
       x: centerX,
-      y: centerY - 60
+      y: centerY - 80  // Aumentei para -80 para aparecer mais acima
     });
     
     setIsPressed(true);
