@@ -180,6 +180,15 @@ interface AppContextType {
   handleMovementClick: (movement: UserHistoryItem) => void;
   handleDebtDetailClick: (debt: DebtItem) => void;
   handleApprovalClick: (approval: UserApprovalItem) => void;
+
+  // Pinned button features
+  pinnedButton: {
+    id: string;
+    label: string;
+    icon: any;
+    onClick: () => void;
+  };
+  setPinnedButton: (buttonData: { id: string; label: string; icon: any; onClick: () => void }) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -214,6 +223,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [selectedDebtForDetail, setSelectedDebtForDetail] = useState<DebtItem | null>(null);
   const [isApprovalDetailOpen, setIsApprovalDetailOpen] = useState<boolean>(false);
   const [selectedApproval, setSelectedApproval] = useState<UserApprovalItem | null>(null);
+
+  // Pinned button state
+  const [pinnedButton, setPinnedButtonState] = useState<{
+    id: string;
+    label: string;
+    icon: any;
+    onClick: () => void;
+  }>({
+    id: 'aporte',
+    label: 'Fazer Aporte',
+    icon: null,
+    onClick: () => handleDepositClick()
+  });
 
   const handleFundClick = (fundId: string) => {
     const fund = funds.find(f => f.id === fundId);
@@ -273,6 +295,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const handleApprovalClick = (approval: UserApprovalItem) => {
     setSelectedApproval(approval);
     setIsApprovalDetailOpen(true);
+  };
+
+  const setPinnedButton = (buttonData: { id: string; label: string; icon: any; onClick: () => void }) => {
+    setPinnedButtonState(buttonData);
   };
 
   const formatDate = (): string => {
@@ -566,7 +592,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setSelectedApproval,
     handleMovementClick,
     handleDebtDetailClick,
-    handleApprovalClick
+    handleApprovalClick,
+
+    // Pinned button features
+    pinnedButton,
+    setPinnedButton
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
