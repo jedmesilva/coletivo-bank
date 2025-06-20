@@ -111,7 +111,7 @@ const AccountPage: React.FC = () => {
           <div className="mb-6">
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Pix</h3>
-              <div className="flex flex-wrap gap-2 justify-center">
+              <div className="flex flex-wrap gap-2">
                 <button 
                   className="bg-white text-gray-900 border border-gray-300 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 min-w-[75px] max-w-[85px]"
                   onClick={() => console.log('Fazer aporte clicado')}
