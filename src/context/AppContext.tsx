@@ -190,7 +190,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [hideValues, setHideValues] = useState<boolean>(false);
   const [activeScreen, setActiveScreen] = useState<Screen>('home');
   const [selectedFund, setSelectedFund] = useState<Fund | null>(null);
-  const [fundTab, setFundTab] = useState<FundTab>('history');
+  const [fundTab, setFundTab] = useState<FundTab>('approvals');
   const [accountTab, setAccountTab] = useState<AccountTab>('debts');
 
   // Fund creation and deposit features
