@@ -84,17 +84,40 @@ const AccountPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Account Summary Card */}
-        <SummaryCard 
-          title="Saldo livre" 
-          balance={getUserFreeBalance()}
-          leftLabel="Fundos ativos"
-          leftValue={funds.length}
-          centerLabel="Saldo aplicado"
-          centerValue="R$ 25.000,00"
-          rightLabel="Dívidas ativas"
-          rightValue={userDebts.length}
-        />
+        {/* Ações Section */}
+        <div className="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 shadow-lg">
+          <h3 className="text-lg font-semibold text-white mb-4">Ações</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <button 
+              className="bg-white/20 backdrop-blur-sm text-white border border-white/30 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-white/30 hover:shadow-md transition-all duration-200 flex-1 min-h-[80px]"
+              onClick={() => console.log('Fazer aporte clicado')}
+            >
+              <ArrowUp size={18} className="mb-1" />
+              <span className="font-medium text-xs text-center leading-tight">Fazer Aporte</span>
+            </button>
+            <button 
+              className="bg-white/20 backdrop-blur-sm text-white border border-white/30 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-white/30 hover:shadow-md transition-all duration-200 flex-1 min-h-[80px]"
+              onClick={() => console.log('Receber Pix clicado')}
+            >
+              <ArrowDown size={18} className="mb-1" />
+              <span className="font-medium text-xs text-center leading-tight">Receber Pix</span>
+            </button>
+            <button 
+              className="bg-gradient-to-r from-blue-500/80 to-purple-500/80 hover:from-blue-600/90 hover:to-purple-600/90 text-white px-3 py-3 rounded-xl flex flex-col items-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 flex-1 min-h-[80px] backdrop-blur-sm"
+              onClick={() => console.log('Enviar Pix clicado')}
+            >
+              <Send size={18} className="mb-1" />
+              <span className="font-medium text-xs text-center leading-tight">Enviar Pix</span>
+            </button>
+            <button 
+              className="bg-white/20 backdrop-blur-sm text-white border border-white/30 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-white/30 hover:shadow-md transition-all duration-200 flex-1 min-h-[80px]"
+              onClick={() => console.log('QRCODE Pix clicado')}
+            >
+              <CreditCard size={18} className="mb-1" />
+              <span className="font-medium text-xs text-center leading-tight">QR CODE Pix</span>
+            </button>
+          </div>
+        </div>
       </HeaderSection>
 
       {/* Seção de Conteúdo - Fundo Branco */}
@@ -106,43 +129,6 @@ const AccountPage: React.FC = () => {
             isMenuOpen={isMenuOpen} 
             toggleMenu={() => setIsMenuOpen(false)} 
           />
-
-          {/* Ações Section */}
-          <div className="mb-6">
-            <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button 
-                  className="bg-white text-gray-900 border border-gray-300 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 flex-1 min-h-[80px]"
-                  onClick={() => console.log('Fazer aporte clicado')}
-                >
-                  <ArrowUp size={18} className="mb-1" />
-                  <span className="font-medium text-xs text-center leading-tight">Fazer Aporte</span>
-                </button>
-                <button 
-                  className="bg-white text-gray-900 border border-gray-300 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 flex-1 min-h-[80px]"
-                  onClick={() => console.log('Receber Pix clicado')}
-                >
-                  <ArrowDown size={18} className="mb-1" />
-                  <span className="font-medium text-xs text-center leading-tight">Receber Pix</span>
-                </button>
-                <button 
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-3 py-3 rounded-xl flex flex-col items-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 flex-1 min-h-[80px]"
-                  onClick={() => console.log('Enviar Pix clicado')}
-                >
-                  <Send size={18} className="mb-1" />
-                  <span className="font-medium text-xs text-center leading-tight">Enviar Pix</span>
-                </button>
-                <button 
-                  className="bg-white text-gray-900 border border-gray-300 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 flex-1 min-h-[80px]"
-                  onClick={() => console.log('QRCODE Pix clicado')}
-                >
-                  <CreditCard size={18} className="mb-1" />
-                  <span className="font-medium text-xs text-center leading-tight">QR CODE Pix</span>
-                </button>
-              </div>
-            </div>
-          </div>
 
           {/* Tabs */}
           <TabNavigation 
