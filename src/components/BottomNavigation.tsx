@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Home, ArrowUp, ArrowDown, Send, CreditCard } from 'lucide-react';
+import React from 'react';
+import { Home } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import IconScroller from './IconScroller';
 import { useApp } from '@/context/AppContext';
@@ -12,73 +12,6 @@ const BottomNavigation: React.FC = () => {
     handleDepositClick,
     currentUser
   } = useApp();
-
-  // Estado para o botão fixado
-  const [pinnedButton, setPinnedButton] = useState<any>(null);
-
-  // Carregar botão fixado do localStorage e escutar mudanças
-  useEffect(() => {
-    const loadPinnedButton = () => {
-      const saved = localStorage.getItem('pinnedButton');
-      if (saved) {
-        try {
-          setPinnedButton(JSON.parse(saved));
-        } catch (e) {
-          console.error('Erro ao carregar botão fixado:', e);
-        }
-      }
-    };
-
-    loadPinnedButton();
-
-    // Escutar evento customizado de botão fixado
-    const handleButtonPinned = (event: CustomEvent) => {
-      setPinnedButton(event.detail);
-    };
-
-    window.addEventListener('buttonPinned', handleButtonPinned as EventListener);
-
-    return () => {
-      window.removeEventListener('buttonPinned', handleButtonPinned as EventListener);
-    };
-  }, []);
-
-  // Função para executar ação do botão fixado
-  const executePinnedButtonAction = () => {
-    if (pinnedButton) {
-      switch (pinnedButton.id) {
-        case 'aporte':
-          handleDepositClick();
-          break;
-        case 'receber':
-          console.log('Receber Pix clicado');
-          break;
-        case 'enviar':
-          console.log('Enviar Pix clicado');
-          break;
-        case 'qrcode':
-          console.log('QRCODE Pix clicado');
-          break;
-        default:
-          console.log('Ação do botão fixado:', pinnedButton);
-      }
-    }
-  };
-
-  // Obter o ícone do botão fixado
-  const getPinnedButtonIcon = () => {
-    if (!pinnedButton) return ArrowUp;
-    
-    switch (pinnedButton.id) {
-      case 'aporte': return ArrowUp;
-      case 'receber': return ArrowDown;
-      case 'enviar': return Send;
-      case 'qrcode': return CreditCard;
-      default: return ArrowUp;
-    }
-  };
-
-  const PinnedIcon = getPinnedButtonIcon();
 
   return (
     <div className="fixed bottom-0 left-0 right-0">
@@ -95,23 +28,14 @@ const BottomNavigation: React.FC = () => {
             <Home size={28} />
           </button>
 
-          {/* Center dynamic button */}
+          {/* Center deposit button */}
           <div className="flex items-center h-full">
             <button 
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] gap-2"
-              onClick={pinnedButton ? executePinnedButtonAction : () => handleDepositClick()}
+              onClick={() => handleDepositClick()}
             >
-              {pinnedButton ? (
-                <>
-                  <PinnedIcon size={20} />
-                  <span className="font-semibold">{pinnedButton.label}</span>
-                </>
-              ) : (
-                <>
-                  <IconScroller />
-                  <span className="font-semibold">Fazer Aporte</span>
-                </>
-              )}
+              <IconScroller />
+              <span className="font-semibold">Fazer Aporte</span>
             </button>
           </div>
 

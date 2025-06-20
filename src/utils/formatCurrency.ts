@@ -1,20 +1,32 @@
-export const formatCurrency = (value: number, hideValue: boolean = false): string => {
-  if (hideValue) {
-    return '••••••';
+
+/**
+ * Formats a number as Brazilian Real currency
+ * @param value - The number to format
+ * @param hideCurrency - If true, returns asterisks instead of the actual value
+ * @returns Formatted currency string
+ */
+export const formatCurrency = (value: number, hideCurrency: boolean = false): string => {
+  if (hideCurrency) {
+    return "R$ ******";
   }
   
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
+  return `R$ ${value.toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(value);
+  })}`;
 };
 
-export const formatPercentage = (value: number, hideValue: boolean = false): string => {
-  if (hideValue) {
-    return '••••••';
+/**
+ * Formats a number as a percentage
+ * @param value - The percentage value
+ * @param hideCurrency - If true, returns asterisks instead of the actual value
+ * @returns Formatted percentage string with + or - prefix
+ */
+export const formatPercentage = (value: number, hideCurrency: boolean = false): string => {
+  if (hideCurrency) {
+    return "***%";
   }
   
-  return `${value.toFixed(1)}%`;
+  const prefix = value >= 0 ? '+' : '';
+  return `${prefix}${value}%`;
 };

@@ -165,18 +165,6 @@
   }
 }
 
-/* Animação para o menu contextual estilo Pinterest */
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-  }
-}
-
 .scrollbar-hide {
     scrollbar-width: none;
     -ms-overflow-style: none;
