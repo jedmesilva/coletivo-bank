@@ -111,30 +111,30 @@ const AccountPage: React.FC = () => {
           <div className="mb-6">
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Pix</h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 justify-center">
                 <button 
-                  className="bg-white text-gray-900 border border-gray-300 px-2 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 flex-1 min-w-[calc(33.333%-8px)]"
+                  className="bg-white text-gray-900 border border-gray-300 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 min-w-[75px] max-w-[85px]"
                   onClick={() => console.log('Fazer aporte clicado')}
                 >
                   <ArrowUp size={18} className="mb-1" />
                   <span className="font-medium text-xs text-center">Fazer Aporte</span>
                 </button>
                 <button 
-                  className="bg-white text-gray-900 border border-gray-300 px-2 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 flex-1 min-w-[calc(33.333%-8px)]"
+                  className="bg-white text-gray-900 border border-gray-300 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 min-w-[75px] max-w-[85px]"
                   onClick={() => console.log('Receber clicado')}
                 >
                   <ArrowDown size={18} className="mb-1" />
                   <span className="font-medium text-xs text-center">Receber</span>
                 </button>
                 <button 
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-2 py-3 rounded-xl flex flex-col items-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 flex-1 min-w-[calc(33.333%-8px)]"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-3 py-3 rounded-xl flex flex-col items-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 min-w-[75px] max-w-[85px]"
                   onClick={() => console.log('Enviar clicado')}
                 >
                   <Send size={18} className="mb-1" />
                   <span className="font-medium text-xs text-center">Enviar</span>
                 </button>
                 <button 
-                  className="bg-white text-gray-900 border border-gray-300 px-2 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 flex-1 min-w-[calc(50%-4px)] max-w-[calc(50%-4px)]"
+                  className="bg-white text-gray-900 border border-gray-300 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 min-w-[75px] max-w-[95px]"
                   onClick={() => console.log('QRCODE Pix clicado')}
                 >
                   <CreditCard size={18} className="mb-1" />
