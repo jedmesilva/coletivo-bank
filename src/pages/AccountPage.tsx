@@ -114,10 +114,10 @@ const AccountPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-3">
                 <button 
                   className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-                  onClick={() => console.log('Pagar clicado')}
+                  onClick={() => console.log('QRCODE Pix clicado')}
                 >
                   <CreditCard size={20} className="mb-1" />
-                  <span className="font-medium text-sm">Pagar</span>
+                  <span className="font-medium text-sm">QRCODE Pix</span>
                 </button>
                 <button 
                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-xl flex flex-col items-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
