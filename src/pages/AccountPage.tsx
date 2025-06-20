@@ -140,6 +140,13 @@ const AccountPage: React.FC = () => {
                   <User size={20} className="mb-1" />
                   <span className="font-medium text-sm">Chaves pix</span>
                 </button>
+                <button 
+                  className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+                  onClick={() => console.log('Fazer aporte clicado')}
+                >
+                  <ArrowUp size={20} className="mb-1" />
+                  <span className="font-medium text-sm">Fazer aporte</span>
+                </button>
               </div>
             </div>
           </div>
