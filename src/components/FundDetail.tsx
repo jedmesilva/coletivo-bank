@@ -2,12 +2,6 @@ import React, { useState } from 'react';
 import { ArrowUp, ArrowDown, CreditCard, Check, X, MoreVertical } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useApp } from '@/context/AppContext';
 import SummaryCard from './SummaryCard';
 import FundBalanceCard from './FundBalanceCard';
@@ -93,28 +87,13 @@ const FundDetail: React.FC = () => {
               </div>
             </div>
             
-            {/* Settings Menu */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-sm">
-                  <MoreVertical size={20} className="text-white" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => console.log('Editar fundo')}>
-                  Editar fundo
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => console.log('Adicionar membros')}>
-                  Adicionar membros
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => console.log('Configurações')}>
-                  Configurações
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => console.log('Relatórios')} className="text-gray-600">
-                  Relatórios
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Settings Button */}
+            <button 
+              onClick={() => console.log('Abrir definições do fundo')}
+              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-sm"
+            >
+              <MoreVertical size={20} className="text-white" />
+            </button>
           </div>
         </div>
 
