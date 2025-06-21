@@ -1,48 +1,45 @@
-
 import { useState, useEffect, useRef } from 'react';
 
 export const useScrollDirection = () => {
-  const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const scrollContainerRef = useRef<HTMLElement | null>(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    // Tentar encontrar o container de scroll da página atual
-    const findScrollContainer = () => {
-      const containers = document.querySelectorAll('.h-full.overflow-y-auto');
-      return containers[0] as HTMLElement || window;
-    };
-
     const updateScrollDirection = () => {
-      const container = scrollContainerRef.current || findScrollContainer();
-      const scrollY = container === window ? window.pageYOffset : container.scrollTop;
-      const direction = scrollY > lastScrollY ? 'down' : 'up';
+      const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
       
-      // Usar thresholds diferentes: 10px para esconder, 1px para aparecer
-      const threshold = direction === 'down' ? 10 : 1;
-      const scrollDiff = Math.abs(scrollY - lastScrollY);
+      // Diferença mínima para considerar o scroll
+      if (Math.abs(currentScrollY - lastScrollY.current) < 5) return;
       
-      if (direction !== scrollDirection && scrollDiff >= threshold) {
-        setScrollDirection(direction);
+      const isScrollingDown = currentScrollY > lastScrollY.current;
+      
+      if (isScrollingDown && currentScrollY > 20) {
+        // Oculta quando rola para baixo após 20px
+        setIsVisible(false);
+      } else if (!isScrollingDown || currentScrollY <= 20) {
+        // Mostra quando rola para cima ou está no topo
+        setIsVisible(true);
       }
-      setLastScrollY(scrollY > 0 ? scrollY : 0);
+      
+      lastScrollY.current = currentScrollY;
     };
 
-    const container = findScrollContainer();
-    scrollContainerRef.current = container;
-    
-    if (container === window) {
-      window.addEventListener('scroll', updateScrollDirection);
-      return () => {
-        window.removeEventListener('scroll', updateScrollDirection);
-      };
-    } else {
-      container.addEventListener('scroll', updateScrollDirection);
-      return () => {
-        container.removeEventListener('scroll', updateScrollDirection);
-      };
-    }
-  }, [scrollDirection, lastScrollY]);
+    let ticking = false;
+    const requestTick = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateScrollDirection);
+        ticking = true;
+        setTimeout(() => { ticking = false; }, 16);
+      }
+    };
 
-  return scrollDirection;
+    window.addEventListener('scroll', requestTick, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', requestTick);
+    };
+  }, []);
+
+  return { isVisible };
 };
+
