@@ -197,7 +197,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
         className="p-0 h-[100dvh] flex flex-col max-w-full"
         aria-describedby="fund-settings-description"
       >
-        <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
+        <div className="flex-1 overflow-y-auto overscroll-contain" style={{ height: 'calc(100dvh - 100px)' }}>
           {/* Header with Fund Info */}
           <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
             <div className="px-4 flex items-center justify-between mb-6">
@@ -232,9 +232,9 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
           </header>
 
           {/* Main Tabs Navigation */}
-          <div className="py-4 flex-1 overflow-hidden flex flex-col">
-            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as FundSettingsTab)} className="flex-1 flex flex-col">
-              <div className="overflow-x-auto scrollbar-hide px-4">
+          <div className="py-4 flex-1 overflow-hidden flex flex-col min-h-0">
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as FundSettingsTab)} className="flex-1 flex flex-col min-h-0">
+              <div className="overflow-x-auto scrollbar-hide px-4 flex-shrink-0">
                 <TabsList className="flex h-auto p-1 bg-gray-100 rounded-2xl" style={{ width: 'max-content', minWidth: '100%' }}>
                   <div className="flex gap-1">
                     <TabsTrigger value="general" className="flex flex-col gap-1 py-3 px-4 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg flex-shrink-0">
@@ -262,7 +262,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
               </div>
 
               {/* Tab Content */}
-              <div className="mt-6 flex-1 overflow-y-auto pb-6 px-4">
+              <div className="mt-6 flex-1 overflow-y-auto px-4 min-h-0">
                 {/* General Tab */}
                 <TabsContent value="general" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
