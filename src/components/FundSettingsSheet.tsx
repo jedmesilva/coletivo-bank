@@ -355,36 +355,48 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                           <div className="grid grid-cols-3 gap-3">
                             <button
                               type="button"
-                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
+                              className={`text-center p-3 rounded-xl transition-all duration-200 ${
+                                contributionRate === '50'
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700'
+                                  : 'bg-white border border-gray-200 hover:border-primary hover:bg-primary/5 shadow-sm hover:shadow-md'
+                              }`}
                               onClick={() => {
                                 setContributionRate('50');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium text-gray-900">50%</div>
-                              <div className="text-xs text-gray-600">Conservador</div>
+                              <div className={`font-medium ${contributionRate === '50' ? 'text-white' : 'text-gray-900'}`}>50%</div>
+                              <div className={`text-xs ${contributionRate === '50' ? 'opacity-90' : 'text-gray-600'}`}>Conservador</div>
                             </button>
                             <button
                               type="button"
-                              className="text-center p-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                              className={`text-center p-3 rounded-xl transition-all duration-200 ${
+                                contributionRate === '100'
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700'
+                                  : 'bg-white border border-gray-200 hover:border-primary hover:bg-primary/5 shadow-sm hover:shadow-md'
+                              }`}
                               onClick={() => {
                                 setContributionRate('100');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium">100%</div>
-                              <div className="text-xs opacity-90">Equilibrado</div>
+                              <div className={`font-medium ${contributionRate === '100' ? 'text-white' : 'text-gray-900'}`}>100%</div>
+                              <div className={`text-xs ${contributionRate === '100' ? 'opacity-90' : 'text-gray-600'}`}>Equilibrado</div>
                             </button>
                             <button
                               type="button"
-                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
+                              className={`text-center p-3 rounded-xl transition-all duration-200 ${
+                                contributionRate === '200'
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700'
+                                  : 'bg-white border border-gray-200 hover:border-primary hover:bg-primary/5 shadow-sm hover:shadow-md'
+                              }`}
                               onClick={() => {
                                 setContributionRate('200');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium text-gray-900">200%</div>
-                              <div className="text-xs text-gray-600">Agressivo</div>
+                              <div className={`font-medium ${contributionRate === '200' ? 'text-white' : 'text-gray-900'}`}>200%</div>
+                              <div className={`text-xs ${contributionRate === '200' ? 'opacity-90' : 'text-gray-600'}`}>Agressivo</div>
                             </button>
                           </div>
                         </TabsContent>
@@ -425,47 +437,63 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                           <div className="grid grid-cols-4 gap-2">
                             <button
                               type="button"
-                              className="text-center p-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                              className={`text-center p-3 rounded-xl transition-all duration-200 ${
+                                interestRate === '0'
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700'
+                                  : 'bg-white border border-gray-200 hover:border-primary hover:bg-primary/5 shadow-sm hover:shadow-md'
+                              }`}
                               onClick={() => {
                                 setInterestRate('0');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium">0%</div>
-                              <div className="text-xs opacity-90">Sem juros</div>
+                              <div className={`font-medium ${interestRate === '0' ? 'text-white' : 'text-gray-900'}`}>0%</div>
+                              <div className={`text-xs ${interestRate === '0' ? 'opacity-90' : 'text-gray-600'}`}>Sem juros</div>
                             </button>
                             <button
                               type="button"
-                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
+                              className={`text-center p-3 rounded-xl transition-all duration-200 ${
+                                interestRate === '3'
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700'
+                                  : 'bg-white border border-gray-200 hover:border-primary hover:bg-primary/5 shadow-sm hover:shadow-md'
+                              }`}
                               onClick={() => {
                                 setInterestRate('3');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium text-gray-900">3%</div>
-                              <div className="text-xs text-gray-600">Baixo</div>
+                              <div className={`font-medium ${interestRate === '3' ? 'text-white' : 'text-gray-900'}`}>3%</div>
+                              <div className={`text-xs ${interestRate === '3' ? 'opacity-90' : 'text-gray-600'}`}>Baixo</div>
                             </button>
                             <button
                               type="button"
-                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
+                              className={`text-center p-3 rounded-xl transition-all duration-200 ${
+                                interestRate === '6'
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700'
+                                  : 'bg-white border border-gray-200 hover:border-primary hover:bg-primary/5 shadow-sm hover:shadow-md'
+                              }`}
                               onClick={() => {
                                 setInterestRate('6');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium text-gray-900">6%</div>
-                              <div className="text-xs text-gray-600">Moderado</div>
+                              <div className={`font-medium ${interestRate === '6' ? 'text-white' : 'text-gray-900'}`}>6%</div>
+                              <div className={`text-xs ${interestRate === '6' ? 'opacity-90' : 'text-gray-600'}`}>Moderado</div>
                             </button>
                             <button
                               type="button"
-                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
+                              className={`text-center p-3 rounded-xl transition-all duration-200 ${
+                                interestRate === '12'
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700'
+                                  : 'bg-white border border-gray-200 hover:border-primary hover:bg-primary/5 shadow-sm hover:shadow-md'
+                              }`}
                               onClick={() => {
                                 setInterestRate('12');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium text-gray-900">12%</div>
-                              <div className="text-xs text-gray-600">Alto</div>
+                              <div className={`font-medium ${interestRate === '12' ? 'text-white' : 'text-gray-900'}`}>12%</div>
+                              <div className={`text-xs ${interestRate === '12' ? 'opacity-90' : 'text-gray-600'}`}>Alto</div>
                             </button>
                           </div>
                         </TabsContent>
