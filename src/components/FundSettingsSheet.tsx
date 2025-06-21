@@ -174,14 +174,14 @@ const FundSettingsSheet: React.FC<FundSettingsSheetProps> = ({
                 >
                   <Users className="w-4 h-4 mr-1" />
                   Membros
-                TabsTrigger>
+                </TabsTrigger>
                 <TabsTrigger 
                   value="danger" 
                   className="text-xs data-[state=active]:bg-white data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
                 >
                   <Trash2 className="w-4 h-4 mr-1" />
                   Perigo
-                TabsTrigger>
+                </TabsTrigger>
               </TabsList>
 
               {/* Tab Content */}
