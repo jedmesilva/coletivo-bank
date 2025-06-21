@@ -16,28 +16,50 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick,
   useEffect(() => {
     let lastScrollY = 0;
 
-    const handleScroll = () => {
-      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const handleScroll = (event: Event) => {
+      const target = event.target as HTMLElement;
+      let scrollY = 0;
+      
+      // Detecta se é scroll da window ou de um container
+      if (target === document || target === document.documentElement) {
+        scrollY = window.pageYOffset || document.documentElement.scrollTop;
+      } else if (target.classList.contains('overflow-y-auto')) {
+        scrollY = target.scrollTop;
+      } else {
+        return;
+      }
       
       // Atualiza o estado de rolagem para o background
       setIsScrolled(scrollY > 20);
       
-      // Lógica de auto-hide
-      const direction = scrollY > lastScrollY ? 'down' : 'up';
-      
-      if (direction === 'down' && scrollY > 50) {
-        setIsVisible(false);
-      } else if (direction === 'up' || scrollY <= 50) {
-        setIsVisible(true);
+      // Lógica de auto-hide com debounce para evitar tremulação
+      if (Math.abs(scrollY - lastScrollY) > 5) {
+        const direction = scrollY > lastScrollY ? 'down' : 'up';
+        
+        if (direction === 'down' && scrollY > 50) {
+          setIsVisible(false);
+        } else if (direction === 'up' || scrollY <= 20) {
+          setIsVisible(true);
+        }
+        
+        lastScrollY = scrollY;
       }
-      
-      lastScrollY = scrollY;
     };
 
+    // Adiciona listeners tanto para window quanto para containers com scroll
     window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Busca containers com scroll e adiciona listeners
+    const scrollContainers = document.querySelectorAll('.overflow-y-auto');
+    scrollContainers.forEach(container => {
+      container.addEventListener('scroll', handleScroll, { passive: true });
+    });
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      scrollContainers.forEach(container => {
+        container.removeEventListener('scroll', handleScroll);
+      });
     };
   }, []);
 
