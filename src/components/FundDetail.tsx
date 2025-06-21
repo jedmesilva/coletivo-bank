@@ -8,12 +8,14 @@ import FundBalanceCard from './FundBalanceCard';
 import TabNavigation from './TabNavigation';
 import TopNavbar from './TopNavbar';
 import HeaderSection from './HeaderSection';
+import FundSettingsSheet from './FundSettingsSheet';
 
 import { formatCurrency } from '@/utils/formatCurrency';
 
 const FundDetail: React.FC = () => {
   const { fundId } = useParams<{ fundId: string }>();
   const navigate = useNavigate();
+  const [isFundSettingsOpen, setIsFundSettingsOpen] = useState(false);
 
   const { 
     funds,
@@ -89,7 +91,7 @@ const FundDetail: React.FC = () => {
             
             {/* Settings Button */}
             <button 
-              onClick={() => console.log('Abrir definições do fundo')}
+              onClick={() => setIsFundSettingsOpen(true)}
               className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-sm"
             >
               <MoreVertical size={20} className="text-white" />
@@ -272,6 +274,21 @@ const FundDetail: React.FC = () => {
         </div>
       </div>
       </div>
+
+      {/* Fund Settings Sheet */}
+      <FundSettingsSheet
+        isOpen={isFundSettingsOpen}
+        onClose={() => setIsFundSettingsOpen(false)}
+        fund={{
+          id: selectedFund.id,
+          name: selectedFund.name,
+          description: selectedFund.description || '',
+          contributionRate: selectedFund.contributionRate || 100,
+          interestRate: selectedFund.interestRate || 0,
+          approvalType: selectedFund.approvalType || 'quorum',
+          minimumQuorum: selectedFund.minimumQuorum || 50
+        }}
+      />
     </div>
   );
 };

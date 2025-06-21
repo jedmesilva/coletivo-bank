@@ -24,6 +24,10 @@ export const funds = pgTable("funds", {
   image: text("image"),
   balance: decimal("balance", { precision: 10, scale: 2 }).default("0.00"),
   growth: decimal("growth", { precision: 5, scale: 2 }).default("0.00"),
+  contributionRate: decimal("contribution_rate", { precision: 5, scale: 2 }).default("100.00"), // Taxa de contribuição (0-1000%)
+  interestRate: decimal("interest_rate", { precision: 4, scale: 2 }).default("0.00"), // Taxa de juros anual (0-12%)
+  approvalType: text("approval_type").default("quorum"), // 'quorum' ou 'unanimous'
+  minimumQuorum: integer("minimum_quorum").default(50), // Percentual mínimo para quórum (1-100%)
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

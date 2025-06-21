@@ -16,6 +16,10 @@ import {
   approveCapitalRequest 
 } from './controllers/fundsController';
 import { 
+  updateFundSettings, 
+  getFundSettings 
+} from './controllers/fundSettingsController';
+import { 
   getUserDebts, 
   getFundDebts, 
   payDebt, 
@@ -55,6 +59,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/funds/:fundId/deposit', requireAuth, depositToFund);
   app.post('/api/funds/:fundId/request-capital', requireAuth, requestCapital);
   app.put('/api/approvals/:approvalId', requireAuth, approveCapitalRequest);
+  
+  // Fund settings routes
+  app.get('/api/funds/:fundId/settings', requireAuth, getFundSettings);
+  app.put('/api/funds/:fundId/settings', requireAuth, updateFundSettings);
 
   // ===== DEBTS ROUTES =====
   app.get('/api/debts', requireAuth, getUserDebts);
