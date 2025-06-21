@@ -199,8 +199,8 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
       >
         <div className="flex-1 overflow-y-auto overscroll-contain" style={{ height: 'calc(100dvh - 100px)' }}>
           {/* Header with Fund Info */}
-          <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
-            <div className="px-4 flex items-center justify-between mb-6">
+          <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-4">
+            <div className="px-4 flex items-center justify-between">
               <div className="flex items-center flex-1">
                 <img 
                   src={fund.image} 
