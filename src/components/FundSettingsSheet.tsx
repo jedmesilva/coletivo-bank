@@ -313,7 +313,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                     <Tabs value={activeRatesTab} onValueChange={(value) => setActiveRatesTab(value as RatesSubTab)} className="flex-1 flex flex-col">
                       <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gray-100 rounded-2xl">
                         <TabsTrigger value="contribution" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                          <CreditCard className="w-4 h-4" />
+                          <Percent className="w-4 h-4" />
                           <span>Contribuição</span>
                         </TabsTrigger>
                         <TabsTrigger value="interest" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
