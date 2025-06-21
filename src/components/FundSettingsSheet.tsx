@@ -140,7 +140,7 @@ const FundSettingsSheet: React.FC<FundSettingsSheetProps> = ({
             <div className="px-4">
               <SheetDescription className="text-white/70">
                 Gerencie as configurações e membros do seu fundo
-              SheetDescription>
+              </SheetDescription>
             </div>
           </header>
 
