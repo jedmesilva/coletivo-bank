@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, Calculator, Percent, Vote, FileText, Users, Share2, Trash2, Settings, CreditCard } from 'lucide-react';
+import { X, Calculator, Percent, Vote, FileText, Users, Share2, Trash2, Settings, CreditCard, AlertTriangle } from 'lucide-react';
 import { 
   Sheet, 
   SheetContent, 
@@ -232,33 +232,37 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
           </header>
 
           {/* Main Tabs Navigation */}
-          <div className="px-4 py-4 flex-1 overflow-hidden flex flex-col">
+          <div className="py-4 flex-1 overflow-hidden flex flex-col">
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as FundSettingsTab)} className="flex-1 flex flex-col">
-              <TabsList className="grid w-full grid-cols-5 h-auto p-1 bg-gray-100 rounded-2xl">
-                <TabsTrigger value="general" className="flex flex-col gap-1 py-2 px-1 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                  <Settings className="w-4 h-4" />
-                  <span>Geral</span>
-                </TabsTrigger>
-                <TabsTrigger value="rates" className="flex flex-col gap-1 py-2 px-1 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                  <Calculator className="w-4 h-4" />
-                  <span>Taxas</span>
-                </TabsTrigger>
-                <TabsTrigger value="approval" className="flex flex-col gap-1 py-2 px-1 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                  <Vote className="w-4 h-4" />
-                  <span>Aprovações</span>
-                </TabsTrigger>
-                <TabsTrigger value="members" className="flex flex-col gap-1 py-2 px-1 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                  <Users className="w-4 h-4" />
-                  <span>Membros</span>
-                </TabsTrigger>
-                <TabsTrigger value="danger" className="flex flex-col gap-1 py-2 px-1 text-xs text-red-600 rounded-xl data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                  <Trash2 className="w-4 h-4" />
-                  <span>Perigo</span>
-                </TabsTrigger>
-              </TabsList>
+              <div className="overflow-x-auto scrollbar-hide px-4">
+                <TabsList className="flex h-auto p-1 bg-gray-100 rounded-2xl" style={{ width: 'max-content', minWidth: '100%' }}>
+                  <div className="flex gap-1">
+                    <TabsTrigger value="general" className="flex flex-col gap-1 py-3 px-4 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg flex-shrink-0">
+                      <Settings className="w-4 h-4" />
+                      <span>Geral</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="rates" className="flex flex-col gap-1 py-3 px-4 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg flex-shrink-0">
+                      <Calculator className="w-4 h-4" />
+                      <span>Taxas</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="approval" className="flex flex-col gap-1 py-3 px-4 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg flex-shrink-0">
+                      <Vote className="w-4 h-4" />
+                      <span>Aprovações</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="members" className="flex flex-col gap-1 py-3 px-4 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg flex-shrink-0">
+                      <Users className="w-4 h-4" />
+                      <span>Membros</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="danger" className="flex flex-col gap-1 py-3 px-4 text-xs text-red-600 rounded-xl data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg flex-shrink-0">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>Perigo</span>
+                    </TabsTrigger>
+                  </div>
+                </TabsList>
+              </div>
 
               {/* Tab Content */}
-              <div className="mt-6 flex-1 overflow-y-auto pb-6">
+              <div className="mt-6 flex-1 overflow-y-auto pb-6 px-4">
                 {/* General Tab */}
                 <TabsContent value="general" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
@@ -665,7 +669,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 <TabsContent value="danger" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium text-red-600 flex items-center gap-2">
-                      <Trash2 className="w-5 h-5" />
+                      <AlertTriangle className="w-5 h-5" />
                       Zona de Perigo
                     </h3>
                     
