@@ -189,8 +189,34 @@ const AccountPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Ações Section */}
+        {/* Chave ColetivoBank */}
         <div className="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 shadow-lg">
+          <h4 className="text-sm font-semibold text-white mb-3">Sua chave ColetivoBank</h4>
+          <div className="flex items-center justify-between bg-white/10 rounded-xl p-3 border border-white/20">
+            <span className="text-white text-sm font-mono break-all flex-1 mr-3">
+              {userKey}
+            </span>
+            <button
+              onClick={copyToClipboard}
+              className="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-all duration-200 flex-shrink-0"
+              title="Copiar chave"
+            >
+              {isCopied ? (
+                <Check size={16} className="text-green-300" />
+              ) : (
+                <Copy size={16} />
+              )}
+            </button>
+          </div>
+          {isCopied && (
+            <p className="text-green-300 text-xs mt-2 text-center">
+              Chave copiada com sucesso!
+            </p>
+          )}
+        </div>
+
+        {/* Ações Section */}
+        <div className="mt-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 shadow-lg">
           <h3 className="text-lg font-semibold text-white mb-4">Ações</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {actionButtons.map((button) => {
@@ -226,32 +252,6 @@ const AccountPage: React.FC = () => {
               );
             })}
           </div>
-        </div>
-
-        {/* Chave ColetivoBank */}
-        <div className="mt-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 shadow-lg">
-          <h4 className="text-sm font-semibold text-white mb-3">Sua chave ColetivoBank</h4>
-          <div className="flex items-center justify-between bg-white/10 rounded-xl p-3 border border-white/20">
-            <span className="text-white text-sm font-mono break-all flex-1 mr-3">
-              {userKey}
-            </span>
-            <button
-              onClick={copyToClipboard}
-              className="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-all duration-200 flex-shrink-0"
-              title="Copiar chave"
-            >
-              {isCopied ? (
-                <Check size={16} className="text-green-300" />
-              ) : (
-                <Copy size={16} />
-              )}
-            </button>
-          </div>
-          {isCopied && (
-            <p className="text-green-300 text-xs mt-2 text-center">
-              Chave copiada com sucesso!
-            </p>
-          )}
         </div>
       </HeaderSection>
 
