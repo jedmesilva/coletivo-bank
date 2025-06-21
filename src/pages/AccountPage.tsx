@@ -28,6 +28,8 @@ const AccountPage: React.FC = () => {
     setSelectedDebtId,
     setIsDebtPaymentOpen,
     handleDebtPaymentClick,
+    // Sidebar menu
+    setIsSidebarMenuOpen,
     // Detail sheets
     isMovementDetailOpen,
     setIsMovementDetailOpen,
