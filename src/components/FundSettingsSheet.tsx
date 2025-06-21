@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, ChevronRight, Settings, Calculator, Percent, Vote, CheckCircle } from 'lucide-react';
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetTitle, 
+  SheetDescription 
+} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { AlertCircle, Settings, Users, Percent, Calculator, Vote } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { toast } from 'sonner';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { toast } from '@/hooks/use-toast';
+
+type FundSettingsStep = 'contribution' | 'interest' | 'approval' | 'summary';
 
 interface FundSettingsSheetProps {
   isOpen: boolean;
@@ -19,41 +20,109 @@ interface FundSettingsSheetProps {
     id: string;
     name: string;
     description: string;
-    contributionRate?: number; // Percentual de 0 a 1000
-    interestRate?: number; // Percentual anual de 0 a 12
+    contributionRate?: number;
+    interestRate?: number;
     approvalType?: 'quorum' | 'unanimous';
-    minimumQuorum?: number; // Percentual mínimo de votantes para quorum
+    minimumQuorum?: number;
   };
 }
 
 export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSettingsSheetProps) {
-  const [contributionRate, setContributionRate] = useState(fund.contributionRate || 100);
-  const [interestRate, setInterestRate] = useState(fund.interestRate || 0);
-  const [approvalType, setApprovalType] = useState<'quorum' | 'unanimous'>(fund.approvalType || 'quorum');
-  const [minimumQuorum, setMinimumQuorum] = useState(fund.minimumQuorum || 50);
+  const [step, setStep] = useState<FundSettingsStep>('contribution');
+  const [contributionRate, setContributionRate] = useState<string>('');
+  const [interestRate, setInterestRate] = useState<string>('');
+  const [approvalType, setApprovalType] = useState<string>('');
+  const [minimumQuorum, setMinimumQuorum] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const stepTitles = {
+    'contribution': 'Taxa de Contribuição',
+    'interest': 'Taxa de Juros',
+    'approval': 'Sistema de Aprovações',
+    'summary': 'Confirmar Alterações'
+  };
+
+  const stepDescriptions = {
+    'contribution': 'Defina o percentual máximo que membros podem solicitar',
+    'interest': 'Configure os juros sobre capital concedido',
+    'approval': 'Escolha como as decisões serão tomadas',
+    'summary': 'Revise todas as configurações antes de salvar'
+  };
+
+  useEffect(() => {
+    if (isOpen && fund) {
+      setStep('contribution');
+      setContributionRate((fund.contributionRate || 100).toString());
+      setInterestRate((fund.interestRate || 0).toString());
+      setApprovalType(fund.approvalType || 'quorum');
+      setMinimumQuorum((fund.minimumQuorum || 50).toString());
+    }
+  }, [isOpen, fund]);
+
+  const handleClose = () => {
+    onClose();
+    setStep('contribution');
+    setContributionRate('');
+    setInterestRate('');
+    setApprovalType('');
+    setMinimumQuorum('');
+  };
+
+  const handleNextStep = () => {
+    if (step === 'contribution') {
+      const rate = parseFloat(contributionRate);
+      if (isNaN(rate) || rate < 0 || rate > 1000) {
+        toast({
+          title: "Valor inválido",
+          description: "A taxa de contribuição deve estar entre 0% e 1.000%",
+          variant: "destructive"
+        });
+        return;
+      }
+      setStep('interest');
+    } else if (step === 'interest') {
+      const rate = parseFloat(interestRate);
+      if (isNaN(rate) || rate < 0 || rate > 12) {
+        toast({
+          title: "Valor inválido", 
+          description: "A taxa de juros deve estar entre 0% e 12% ao ano",
+          variant: "destructive"
+        });
+        return;
+      }
+      setStep('approval');
+    } else if (step === 'approval') {
+      if (!approvalType) {
+        toast({
+          title: "Seleção obrigatória",
+          description: "Escolha um tipo de aprovação",
+          variant: "destructive"
+        });
+        return;
+      }
+      if (approvalType === 'quorum') {
+        const quorum = parseFloat(minimumQuorum);
+        if (isNaN(quorum) || quorum < 1 || quorum > 100) {
+          toast({
+            title: "Valor inválido",
+            description: "O quórum mínimo deve estar entre 1% e 100%",
+            variant: "destructive"
+          });
+          return;
+        }
+      }
+      setStep('summary');
+    }
+  };
+
+  const handlePreviousStep = () => {
+    if (step === 'interest') setStep('contribution');
+    else if (step === 'approval') setStep('interest');
+    else if (step === 'summary') setStep('approval');
+  };
 
   const handleSave = async () => {
     setIsLoading(true);
-    
-    // Validações
-    if (contributionRate < 0 || contributionRate > 1000) {
-      toast.error('A taxa de contribuição deve estar entre 0% e 1.000%');
-      setIsLoading(false);
-      return;
-    }
-    
-    if (interestRate < 0 || interestRate > 12) {
-      toast.error('A taxa de juros deve estar entre 0% e 12% ao ano');
-      setIsLoading(false);
-      return;
-    }
-    
-    if (approvalType === 'quorum' && (minimumQuorum < 1 || minimumQuorum > 100)) {
-      toast.error('O quórum mínimo deve estar entre 1% e 100%');
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const response = await fetch(`/api/funds/${fund.id}/settings`, {
@@ -62,10 +131,10 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          contributionRate,
-          interestRate,
+          contributionRate: parseFloat(contributionRate),
+          interestRate: parseFloat(interestRate),
           approvalType,
-          minimumQuorum
+          minimumQuorum: approvalType === 'quorum' ? parseInt(minimumQuorum) : 50
         })
       });
 
@@ -75,263 +144,354 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
         throw new Error(data.error || 'Erro ao salvar configurações');
       }
       
-      toast.success('Configurações do fundo atualizadas com sucesso!');
-      onClose();
+      toast({
+        title: "Configurações salvas!",
+        description: "As configurações do fundo foram atualizadas com sucesso."
+      });
+      
+      handleClose();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao salvar configurações. Tente novamente.';
-      toast.error(errorMessage);
+      toast({
+        title: "Erro",
+        description: errorMessage,
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getContributionExample = (rate: number) => {
+  const getStepNumber = () => {
+    const steps = ['contribution', 'interest', 'approval', 'summary'];
+    return steps.indexOf(step) + 1;
+  };
+
+  const formatCurrency = (value: number) => {
+    return value.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+  };
+
+  const getContributionExample = () => {
+    const rate = parseFloat(contributionRate) || 0;
     const contributed = 1000;
     const maxRequest = (contributed * rate) / 100;
     return { contributed, maxRequest };
   };
 
-  const getInterestExample = (rate: number) => {
+  const getInterestExample = () => {
+    const rate = parseFloat(interestRate) || 0;
     const principal = 1000;
     const monthlyInterest = (principal * (rate / 100)) / 12;
     return { principal, monthlyInterest };
   };
 
-  const contributionExample = getContributionExample(contributionRate);
-  const interestExample = getInterestExample(interestRate);
+  if (!fund) {
+    return null;
+  }
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
-        <SheetHeader className="pb-6">
-          <SheetTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
-            Definições do Fundo
-          </SheetTitle>
-          <SheetDescription>
-            Configure as regras e políticas do fundo "{fund.name}"
-          </SheetDescription>
-        </SheetHeader>
-
-        <div className="space-y-6">
-          {/* Taxa de Contribuição */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Calculator className="w-5 h-5" />
-                Taxa de Contribuição
-              </CardTitle>
-              <CardDescription>
-                Define o percentual máximo que os membros podem solicitar em relação ao que contribuíram
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="contribution-rate">Taxa de Contribuição (%)</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="contribution-rate"
-                    type="number"
-                    min="0"
-                    max="1000"
-                    step="1"
-                    value={contributionRate}
-                    onChange={(e) => setContributionRate(Number(e.target.value))}
-                    className="flex-1"
-                  />
-                  <Badge variant="secondary">{contributionRate}%</Badge>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Intervalo: 0% a 1.000%
-                </div>
-              </div>
-
-              <Alert>
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  <strong>Exemplo:</strong> Se um membro contribuiu R$ {contributionExample.contributed.toLocaleString('pt-BR')}, 
-                  ele pode solicitar até R$ {contributionExample.maxRequest.toLocaleString('pt-BR')} em capital.
-                </AlertDescription>
-              </Alert>
-
-              <div className="grid grid-cols-3 gap-2 text-sm">
-                <div className="text-center p-2 bg-blue-50 rounded">
-                  <div className="font-medium">50%</div>
-                  <div className="text-xs text-muted-foreground">Conservador</div>
-                </div>
-                <div className="text-center p-2 bg-green-50 rounded">
-                  <div className="font-medium">100%</div>
-                  <div className="text-xs text-muted-foreground">Equilibrado</div>
-                </div>
-                <div className="text-center p-2 bg-orange-50 rounded">
-                  <div className="font-medium">200%</div>
-                  <div className="text-xs text-muted-foreground">Agressivo</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Taxa de Juros */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Percent className="w-5 h-5" />
-                Taxa de Juros
-              </CardTitle>
-              <CardDescription>
-                Define os juros cobrados sobre o capital concedido aos membros
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="interest-rate">Taxa de Juros Anual (%)</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="interest-rate"
-                    type="number"
-                    min="0"
-                    max="12"
-                    step="0.1"
-                    value={interestRate}
-                    onChange={(e) => setInterestRate(Number(e.target.value))}
-                    className="flex-1"
-                  />
-                  <Badge variant="secondary">{interestRate}% a.a.</Badge>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Intervalo: 0% a 12% ao ano
-                </div>
-              </div>
-
-              <Alert>
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  <strong>Exemplo:</strong> Empréstimo de R$ {interestExample.principal.toLocaleString('pt-BR')} 
-                  gera aproximadamente R$ {interestExample.monthlyInterest.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} 
-                  de juros por mês.
-                </AlertDescription>
-              </Alert>
-
-              <div className="grid grid-cols-4 gap-2 text-sm">
-                <div className="text-center p-2 bg-green-50 rounded">
-                  <div className="font-medium">0%</div>
-                  <div className="text-xs text-muted-foreground">Sem juros</div>
-                </div>
-                <div className="text-center p-2 bg-blue-50 rounded">
-                  <div className="font-medium">3%</div>
-                  <div className="text-xs text-muted-foreground">Baixo</div>
-                </div>
-                <div className="text-center p-2 bg-yellow-50 rounded">
-                  <div className="font-medium">6%</div>
-                  <div className="text-xs text-muted-foreground">Moderado</div>
-                </div>
-                <div className="text-center p-2 bg-red-50 rounded">
-                  <div className="font-medium">12%</div>
-                  <div className="text-xs text-muted-foreground">Alto</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Tipo de Aprovação */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Vote className="w-5 h-5" />
-                Sistema de Aprovações
-              </CardTitle>
-              <CardDescription>
-                Define como as decisões são tomadas no fundo
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <Label>Tipo de Aprovação</Label>
-                <Select value={approvalType} onValueChange={(value: 'quorum' | 'unanimous') => setApprovalType(value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="quorum">Quórum Mínimo de Votantes</SelectItem>
-                    <SelectItem value="unanimous">Aprovação Unânime</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {approvalType === 'quorum' && (
-                <div className="space-y-2">
-                  <Label htmlFor="minimum-quorum">Quórum Mínimo (%)</Label>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      id="minimum-quorum"
-                      type="number"
-                      min="1"
-                      max="100"
-                      step="1"
-                      value={minimumQuorum}
-                      onChange={(e) => setMinimumQuorum(Number(e.target.value))}
-                      className="flex-1"
-                    />
-                    <Badge variant="secondary">{minimumQuorum}%</Badge>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Percentual mínimo de membros que devem votar para validar uma decisão
-                  </div>
-                </div>
+    <Sheet open={isOpen} onOpenChange={handleClose}>
+      <SheetContent 
+        side="bottom" 
+        className="p-0 h-[100dvh] flex flex-col max-w-full"
+        aria-describedby="fund-settings-description"
+      >
+        <div className="flex-1 overflow-y-auto overscroll-contain" style={{ height: 'calc(100dvh - 100px)' }}>
+          {/* Header */}
+          <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
+            <div className="px-4 flex items-center mb-4">
+              {step !== 'contribution' && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 mr-2 text-white hover:bg-white/10" 
+                  onClick={handlePreviousStep}
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
               )}
+              <div className="flex-1">
+                <SheetTitle className="text-xl text-white font-semibold">
+                  {stepTitles[step]}
+                </SheetTitle>
+                <SheetDescription 
+                  id="fund-settings-description"
+                  className="text-white/70 text-sm mt-1"
+                >
+                  {stepDescriptions[step]}
+                </SheetDescription>
+              </div>
+              <div className="text-white/60 text-sm">
+                {getStepNumber()}/4
+              </div>
+            </div>
 
-              <Alert>
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  {approvalType === 'quorum' ? (
-                    <>
-                      <strong>Quórum Mínimo:</strong> Decisões são aprovadas quando pelo menos {minimumQuorum}% 
-                      dos membros votam e a maioria aprova.
-                    </>
-                  ) : (
-                    <>
-                      <strong>Aprovação Unânime:</strong> Todas as decisões precisam ser aprovadas por 
-                      100% dos membros votantes.
-                    </>
+            {/* Progress indicator */}
+            <div className="px-4">
+              <div className="flex gap-2">
+                {['contribution', 'interest', 'approval', 'summary'].map((stepName, index) => (
+                  <div
+                    key={stepName}
+                    className={`h-1 flex-1 rounded-full transition-colors ${
+                      index < getStepNumber() ? 'bg-white' : 'bg-white/20'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </header>
+
+          {/* Content */}
+          <div className="px-4 py-6 space-y-6">
+            {step === 'contribution' && (
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-xl">
+                  <Calculator className="w-6 h-6 text-blue-600" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Taxa de Contribuição</h3>
+                    <p className="text-sm text-gray-600">Define o limite de solicitação baseado na contribuição</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Percentual da taxa (0% - 1000%)
+                    </label>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="1000"
+                      step="1"
+                      value={contributionRate}
+                      onChange={(e) => setContributionRate(e.target.value)}
+                      placeholder="Ex: 100"
+                      className="text-lg"
+                    />
+                  </div>
+
+                  {contributionRate && (
+                    <div className="p-4 bg-gray-50 rounded-xl">
+                      <h4 className="font-medium text-gray-900 mb-2">Exemplo prático:</h4>
+                      <p className="text-sm text-gray-600">
+                        Se um membro contribuiu {formatCurrency(getContributionExample().contributed)}, 
+                        ele pode solicitar até {formatCurrency(getContributionExample().maxRequest)} em capital.
+                      </p>
+                    </div>
                   )}
-                </AlertDescription>
-              </Alert>
 
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Aplicável para:</Label>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Solicitações de capital</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Alterações no nome do fundo</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Adição e remoção de membros</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Mudanças nas configurações do fundo</span>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="text-center p-3 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
+                         onClick={() => setContributionRate('50')}>
+                      <div className="font-medium text-blue-700">50%</div>
+                      <div className="text-xs text-blue-600">Conservador</div>
+                    </div>
+                    <div className="text-center p-3 bg-green-50 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
+                         onClick={() => setContributionRate('100')}>
+                      <div className="font-medium text-green-700">100%</div>
+                      <div className="text-xs text-green-600">Equilibrado</div>
+                    </div>
+                    <div className="text-center p-3 bg-orange-50 rounded-lg cursor-pointer hover:bg-orange-100 transition-colors"
+                         onClick={() => setContributionRate('200')}>
+                      <div className="font-medium text-orange-700">200%</div>
+                      <div className="text-xs text-orange-600">Agressivo</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            )}
 
-          <Separator />
+            {step === 'interest' && (
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 p-4 bg-green-50 rounded-xl">
+                  <Percent className="w-6 h-6 text-green-600" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Taxa de Juros</h3>
+                    <p className="text-sm text-gray-600">Juros cobrados sobre o capital concedido</p>
+                  </div>
+                </div>
 
-          {/* Botões */}
-          <div className="flex gap-3 pt-4">
-            <Button variant="outline" onClick={onClose} className="flex-1">
-              Cancelar
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Taxa de juros anual (0% - 12%)
+                    </label>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="12"
+                      step="0.1"
+                      value={interestRate}
+                      onChange={(e) => setInterestRate(e.target.value)}
+                      placeholder="Ex: 6.0"
+                      className="text-lg"
+                    />
+                  </div>
+
+                  {interestRate && (
+                    <div className="p-4 bg-gray-50 rounded-xl">
+                      <h4 className="font-medium text-gray-900 mb-2">Exemplo prático:</h4>
+                      <p className="text-sm text-gray-600">
+                        Empréstimo de {formatCurrency(getInterestExample().principal)} gera 
+                        aproximadamente {formatCurrency(getInterestExample().monthlyInterest)} de juros por mês.
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-4 gap-2">
+                    <div className="text-center p-3 bg-green-50 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
+                         onClick={() => setInterestRate('0')}>
+                      <div className="font-medium text-green-700">0%</div>
+                      <div className="text-xs text-green-600">Sem juros</div>
+                    </div>
+                    <div className="text-center p-3 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
+                         onClick={() => setInterestRate('3')}>
+                      <div className="font-medium text-blue-700">3%</div>
+                      <div className="text-xs text-blue-600">Baixo</div>
+                    </div>
+                    <div className="text-center p-3 bg-yellow-50 rounded-lg cursor-pointer hover:bg-yellow-100 transition-colors"
+                         onClick={() => setInterestRate('6')}>
+                      <div className="font-medium text-yellow-700">6%</div>
+                      <div className="text-xs text-yellow-600">Moderado</div>
+                    </div>
+                    <div className="text-center p-3 bg-red-50 rounded-lg cursor-pointer hover:bg-red-100 transition-colors"
+                         onClick={() => setInterestRate('12')}>
+                      <div className="font-medium text-red-700">12%</div>
+                      <div className="text-xs text-red-600">Alto</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {step === 'approval' && (
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 p-4 bg-purple-50 rounded-xl">
+                  <Vote className="w-6 h-6 text-purple-600" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Sistema de Aprovações</h3>
+                    <p className="text-sm text-gray-600">Como as decisões serão tomadas no fundo</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <RadioGroup value={approvalType} onValueChange={setApprovalType}>
+                    <div className="flex items-center space-x-3 p-4 border rounded-xl hover:bg-gray-50 transition-colors">
+                      <RadioGroupItem value="quorum" id="quorum" />
+                      <div className="flex-1">
+                        <label htmlFor="quorum" className="font-medium text-gray-900 cursor-pointer">
+                          Quórum Mínimo de Votantes
+                        </label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Decisões aprovadas quando a maioria vota e atinge o quórum mínimo
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3 p-4 border rounded-xl hover:bg-gray-50 transition-colors">
+                      <RadioGroupItem value="unanimous" id="unanimous" />
+                      <div className="flex-1">
+                        <label htmlFor="unanimous" className="font-medium text-gray-900 cursor-pointer">
+                          Aprovação Unânime
+                        </label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Todas as decisões precisam ser aprovadas por 100% dos votantes
+                        </p>
+                      </div>
+                    </div>
+                  </RadioGroup>
+
+                  {approvalType === 'quorum' && (
+                    <div className="space-y-3">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Quórum mínimo (1% - 100%)
+                      </label>
+                      <Input
+                        type="number"
+                        min="1"
+                        max="100"
+                        step="1"
+                        value={minimumQuorum}
+                        onChange={(e) => setMinimumQuorum(e.target.value)}
+                        placeholder="Ex: 50"
+                        className="text-lg"
+                      />
+                      <p className="text-sm text-gray-600">
+                        Percentual mínimo de membros que devem votar para validar uma decisão
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {step === 'summary' && (
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 p-4 bg-green-50 rounded-xl">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Resumo das Configurações</h3>
+                    <p className="text-sm text-gray-600">Revise antes de salvar as alterações</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="p-4 border rounded-xl">
+                    <h4 className="font-medium text-gray-900 mb-2">Taxa de Contribuição</h4>
+                    <p className="text-sm text-gray-600">
+                      <strong>{contributionRate}%</strong> - Membros podem solicitar até {contributionRate}% do que contribuíram
+                    </p>
+                  </div>
+
+                  <div className="p-4 border rounded-xl">
+                    <h4 className="font-medium text-gray-900 mb-2">Taxa de Juros</h4>
+                    <p className="text-sm text-gray-600">
+                      <strong>{interestRate}% ao ano</strong> - Juros aplicados sobre capital concedido
+                    </p>
+                  </div>
+
+                  <div className="p-4 border rounded-xl">
+                    <h4 className="font-medium text-gray-900 mb-2">Sistema de Aprovações</h4>
+                    <p className="text-sm text-gray-600">
+                      {approvalType === 'quorum' ? (
+                        <>
+                          <strong>Quórum de {minimumQuorum}%</strong> - Decisões aprovadas quando {minimumQuorum}% dos membros votam
+                        </>
+                      ) : (
+                        <>
+                          <strong>Aprovação Unânime</strong> - Todas as decisões precisam de 100% de aprovação
+                        </>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Action Bar */}
+        <div className="p-4 bg-white border-t">
+          {step !== 'summary' ? (
+            <Button 
+              className="w-full h-12 text-lg font-medium"
+              onClick={handleNextStep}
+            >
+              Continuar
+              <ChevronRight className="ml-2 h-5 w-5" />
             </Button>
-            <Button onClick={handleSave} disabled={isLoading} className="flex-1">
+          ) : (
+            <Button 
+              className="w-full h-12 text-lg font-medium bg-green-600 hover:bg-green-700"
+              onClick={handleSave}
+              disabled={isLoading}
+            >
               {isLoading ? 'Salvando...' : 'Salvar Configurações'}
             </Button>
-          </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>
