@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, Bell } from 'lucide-react';
-import { useScrollDirection } from '../hooks/useScrollDirection';
 import NotificationPanel from './NotificationPanel';
 
 interface TopNavbarProps {
@@ -10,40 +9,41 @@ interface TopNavbarProps {
 }
 
 const TopNavbar: React.FC<TopNavbarProps> = ({ onMenuClick, onNotificationClick, notificationCount = 0 }) => {
-  const scrollDirection = useScrollDirection();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
 
   useEffect(() => {
-    const findScrollContainer = () => {
-      const containers = document.querySelectorAll('.h-full.overflow-y-auto');
-      return containers[0] as HTMLElement || window;
-    };
+    let lastScrollY = 0;
 
     const handleScroll = () => {
-      const container = findScrollContainer();
-      const scrollY = container === window ? window.pageYOffset : container.scrollTop;
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Atualiza o estado de rolagem para o background
       setIsScrolled(scrollY > 20);
+      
+      // Lógica de auto-hide
+      const direction = scrollY > lastScrollY ? 'down' : 'up';
+      
+      if (direction === 'down' && scrollY > 50) {
+        setIsVisible(false);
+      } else if (direction === 'up' || scrollY <= 50) {
+        setIsVisible(true);
+      }
+      
+      lastScrollY = scrollY;
     };
 
-    const container = findScrollContainer();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
-    if (container === window) {
-      window.addEventListener('scroll', handleScroll);
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-      };
-    } else {
-      container.addEventListener('scroll', handleScroll);
-      return () => {
-        container.removeEventListener('scroll', handleScroll);
-      };
-    }
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
     <div className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ease-in-out ${
-      scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
+      isVisible ? 'translate-y-0' : '-translate-y-full'
     } ${
       isScrolled 
         ? 'bg-slate-900/70 backdrop-blur-lg border-b border-white/10 shadow-lg' 
