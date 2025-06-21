@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { X, Calculator, Percent, Vote, FileText, Users, Share2, Trash2 } from 'lucide-react';
+import { X, Calculator, Percent, Vote, FileText, Users, Share2, Trash2, Settings, CreditCard } from 'lucide-react';
 import { 
   Sheet, 
   SheetContent, 
@@ -17,7 +18,9 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/hooks/use-toast';
 
-type FundSettingsTab = 'contribution' | 'interest' | 'approval' | 'fund-data' | 'members' | 'invites' | 'danger';
+type FundSettingsTab = 'general' | 'rates' | 'approval' | 'members' | 'danger';
+type RatesSubTab = 'contribution' | 'interest';
+type MembersSubTab = 'management' | 'invites';
 
 interface FundSettingsSheetProps {
   isOpen: boolean;
@@ -42,7 +45,9 @@ interface FundSettingsSheetProps {
 }
 
 export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSettingsSheetProps) {
-  const [activeTab, setActiveTab] = useState<FundSettingsTab>('fund-data');
+  const [activeTab, setActiveTab] = useState<FundSettingsTab>('general');
+  const [activeRatesTab, setActiveRatesTab] = useState<RatesSubTab>('contribution');
+  const [activeMembersTab, setActiveMembersTab] = useState<MembersSubTab>('management');
   const [hasChanges, setHasChanges] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -58,7 +63,9 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
 
   useEffect(() => {
     if (isOpen && fund) {
-      setActiveTab('fund-data');
+      setActiveTab('general');
+      setActiveRatesTab('contribution');
+      setActiveMembersTab('management');
       setFundName(fund.name);
       setFundDescription(fund.description || '');
       setContributionRate((fund.contributionRate || 100).toString());
@@ -80,7 +87,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
       if (!confirmClose) return;
     }
     onClose();
-    setActiveTab('fund-data');
+    setActiveTab('general');
     setHasChanges(false);
   };
 
@@ -224,50 +231,42 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
             </div>
           </header>
 
-          {/* Tabs Navigation */}
+          {/* Main Tabs Navigation */}
           <div className="px-4 py-4 flex-1 overflow-hidden flex flex-col">
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as FundSettingsTab)} className="flex-1 flex flex-col">
-              <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gray-100">
-                <TabsTrigger value="fund-data" className="flex flex-col gap-1 py-2 px-2 text-xs">
-                  <FileText className="w-4 h-4" />
-                  <span>Dados</span>
+              <TabsList className="grid w-full grid-cols-5 h-auto p-1 bg-gray-100">
+                <TabsTrigger value="general" className="flex flex-col gap-1 py-2 px-1 text-xs">
+                  <Settings className="w-4 h-4" />
+                  <span>Geral</span>
                 </TabsTrigger>
-                <TabsTrigger value="contribution" className="flex flex-col gap-1 py-2 px-2 text-xs">
+                <TabsTrigger value="rates" className="flex flex-col gap-1 py-2 px-1 text-xs">
                   <Calculator className="w-4 h-4" />
-                  <span>Contribuição</span>
+                  <span>Taxas</span>
                 </TabsTrigger>
-                <TabsTrigger value="interest" className="flex flex-col gap-1 py-2 px-2 text-xs">
-                  <Percent className="w-4 h-4" />
-                  <span>Juros</span>
-                </TabsTrigger>
-                <TabsTrigger value="approval" className="flex flex-col gap-1 py-2 px-2 text-xs">
+                <TabsTrigger value="approval" className="flex flex-col gap-1 py-2 px-1 text-xs">
                   <Vote className="w-4 h-4" />
                   <span>Aprovações</span>
                 </TabsTrigger>
+                <TabsTrigger value="members" className="flex flex-col gap-1 py-2 px-1 text-xs">
+                  <Users className="w-4 h-4" />
+                  <span>Membros</span>
+                </TabsTrigger>
+                <TabsTrigger value="danger" className="flex flex-col gap-1 py-2 px-1 text-xs text-red-600">
+                  <Trash2 className="w-4 h-4" />
+                  <span>Perigo</span>
+                </TabsTrigger>
               </TabsList>
-              
-              <div className="mt-4">
-                <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gray-100">
-                  <TabsTrigger value="members" className="flex flex-col gap-1 py-2 px-2 text-xs">
-                    <Users className="w-4 h-4" />
-                    <span>Membros</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="invites" className="flex flex-col gap-1 py-2 px-2 text-xs">
-                    <Share2 className="w-4 h-4" />
-                    <span>Convites</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="danger" className="flex flex-col gap-1 py-2 px-2 text-xs text-red-600">
-                    <Trash2 className="w-4 h-4" />
-                    <span>Excluir</span>
-                  </TabsTrigger>
-                </TabsList>
-              </div>
 
               {/* Tab Content */}
               <div className="mt-6 flex-1 overflow-y-auto pb-6">
-                {/* Fund Data Tab */}
-                <TabsContent value="fund-data" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
+                {/* General Tab */}
+                <TabsContent value="general" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <FileText className="w-5 h-5" />
+                      Informações Gerais
+                    </h3>
+                    
                     <div>
                       <Label htmlFor="fund-name">Nome do Fundo</Label>
                       <Input
@@ -299,139 +298,165 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                   </div>
                 </TabsContent>
 
-                {/* Contribution Tab */}
-                <TabsContent value="contribution" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
+                {/* Rates Tab with Sub-tabs */}
+                <TabsContent value="rates" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="contribution-rate">Taxa de Contribuição (%)</Label>
-                      <Input
-                        id="contribution-rate"
-                        type="number"
-                        min="0"
-                        max="1000"
-                        step="1"
-                        value={contributionRate}
-                        onChange={(e) => {
-                          setContributionRate(e.target.value);
-                          trackChanges();
-                        }}
-                        placeholder="Ex: 100"
-                        className="mt-2"
-                      />
-                      <p className="text-sm text-gray-600 mt-1">
-                        Define o percentual máximo que membros podem solicitar (0% - 1000%)
-                      </p>
-                    </div>
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <Calculator className="w-5 h-5" />
+                      Configuração de Taxas
+                    </h3>
+                    
+                    <Tabs value={activeRatesTab} onValueChange={(value) => setActiveRatesTab(value as RatesSubTab)} className="flex-1 flex flex-col">
+                      <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gray-100">
+                        <TabsTrigger value="contribution" className="flex items-center gap-2 py-2 px-3 text-sm">
+                          <CreditCard className="w-4 h-4" />
+                          <span>Contribuição</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="interest" className="flex items-center gap-2 py-2 px-3 text-sm">
+                          <Percent className="w-4 h-4" />
+                          <span>Juros</span>
+                        </TabsTrigger>
+                      </TabsList>
 
-                    {contributionRate && (
-                      <div className="p-4 bg-blue-50 rounded-xl">
-                        <h4 className="font-medium text-gray-900 mb-2">Exemplo:</h4>
-                        <p className="text-sm text-gray-600">
-                          Se um membro contribuiu {formatCurrency(getContributionExample().contributed)}, 
-                          ele pode solicitar até {formatCurrency(getContributionExample().maxRequest)} em capital.
-                        </p>
+                      <div className="mt-4">
+                        {/* Contribution Sub-tab */}
+                        <TabsContent value="contribution" className="space-y-4">
+                          <div>
+                            <Label htmlFor="contribution-rate">Taxa de Contribuição (%)</Label>
+                            <Input
+                              id="contribution-rate"
+                              type="number"
+                              min="0"
+                              max="1000"
+                              step="1"
+                              value={contributionRate}
+                              onChange={(e) => {
+                                setContributionRate(e.target.value);
+                                trackChanges();
+                              }}
+                              placeholder="Ex: 100"
+                              className="mt-2"
+                            />
+                            <p className="text-sm text-gray-600 mt-1">
+                              Define o percentual máximo que membros podem solicitar (0% - 1000%)
+                            </p>
+                          </div>
+
+                          {contributionRate && (
+                            <div className="p-4 bg-blue-50 rounded-xl">
+                              <h4 className="font-medium text-gray-900 mb-2">Exemplo:</h4>
+                              <p className="text-sm text-gray-600">
+                                Se um membro contribuiu {formatCurrency(getContributionExample().contributed)}, 
+                                ele pode solicitar até {formatCurrency(getContributionExample().maxRequest)} em capital.
+                              </p>
+                            </div>
+                          )}
+
+                          <div className="grid grid-cols-3 gap-3">
+                            <button
+                              type="button"
+                              className="text-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                              onClick={() => {
+                                setContributionRate('50');
+                                trackChanges();
+                              }}
+                            >
+                              <div className="font-medium text-blue-700">50%</div>
+                              <div className="text-xs text-blue-600">Conservador</div>
+                            </button>
+                            <button
+                              type="button"
+                              className="text-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+                              onClick={() => {
+                                setContributionRate('100');
+                                trackChanges();
+                              }}
+                            >
+                              <div className="font-medium text-green-700">100%</div>
+                              <div className="text-xs text-green-600">Equilibrado</div>
+                            </button>
+                            <button
+                              type="button"
+                              className="text-center p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors"
+                              onClick={() => {
+                                setContributionRate('200');
+                                trackChanges();
+                              }}
+                            >
+                              <div className="font-medium text-orange-700">200%</div>
+                              <div className="text-xs text-orange-600">Agressivo</div>
+                            </button>
+                          </div>
+                        </TabsContent>
+
+                        {/* Interest Sub-tab */}
+                        <TabsContent value="interest" className="space-y-4">
+                          <div>
+                            <Label htmlFor="interest-rate">Taxa de Juros Anual (%)</Label>
+                            <Input
+                              id="interest-rate"
+                              type="number"
+                              min="0"
+                              max="12"
+                              step="0.1"
+                              value={interestRate}
+                              onChange={(e) => {
+                                setInterestRate(e.target.value);
+                                trackChanges();
+                              }}
+                              placeholder="Ex: 6.0"
+                              className="mt-2"
+                            />
+                            <p className="text-sm text-gray-600 mt-1">
+                              Juros cobrados sobre capital concedido (0% - 12% ao ano)
+                            </p>
+                          </div>
+
+                          {interestRate && (
+                            <div className="p-4 bg-green-50 rounded-xl">
+                              <h4 className="font-medium text-gray-900 mb-2">Exemplo:</h4>
+                              <p className="text-sm text-gray-600">
+                                Empréstimo de {formatCurrency(getInterestExample().principal)} gera 
+                                aproximadamente {formatCurrency(getInterestExample().monthlyInterest)} de juros por mês.
+                              </p>
+                            </div>
+                          )}
+
+                          <div className="grid grid-cols-4 gap-2">
+                            {[
+                              { rate: '0', label: 'Sem juros', color: 'green' },
+                              { rate: '3', label: 'Baixo', color: 'blue' },
+                              { rate: '6', label: 'Moderado', color: 'yellow' },
+                              { rate: '12', label: 'Alto', color: 'red' }
+                            ].map(({ rate, label, color }) => (
+                              <button
+                                key={rate}
+                                type="button"
+                                className={`text-center p-3 bg-${color}-50 rounded-lg hover:bg-${color}-100 transition-colors`}
+                                onClick={() => {
+                                  setInterestRate(rate);
+                                  trackChanges();
+                                }}
+                              >
+                                <div className={`font-medium text-${color}-700`}>{rate}%</div>
+                                <div className={`text-xs text-${color}-600`}>{label}</div>
+                              </button>
+                            ))}
+                          </div>
+                        </TabsContent>
                       </div>
-                    )}
-
-                    <div className="grid grid-cols-3 gap-3">
-                      <button
-                        type="button"
-                        className="text-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-                        onClick={() => {
-                          setContributionRate('50');
-                          trackChanges();
-                        }}
-                      >
-                        <div className="font-medium text-blue-700">50%</div>
-                        <div className="text-xs text-blue-600">Conservador</div>
-                      </button>
-                      <button
-                        type="button"
-                        className="text-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
-                        onClick={() => {
-                          setContributionRate('100');
-                          trackChanges();
-                        }}
-                      >
-                        <div className="font-medium text-green-700">100%</div>
-                        <div className="text-xs text-green-600">Equilibrado</div>
-                      </button>
-                      <button
-                        type="button"
-                        className="text-center p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors"
-                        onClick={() => {
-                          setContributionRate('200');
-                          trackChanges();
-                        }}
-                      >
-                        <div className="font-medium text-orange-700">200%</div>
-                        <div className="text-xs text-orange-600">Agressivo</div>
-                      </button>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                {/* Interest Tab */}
-                <TabsContent value="interest" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="interest-rate">Taxa de Juros Anual (%)</Label>
-                      <Input
-                        id="interest-rate"
-                        type="number"
-                        min="0"
-                        max="12"
-                        step="0.1"
-                        value={interestRate}
-                        onChange={(e) => {
-                          setInterestRate(e.target.value);
-                          trackChanges();
-                        }}
-                        placeholder="Ex: 6.0"
-                        className="mt-2"
-                      />
-                      <p className="text-sm text-gray-600 mt-1">
-                        Juros cobrados sobre capital concedido (0% - 12% ao ano)
-                      </p>
-                    </div>
-
-                    {interestRate && (
-                      <div className="p-4 bg-green-50 rounded-xl">
-                        <h4 className="font-medium text-gray-900 mb-2">Exemplo:</h4>
-                        <p className="text-sm text-gray-600">
-                          Empréstimo de {formatCurrency(getInterestExample().principal)} gera 
-                          aproximadamente {formatCurrency(getInterestExample().monthlyInterest)} de juros por mês.
-                        </p>
-                      </div>
-                    )}
-
-                    <div className="grid grid-cols-4 gap-2">
-                      {[
-                        { rate: '0', label: 'Sem juros', color: 'green' },
-                        { rate: '3', label: 'Baixo', color: 'blue' },
-                        { rate: '6', label: 'Moderado', color: 'yellow' },
-                        { rate: '12', label: 'Alto', color: 'red' }
-                      ].map(({ rate, label, color }) => (
-                        <button
-                          key={rate}
-                          type="button"
-                          className={`text-center p-3 bg-${color}-50 rounded-lg hover:bg-${color}-100 transition-colors`}
-                          onClick={() => {
-                            setInterestRate(rate);
-                            trackChanges();
-                          }}
-                        >
-                          <div className={`font-medium text-${color}-700`}>{rate}%</div>
-                          <div className={`text-xs text-${color}-600`}>{label}</div>
-                        </button>
-                      ))}
-                    </div>
+                    </Tabs>
                   </div>
                 </TabsContent>
 
                 {/* Approval Tab */}
                 <TabsContent value="approval" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <Vote className="w-5 h-5" />
+                      Sistema de Aprovações
+                    </h3>
+                    
                     <div>
                       <Label>Tipo de Aprovação</Label>
                       <RadioGroup 
@@ -493,80 +518,103 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                   </div>
                 </TabsContent>
 
-                {/* Members Tab */}
+                {/* Members Tab with Sub-tabs */}
                 <TabsContent value="members" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium">Membros do Fundo</h3>
-                      <Badge variant="secondary">{fund.members?.length || 0} membros</Badge>
-                    </div>
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <Users className="w-5 h-5" />
+                      Gestão de Membros
+                    </h3>
                     
-                    <div className="space-y-3">
-                      {fund.members && fund.members.length > 0 ? (
-                        fund.members.map((member) => (
-                          <div key={member.id} className="flex items-center justify-between p-3 border rounded-xl">
-                            <div className="flex items-center gap-3">
-                              <Avatar className="w-10 h-10">
-                                <AvatarImage src={member.profileImage} alt={member.name} />
-                                <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <p className="font-medium text-gray-900">{member.name}</p>
-                                <p className="text-sm text-gray-500">Membro desde {member.joined}</p>
-                              </div>
-                            </div>
-                            <Badge variant={member.role === 'Admin' ? 'default' : 'secondary'}>
-                              {member.role}
-                            </Badge>
+                    <Tabs value={activeMembersTab} onValueChange={(value) => setActiveMembersTab(value as MembersSubTab)} className="flex-1 flex flex-col">
+                      <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gray-100">
+                        <TabsTrigger value="management" className="flex items-center gap-2 py-2 px-3 text-sm">
+                          <Users className="w-4 h-4" />
+                          <span>Membros</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="invites" className="flex items-center gap-2 py-2 px-3 text-sm">
+                          <Share2 className="w-4 h-4" />
+                          <span>Convites</span>
+                        </TabsTrigger>
+                      </TabsList>
+
+                      <div className="mt-4">
+                        {/* Members Management Sub-tab */}
+                        <TabsContent value="management" className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-medium">Lista de Membros</h4>
+                            <Badge variant="secondary">{fund.members?.length || 0} membros</Badge>
                           </div>
-                        ))
-                      ) : (
-                        <div className="text-center py-8">
-                          <Users className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                          <p className="text-gray-500">Nenhum membro encontrado</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </TabsContent>
+                          
+                          <div className="space-y-3">
+                            {fund.members && fund.members.length > 0 ? (
+                              fund.members.map((member) => (
+                                <div key={member.id} className="flex items-center justify-between p-3 border rounded-xl">
+                                  <div className="flex items-center gap-3">
+                                    <Avatar className="w-10 h-10">
+                                      <AvatarImage src={member.profileImage} alt={member.name} />
+                                      <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                      <p className="font-medium text-gray-900">{member.name}</p>
+                                      <p className="text-sm text-gray-500">Membro desde {member.joined}</p>
+                                    </div>
+                                  </div>
+                                  <Badge variant={member.role === 'Admin' ? 'default' : 'secondary'}>
+                                    {member.role}
+                                  </Badge>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="text-center py-8">
+                                <Users className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                                <p className="text-gray-500">Nenhum membro encontrado</p>
+                              </div>
+                            )}
+                          </div>
+                        </TabsContent>
 
-                {/* Invites Tab */}
-                <TabsContent value="invites" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Convites e Links</h3>
-                    
-                    <div className="p-4 border rounded-xl">
-                      <h4 className="font-medium text-gray-900 mb-2">Link de Convite</h4>
-                      <div className="flex gap-2">
-                        <Input
-                          value={`https://app.fundos.com/invite/${fund.id}`}
-                          readOnly
-                          className="flex-1"
-                        />
-                        <Button 
-                          variant="outline"
-                          onClick={() => {
-                            navigator.clipboard.writeText(`https://app.fundos.com/invite/${fund.id}`);
-                            toast({
-                              title: "Link copiado!",
-                              description: "O link de convite foi copiado para a área de transferência."
-                            });
-                          }}
-                        >
-                          Copiar
-                        </Button>
+                        {/* Invites Sub-tab */}
+                        <TabsContent value="invites" className="space-y-4">
+                          <h4 className="font-medium">Link de Convite</h4>
+                          
+                          <div className="p-4 border rounded-xl">
+                            <div className="flex gap-2">
+                              <Input
+                                value={`https://app.fundos.com/invite/${fund.id}`}
+                                readOnly
+                                className="flex-1"
+                              />
+                              <Button 
+                                variant="outline"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(`https://app.fundos.com/invite/${fund.id}`);
+                                  toast({
+                                    title: "Link copiado!",
+                                    description: "O link de convite foi copiado para a área de transferência."
+                                  });
+                                }}
+                              >
+                                Copiar
+                              </Button>
+                            </div>
+                            <p className="text-sm text-gray-600 mt-2">
+                              Compartilhe este link para convidar novos membros
+                            </p>
+                          </div>
+                        </TabsContent>
                       </div>
-                      <p className="text-sm text-gray-600 mt-2">
-                        Compartilhe este link para convidar novos membros
-                      </p>
-                    </div>
+                    </Tabs>
                   </div>
                 </TabsContent>
 
-                {/* Danger Tab */}
+                {/* Danger Zone Tab */}
                 <TabsContent value="danger" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-red-600">Zona de Perigo</h3>
+                    <h3 className="text-lg font-medium text-red-600 flex items-center gap-2">
+                      <Trash2 className="w-5 h-5" />
+                      Zona de Perigo
+                    </h3>
                     
                     <div className="p-4 border border-red-200 rounded-xl bg-red-50">
                       <h4 className="font-medium text-red-900 mb-2">Excluir Fundo</h4>
