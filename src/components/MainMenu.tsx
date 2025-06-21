@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, Home, CreditCard, PieChart, Settings, HelpCircle, LogOut, User, Wallet, Bell } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import GeometricStatusBadge from '@/components/GeometricStatusBadge';
+import NotificationPanel from '@/components/NotificationPanel';
 
 const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMenu: () => void }) => {
   const { currentUser } = useApp();
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
+  
   // Prevenir scroll do body quando o menu estiver aberto
   useEffect(() => {
     if (isMenuOpen) {
@@ -19,12 +22,17 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
       document.body.style.overflow = 'unset';
     };
   }, [isMenuOpen]);
+  const handleNotificationClick = () => {
+    setIsNotificationPanelOpen(true);
+    toggleMenu(); // Fechar o menu lateral
+  };
+
   const menuItems = [
-    { icon: Home, label: 'Início', active: true },
-    { icon: User, label: 'Conta' },
-    { icon: Bell, label: 'Notificações', badge: '3' },
-    { icon: Settings, label: 'Configurações' },
-    { icon: HelpCircle, label: 'Suporte' },
+    { icon: Home, label: 'Início', active: true, onClick: () => {} },
+    { icon: User, label: 'Conta', onClick: () => {} },
+    { icon: Bell, label: 'Notificações', badge: '3', onClick: handleNotificationClick },
+    { icon: Settings, label: 'Configurações', onClick: () => {} },
+    { icon: HelpCircle, label: 'Suporte', onClick: () => {} },
   ];
 
   return (
@@ -71,6 +79,7 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
               return (
                 <button
                   key={index}
+                  onClick={item.onClick}
                   className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group ${
                     item.active 
                       ? 'bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 text-blue-700' 
@@ -110,6 +119,12 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
           </div>
         </div>
       </div>
+
+      {/* Notification Panel */}
+      <NotificationPanel 
+        isOpen={isNotificationPanelOpen}
+        onClose={() => setIsNotificationPanelOpen(false)}
+      />
     </div>
   );
 };
