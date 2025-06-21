@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreditCard, Check, X, User, ArrowUp, ArrowDown, Send, Copy, Pin } from 'lucide-react';
+import { CreditCard, Check, X, User, ArrowUp, ArrowDown, Send, Copy, Pin, QrCode } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
@@ -145,9 +145,9 @@ const AccountPage: React.FC = () => {
     },
     {
       id: 'qrcode',
-      label: 'QR CODE Pix',
-      icon: CreditCard,
-      onClick: () => console.log('QRCODE Pix clicado')
+      label: 'QR Code Pix',
+      icon: QrCode,
+      onClick: () => console.log('QR Code Pix clicado')
     }
   ];
 
