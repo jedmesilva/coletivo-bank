@@ -197,7 +197,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
         className="p-0 h-[100dvh] flex flex-col max-w-full"
         aria-describedby="fund-settings-description"
       >
-        <div className="flex-1 overflow-y-auto overscroll-contain" style={{ maxHeight: 'calc(100dvh - 80px)' }}>
+        <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
           {/* Header with Fund Info */}
           <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
             <div className="px-4 flex items-center justify-between mb-6">
@@ -718,7 +718,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
         </div>
 
         {/* Bottom Action Bar */}
-        <div className="p-4 bg-white border-t">
+        <div className="p-4 bg-white border-t flex-shrink-0">
           <Button 
             className={`w-full h-12 text-lg font-medium transition-all duration-200 ${
               hasChanges && !isLoading
