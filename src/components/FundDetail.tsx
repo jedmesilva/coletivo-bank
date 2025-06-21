@@ -283,6 +283,8 @@ const FundDetail: React.FC = () => {
           id: selectedFund.id,
           name: selectedFund.name,
           description: selectedFund.description || '',
+          image: selectedFund.image,
+          members: selectedFund.members || [],
           contributionRate: selectedFund.contributionRate || 100,
           interestRate: selectedFund.interestRate || 0,
           approvalType: selectedFund.approvalType || 'quorum',
