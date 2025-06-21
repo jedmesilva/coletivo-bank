@@ -524,7 +524,13 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                         }}
                         className="mt-2"
                       >
-                        <div className="flex items-center space-x-3 p-4 border rounded-xl hover:bg-gray-50 transition-colors">
+                        <div 
+                          className="flex items-center space-x-3 p-4 border rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
+                          onClick={() => {
+                            setApprovalType('quorum');
+                            trackChanges();
+                          }}
+                        >
                           <RadioGroupItem value="quorum" id="quorum" />
                           <div className="flex-1">
                             <label htmlFor="quorum" className="font-medium text-gray-900 cursor-pointer">
@@ -536,7 +542,13 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                           </div>
                         </div>
                         
-                        <div className="flex items-center space-x-3 p-4 border rounded-xl hover:bg-gray-50 transition-colors">
+                        <div 
+                          className="flex items-center space-x-3 p-4 border rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
+                          onClick={() => {
+                            setApprovalType('unanimous');
+                            trackChanges();
+                          }}
+                        >
                           <RadioGroupItem value="unanimous" id="unanimous" />
                           <div className="flex-1">
                             <label htmlFor="unanimous" className="font-medium text-gray-900 cursor-pointer">
