@@ -234,24 +234,24 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
           {/* Main Tabs Navigation */}
           <div className="px-4 py-4 flex-1 overflow-hidden flex flex-col">
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as FundSettingsTab)} className="flex-1 flex flex-col">
-              <TabsList className="grid w-full grid-cols-5 h-auto p-1 bg-gray-100">
-                <TabsTrigger value="general" className="flex flex-col gap-1 py-2 px-1 text-xs">
+              <TabsList className="grid w-full grid-cols-5 h-auto p-1 bg-gray-100 rounded-2xl">
+                <TabsTrigger value="general" className="flex flex-col gap-1 py-2 px-1 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
                   <Settings className="w-4 h-4" />
                   <span>Geral</span>
                 </TabsTrigger>
-                <TabsTrigger value="rates" className="flex flex-col gap-1 py-2 px-1 text-xs">
+                <TabsTrigger value="rates" className="flex flex-col gap-1 py-2 px-1 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
                   <Calculator className="w-4 h-4" />
                   <span>Taxas</span>
                 </TabsTrigger>
-                <TabsTrigger value="approval" className="flex flex-col gap-1 py-2 px-1 text-xs">
+                <TabsTrigger value="approval" className="flex flex-col gap-1 py-2 px-1 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
                   <Vote className="w-4 h-4" />
                   <span>Aprovações</span>
                 </TabsTrigger>
-                <TabsTrigger value="members" className="flex flex-col gap-1 py-2 px-1 text-xs">
+                <TabsTrigger value="members" className="flex flex-col gap-1 py-2 px-1 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
                   <Users className="w-4 h-4" />
                   <span>Membros</span>
                 </TabsTrigger>
-                <TabsTrigger value="danger" className="flex flex-col gap-1 py-2 px-1 text-xs text-red-600">
+                <TabsTrigger value="danger" className="flex flex-col gap-1 py-2 px-1 text-xs text-red-600 rounded-xl data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
                   <Trash2 className="w-4 h-4" />
                   <span>Perigo</span>
                 </TabsTrigger>
@@ -307,12 +307,12 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                     </h3>
                     
                     <Tabs value={activeRatesTab} onValueChange={(value) => setActiveRatesTab(value as RatesSubTab)} className="flex-1 flex flex-col">
-                      <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gray-100">
-                        <TabsTrigger value="contribution" className="flex items-center gap-2 py-2 px-3 text-sm">
+                      <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gray-100 rounded-2xl">
+                        <TabsTrigger value="contribution" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
                           <CreditCard className="w-4 h-4" />
                           <span>Contribuição</span>
                         </TabsTrigger>
-                        <TabsTrigger value="interest" className="flex items-center gap-2 py-2 px-3 text-sm">
+                        <TabsTrigger value="interest" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
                           <Percent className="w-4 h-4" />
                           <span>Juros</span>
                         </TabsTrigger>
@@ -355,36 +355,36 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                           <div className="grid grid-cols-3 gap-3">
                             <button
                               type="button"
-                              className="text-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
                               onClick={() => {
                                 setContributionRate('50');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium text-blue-700">50%</div>
-                              <div className="text-xs text-blue-600">Conservador</div>
+                              <div className="font-medium text-gray-900">50%</div>
+                              <div className="text-xs text-gray-600">Conservador</div>
                             </button>
                             <button
                               type="button"
-                              className="text-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+                              className="text-center p-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
                               onClick={() => {
                                 setContributionRate('100');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium text-green-700">100%</div>
-                              <div className="text-xs text-green-600">Equilibrado</div>
+                              <div className="font-medium">100%</div>
+                              <div className="text-xs opacity-90">Equilibrado</div>
                             </button>
                             <button
                               type="button"
-                              className="text-center p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors"
+                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
                               onClick={() => {
                                 setContributionRate('200');
                                 trackChanges();
                               }}
                             >
-                              <div className="font-medium text-orange-700">200%</div>
-                              <div className="text-xs text-orange-600">Agressivo</div>
+                              <div className="font-medium text-gray-900">200%</div>
+                              <div className="text-xs text-gray-600">Agressivo</div>
                             </button>
                           </div>
                         </TabsContent>
@@ -423,25 +423,50 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                           )}
 
                           <div className="grid grid-cols-4 gap-2">
-                            {[
-                              { rate: '0', label: 'Sem juros', color: 'green' },
-                              { rate: '3', label: 'Baixo', color: 'blue' },
-                              { rate: '6', label: 'Moderado', color: 'yellow' },
-                              { rate: '12', label: 'Alto', color: 'red' }
-                            ].map(({ rate, label, color }) => (
-                              <button
-                                key={rate}
-                                type="button"
-                                className={`text-center p-3 bg-${color}-50 rounded-lg hover:bg-${color}-100 transition-colors`}
-                                onClick={() => {
-                                  setInterestRate(rate);
-                                  trackChanges();
-                                }}
-                              >
-                                <div className={`font-medium text-${color}-700`}>{rate}%</div>
-                                <div className={`text-xs text-${color}-600`}>{label}</div>
-                              </button>
-                            ))}
+                            <button
+                              type="button"
+                              className="text-center p-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                              onClick={() => {
+                                setInterestRate('0');
+                                trackChanges();
+                              }}
+                            >
+                              <div className="font-medium">0%</div>
+                              <div className="text-xs opacity-90">Sem juros</div>
+                            </button>
+                            <button
+                              type="button"
+                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
+                              onClick={() => {
+                                setInterestRate('3');
+                                trackChanges();
+                              }}
+                            >
+                              <div className="font-medium text-gray-900">3%</div>
+                              <div className="text-xs text-gray-600">Baixo</div>
+                            </button>
+                            <button
+                              type="button"
+                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
+                              onClick={() => {
+                                setInterestRate('6');
+                                trackChanges();
+                              }}
+                            >
+                              <div className="font-medium text-gray-900">6%</div>
+                              <div className="text-xs text-gray-600">Moderado</div>
+                            </button>
+                            <button
+                              type="button"
+                              className="text-center p-3 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 shadow-sm hover:shadow-md"
+                              onClick={() => {
+                                setInterestRate('12');
+                                trackChanges();
+                              }}
+                            >
+                              <div className="font-medium text-gray-900">12%</div>
+                              <div className="text-xs text-gray-600">Alto</div>
+                            </button>
                           </div>
                         </TabsContent>
                       </div>
@@ -527,12 +552,12 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                     </h3>
                     
                     <Tabs value={activeMembersTab} onValueChange={(value) => setActiveMembersTab(value as MembersSubTab)} className="flex-1 flex flex-col">
-                      <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gray-100">
-                        <TabsTrigger value="management" className="flex items-center gap-2 py-2 px-3 text-sm">
+                      <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gray-100 rounded-2xl">
+                        <TabsTrigger value="management" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
                           <Users className="w-4 h-4" />
                           <span>Membros</span>
                         </TabsTrigger>
-                        <TabsTrigger value="invites" className="flex items-center gap-2 py-2 px-3 text-sm">
+                        <TabsTrigger value="invites" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
                           <Share2 className="w-4 h-4" />
                           <span>Convites</span>
                         </TabsTrigger>
@@ -586,7 +611,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                                 className="flex-1"
                               />
                               <Button 
-                                variant="outline"
+                                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
                                 onClick={() => {
                                   navigator.clipboard.writeText(`https://app.fundos.com/invite/${fund.id}`);
                                   toast({
@@ -651,10 +676,13 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
         {/* Bottom Action Bar */}
         <div className="p-4 bg-white border-t">
           <Button 
-            className="w-full h-12 text-lg font-medium"
+            className={`w-full h-12 text-lg font-medium transition-all duration-200 ${
+              hasChanges && !isLoading
+                ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl'
+                : 'bg-gray-100 text-gray-500 cursor-not-allowed'
+            }`}
             onClick={handleSave}
             disabled={isLoading || !hasChanges}
-            variant={hasChanges ? "default" : "secondary"}
           >
             {isLoading ? 'Salvando...' : hasChanges ? 'Salvar Alterações' : 'Nenhuma Alteração'}
           </Button>
