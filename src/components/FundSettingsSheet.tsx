@@ -235,7 +235,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
           <div className="py-4 flex-1 overflow-hidden flex flex-col min-h-0">
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as FundSettingsTab)} className="flex-1 flex flex-col min-h-0">
               <div className="overflow-x-auto scrollbar-hide px-4 flex-shrink-0">
-                <TabsList className="flex h-auto p-1 bg-gray-100 rounded-2xl" style={{ width: 'max-content', minWidth: '100%' }}>
+                <TabsList className="flex h-auto p-1 bg-gray-100 rounded-2xl w-fit">
                   <div className="flex gap-1">
                     <TabsTrigger value="general" className="flex flex-col gap-1 py-3 px-4 text-xs rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg flex-shrink-0">
                       <Settings className="w-4 h-4" />
@@ -311,15 +311,17 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                     </h3>
                     
                     <Tabs value={activeRatesTab} onValueChange={(value) => setActiveRatesTab(value as RatesSubTab)} className="flex-1 flex flex-col">
-                      <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gray-100 rounded-2xl">
-                        <TabsTrigger value="contribution" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                          <Percent className="w-4 h-4" />
-                          <span>Contribuição</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="interest" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                          <Percent className="w-4 h-4" />
-                          <span>Juros</span>
-                        </TabsTrigger>
+                      <TabsList className="flex h-auto p-1 bg-gray-100 rounded-2xl w-fit">
+                        <div className="flex gap-1">
+                          <TabsTrigger value="contribution" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
+                            <Percent className="w-4 h-4" />
+                            <span>Contribuição</span>
+                          </TabsTrigger>
+                          <TabsTrigger value="interest" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
+                            <Percent className="w-4 h-4" />
+                            <span>Juros</span>
+                          </TabsTrigger>
+                        </div>
                       </TabsList>
 
                       <div className="mt-4">
@@ -596,15 +598,17 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                     </h3>
                     
                     <Tabs value={activeMembersTab} onValueChange={(value) => setActiveMembersTab(value as MembersSubTab)} className="flex-1 flex flex-col">
-                      <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gray-100 rounded-2xl">
-                        <TabsTrigger value="management" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                          <Users className="w-4 h-4" />
-                          <span>Membros</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="invites" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
-                          <Share2 className="w-4 h-4" />
-                          <span>Convites</span>
-                        </TabsTrigger>
+                      <TabsList className="flex h-auto p-1 bg-gray-100 rounded-2xl w-fit">
+                        <div className="flex gap-1">
+                          <TabsTrigger value="management" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
+                            <Users className="w-4 h-4" />
+                            <span>Membros</span>
+                          </TabsTrigger>
+                          <TabsTrigger value="invites" className="flex items-center gap-2 py-2 px-3 text-sm rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg">
+                            <Share2 className="w-4 h-4" />
+                            <span>Convites</span>
+                          </TabsTrigger>
+                        </div>
                       </TabsList>
 
                       <div className="mt-4">
