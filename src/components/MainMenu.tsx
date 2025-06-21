@@ -41,14 +41,14 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
     }`}>
       {/* Overlay */}
       <div 
-        className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 z-[99998] ${
+        className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
           isMenuOpen ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={toggleMenu}
       />
       
       {/* Menu Panel */}
-      <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out flex flex-col z-[99999] ${
+      <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${
         isMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         {/* Header do Menu */}
