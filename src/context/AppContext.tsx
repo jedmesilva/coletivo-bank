@@ -185,6 +185,10 @@ interface AppContextType {
   isNotificationPanelOpen: boolean;
   setIsNotificationPanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleNotificationClick: () => void;
+
+  // Sidebar menu features
+  isSidebarMenuOpen: boolean;
+  setIsSidebarMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -222,6 +226,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   // Notification panel state
   const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState<boolean>(false);
+
+  // Sidebar menu state
+  const [isSidebarMenuOpen, setIsSidebarMenuOpen] = useState<boolean>(false);
 
   const handleFundClick = (fundId: string) => {
     const fund = funds.find(f => f.id === fundId);
@@ -574,7 +581,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setSelectedApproval,
     handleMovementClick,
     handleDebtDetailClick,
-    handleApprovalClick
+    handleApprovalClick,
+
+    // Sidebar menu features
+    isSidebarMenuOpen,
+    setIsSidebarMenuOpen
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

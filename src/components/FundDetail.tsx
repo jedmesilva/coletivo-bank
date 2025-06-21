@@ -8,13 +8,13 @@ import FundBalanceCard from './FundBalanceCard';
 import TabNavigation from './TabNavigation';
 import TopNavbar from './TopNavbar';
 import HeaderSection from './HeaderSection';
-import SidebarMenu from './MainMenu';
+
 import { formatCurrency } from '@/utils/formatCurrency';
 
 const FundDetail: React.FC = () => {
   const { fundId } = useParams<{ fundId: string }>();
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const { 
     funds,
     fundTab, 
@@ -23,7 +23,8 @@ const FundDetail: React.FC = () => {
     userDebts,
     handleDepositClick,
     handleCapitalRequestClick,
-    handleDebtPaymentClick
+    handleDebtPaymentClick,
+    setIsSidebarMenuOpen
   } = useApp();
 
   const selectedFund = funds.find(fund => fund.id === fundId);
@@ -65,7 +66,7 @@ const FundDetail: React.FC = () => {
       <div className="h-full overflow-y-auto">
         {/* Top Navbar */}
         <TopNavbar 
-          onMenuClick={() => setIsMenuOpen(true)}
+          onMenuClick={() => setIsSidebarMenuOpen(true)}
           onNotificationClick={() => console.log('Notificações')}
         />
 
@@ -102,12 +103,6 @@ const FundDetail: React.FC = () => {
       <div className="bg-white min-h-screen">
         <div className="max-w-md mx-auto px-4 pt-8 pb-28">
           
-          {/* Menu Lateral */}
-          <SidebarMenu 
-            isMenuOpen={isMenuOpen} 
-            toggleMenu={() => setIsMenuOpen(false)} 
-          />
-
           {/* Action Buttons */}
           <div className="flex justify-between mb-6">
             <button 

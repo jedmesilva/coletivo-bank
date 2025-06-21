@@ -11,6 +11,7 @@ import CapitalRequestSheet from "./components/CapitalRequestSheet";
 import DebtPaymentSheet from "./components/DebtPaymentSheet";
 import { Toaster } from "@/components/ui/sonner";
 import BottomNavigation from "./components/BottomNavigation";
+import SidebarMenu from "./components/MainMenu";
 
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => {
             <DepositModal />
             <CapitalRequestSheet />
             <DebtPaymentSheet />
+            <SidebarMenu />
             <Toaster />
           </div>
         </BrowserRouter>

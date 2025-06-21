@@ -5,7 +5,7 @@ import SummaryCard from '@/components/SummaryCard';
 import FundCard from '@/components/FundCard';
 import TopNavbar from '@/components/TopNavbar';
 import HeaderSection from '@/components/HeaderSection';
-import SidebarMenu from '@/components/MainMenu';
+
 
 const Index: React.FC = () => {
   const navigate = useNavigate();
@@ -16,11 +16,10 @@ const Index: React.FC = () => {
     getUserFreeBalance,
     setIsFundCreationOpen,
     handleDepositClick,
-    userDebts
+    userDebts,
+    isSidebarMenuOpen,
+    setIsSidebarMenuOpen
   } = useApp();
-  
-  // Estado para controlar a abertura/fechamento do menu lateral
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleFundClick = (fundId: string) => {
     navigate(`/fund/${fundId}`);
@@ -31,7 +30,7 @@ const Index: React.FC = () => {
       <div className="h-full overflow-y-auto">
         {/* Top Navbar Transparente */}
         <TopNavbar 
-          onMenuClick={() => setIsMenuOpen(true)}
+          onMenuClick={() => setIsSidebarMenuOpen(true)}
           onNotificationClick={() => console.log('Notificações')}
           notificationCount={3}
         />
@@ -63,12 +62,6 @@ const Index: React.FC = () => {
         {/* Seção Fundos - Fundo Branco */}
         <div className="bg-white min-h-screen">
           <div className="max-w-md mx-auto px-4 pt-8">
-            {/* Menu Lateral */}
-            <SidebarMenu 
-              isMenuOpen={isMenuOpen} 
-              toggleMenu={() => setIsMenuOpen(false)} 
-            />
-
             {/* Seção Fundos */}
             <div className="mb-8">
               <div className="flex justify-between items-center mb-6">

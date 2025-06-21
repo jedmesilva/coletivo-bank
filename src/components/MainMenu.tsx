@@ -5,13 +5,13 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import GeometricStatusBadge from '@/components/GeometricStatusBadge';
 import NotificationPanel from '@/components/NotificationPanel';
 
-const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMenu: () => void }) => {
-  const { currentUser } = useApp();
+const SidebarMenu = () => {
+  const { currentUser, isSidebarMenuOpen, setIsSidebarMenuOpen } = useApp();
   const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
   
   // Prevenir scroll do body quando o menu estiver aberto
   useEffect(() => {
-    if (isMenuOpen) {
+    if (isSidebarMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -21,10 +21,10 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isMenuOpen]);
+  }, [isSidebarMenuOpen]);
   const handleNotificationClick = () => {
     setIsNotificationPanelOpen(true);
-    toggleMenu(); // Fechar o menu lateral
+    setIsSidebarMenuOpen(false); // Fechar o menu lateral
   };
 
   const menuItems = [
@@ -37,19 +37,19 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
 
   return (
     <div className={`fixed inset-0 z-[99999] transition-all duration-300 ease-in-out ${
-      isMenuOpen ? 'visible' : 'invisible'
+      isSidebarMenuOpen ? 'visible' : 'invisible'
     }`}>
       {/* Overlay */}
       <div 
         className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-          isMenuOpen ? 'opacity-100' : 'opacity-0'
+          isSidebarMenuOpen ? 'opacity-100' : 'opacity-0'
         }`}
-        onClick={toggleMenu}
+        onClick={() => setIsSidebarMenuOpen(false)}
       />
       
       {/* Menu Panel */}
       <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${
-        isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        isSidebarMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         {/* Header do Menu */}
         <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-6 flex-shrink-0">

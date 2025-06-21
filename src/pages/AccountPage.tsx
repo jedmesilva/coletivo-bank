@@ -7,7 +7,7 @@ import TabNavigation from '@/components/TabNavigation';
 import { formatCurrency } from '@/utils/formatCurrency';
 import TopNavbar from '@/components/TopNavbar';
 import HeaderSection from '@/components/HeaderSection';
-import SidebarMenu from '@/components/MainMenu';
+
 import GeometricStatusBadge from '@/components/GeometricStatusBadge';
 import MovementDetailSheet from '@/components/MovementDetailSheet';
 import DebtDetailSheet from '@/components/DebtDetailSheet';
@@ -166,7 +166,7 @@ const AccountPage: React.FC = () => {
       <div className="h-full overflow-y-auto">
         {/* Top Navbar */}
         <TopNavbar 
-          onMenuClick={() => setIsMenuOpen(true)}
+          onMenuClick={() => setIsSidebarMenuOpen(true)}
           onNotificationClick={() => console.log('Notificações')}
           notificationCount={3}
         />
@@ -295,12 +295,6 @@ const AccountPage: React.FC = () => {
       {/* Seção de Conteúdo - Fundo Branco */}
       <div className="bg-white min-h-screen">
         <div className="max-w-md mx-auto px-4 pt-8 pb-28">
-
-          {/* Menu Lateral */}
-          <SidebarMenu 
-            isMenuOpen={isMenuOpen} 
-            toggleMenu={() => setIsMenuOpen(false)} 
-          />
 
           {/* Tabs */}
           <TabNavigation 

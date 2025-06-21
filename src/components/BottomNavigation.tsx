@@ -10,8 +10,14 @@ const BottomNavigation: React.FC = () => {
   const location = useLocation();
   const { 
     handleDepositClick,
-    currentUser
+    currentUser,
+    isSidebarMenuOpen
   } = useApp();
+
+  // Ocultar o bottom navigation quando o menu lateral estiver aberto
+  if (isSidebarMenuOpen) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-30">
