@@ -190,7 +190,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
         className="p-0 h-[100dvh] flex flex-col max-w-full"
         aria-describedby="fund-settings-description"
       >
-        <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div className="flex-1 overflow-y-auto overscroll-contain" style={{ maxHeight: 'calc(100dvh - 80px)' }}>
           {/* Header with Fund Info */}
           <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
             <div className="px-4 flex items-center justify-between mb-6">
@@ -225,8 +225,8 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
           </header>
 
           {/* Tabs Navigation */}
-          <div className="px-4 py-4">
-            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as FundSettingsTab)}>
+          <div className="px-4 py-4 flex-1 overflow-hidden flex flex-col">
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as FundSettingsTab)} className="flex-1 flex flex-col">
               <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gray-100">
                 <TabsTrigger value="fund-data" className="flex flex-col gap-1 py-2 px-2 text-xs">
                   <FileText className="w-4 h-4" />
@@ -264,9 +264,9 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
               </div>
 
               {/* Tab Content */}
-              <div className="mt-6 space-y-6">
+              <div className="mt-6 flex-1 overflow-y-auto pb-6">
                 {/* Fund Data Tab */}
-                <TabsContent value="fund-data" className="space-y-6">
+                <TabsContent value="fund-data" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="fund-name">Nome do Fundo</Label>
@@ -300,7 +300,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Contribution Tab */}
-                <TabsContent value="contribution" className="space-y-6">
+                <TabsContent value="contribution" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="contribution-rate">Taxa de Contribuição (%)</Label>
@@ -372,7 +372,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Interest Tab */}
-                <TabsContent value="interest" className="space-y-6">
+                <TabsContent value="interest" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="interest-rate">Taxa de Juros Anual (%)</Label>
@@ -430,7 +430,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Approval Tab */}
-                <TabsContent value="approval" className="space-y-6">
+                <TabsContent value="approval" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
                     <div>
                       <Label>Tipo de Aprovação</Label>
@@ -494,7 +494,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Members Tab */}
-                <TabsContent value="members" className="space-y-6">
+                <TabsContent value="members" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-medium">Membros do Fundo</h3>
@@ -531,7 +531,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Invites Tab */}
-                <TabsContent value="invites" className="space-y-6">
+                <TabsContent value="invites" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">Convites e Links</h3>
                     
@@ -564,7 +564,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Danger Tab */}
-                <TabsContent value="danger" className="space-y-6">
+                <TabsContent value="danger" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium text-red-600">Zona de Perigo</h3>
                     
