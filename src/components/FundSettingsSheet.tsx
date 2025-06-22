@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, Calculator, Percent, Vote, FileText, Users, Share2, Trash2, Settings, CreditCard, AlertTriangle } from 'lucide-react';
+import { X, Calculator, Percent, Vote, FileText, Users, Share2, Trash2, Settings, CreditCard, AlertTriangle, Plus } from 'lucide-react';
 import { 
   Sheet, 
   SheetContent, 
