@@ -140,7 +140,22 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
                 variant="ghost"
                 size="sm"
                 className="text-white hover:bg-white/10 px-3 py-2"
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={() => {
+                  if (isEditing) {
+                    // Cancelar: resetar dados e sair do modo de edição
+                    setUserName(user.name || '');
+                    setUserEmail(user.email || '');
+                    setUserPhone(user.phone || '');
+                    setUserCpf(user.cpf || '');
+                    setUserAddress(user.address || '');
+                    setUserImage(user.profileImage || '');
+                    setHasChanges(false);
+                    setIsEditing(false);
+                  } else {
+                    // Editar: entrar no modo de edição
+                    setIsEditing(true);
+                  }
+                }}
               >
                 <Edit className="w-4 h-4 mr-2" />
                 {isEditing ? 'Cancelar' : 'Editar'}
