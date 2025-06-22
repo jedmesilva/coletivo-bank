@@ -54,6 +54,16 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
   // Fund data states
   const [fundName, setFundName] = useState('');
   const [fundDescription, setFundDescription] = useState('');
+  const [fundImage, setFundImage] = useState('');
+
+  const images = [
+    'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=200&h=200',
+    'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=200&h=200'
+  ];
   
   // Settings states
   const [contributionRate, setContributionRate] = useState<string>('');
@@ -68,6 +78,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
       setActiveMembersTab('management');
       setFundName(fund.name);
       setFundDescription(fund.description || '');
+      setFundImage(fund.image || '');
       setContributionRate((fund.contributionRate || 100).toString());
       setInterestRate((fund.interestRate || 0).toString());
       setApprovalType(fund.approvalType || 'quorum');
@@ -79,6 +90,11 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
   // Track changes
   const trackChanges = () => {
     setHasChanges(true);
+  };
+
+  const selectImage = (imageUrl: string) => {
+    setFundImage(imageUrl);
+    trackChanges();
   };
 
   const handleClose = () => {
@@ -286,7 +302,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                     </div>
                     
                     <div>
-                      <Label htmlFor="fund-description">Descrição</Label>
+                      <Label htmlFor="fund-description">Propósito do fundo</Label>
                       <Textarea
                         id="fund-description"
                         value={fundDescription}
@@ -294,10 +310,61 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                           setFundDescription(e.target.value);
                           trackChanges();
                         }}
-                        placeholder="Descreva o objetivo do fundo"
+                        placeholder="Ex: Para custear aluguel de quadra, equipamentos esportivos e eventos do grupo"
                         rows={3}
                         className="mt-2 mb-4"
                       />
+                    </div>
+
+                    <div className="space-y-4">
+                      <Label>Imagem do fundo</Label>
+                      
+                      {/* Upload de imagem */}
+                      <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 hover:border-primary/50 transition-colors">
+                        <label className="flex flex-col items-center justify-center cursor-pointer">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const imageUrl = URL.createObjectURL(file);
+                                setFundImage(imageUrl);
+                                trackChanges();
+                              }
+                            }}
+                          />
+                          <div className="flex flex-col items-center">
+                            <Plus size={32} className="text-gray-400 mb-3" />
+                            <span className="text-base font-medium text-gray-600 mb-1">Fazer upload de imagem</span>
+                            <span className="text-sm text-gray-500">JPG, PNG ou GIF até 5MB</span>
+                          </div>
+                        </label>
+                      </div>
+
+                      <div className="text-center">
+                        <span className="text-sm text-gray-500">ou escolha uma das opções abaixo</span>
+                      </div>
+
+                      {/* Grade de imagens predefinidas */}
+                      <div className="grid grid-cols-3 gap-3">
+                        {images.map((image, index) => (
+                          <div 
+                            key={index}
+                            className={`cursor-pointer rounded-xl overflow-hidden h-24 border-2 transition-all ${
+                              fundImage === image ? 'border-primary shadow-lg scale-105' : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                            onClick={() => selectImage(image)}
+                          >
+                            <img 
+                              src={image} 
+                              alt={`Opção ${index + 1}`} 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
