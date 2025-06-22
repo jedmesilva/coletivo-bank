@@ -114,7 +114,9 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
         className="p-0 h-[100dvh] flex flex-col max-w-full"
         aria-describedby="personal-data-description"
       >
-        <div className="flex-1 overflow-y-auto overscroll-contain" style={{ height: 'calc(100dvh - 100px)' }}>
+        <div className={`flex-1 overflow-y-auto overscroll-contain ${
+          hasChanges && isEditing ? 'pb-20' : 'pb-4'
+        }`} style={{ height: '100dvh' }}>
           {/* Header com gradiente seguindo o padrão do app */}
           <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
             <div className="px-6 flex items-center justify-between mb-4">
