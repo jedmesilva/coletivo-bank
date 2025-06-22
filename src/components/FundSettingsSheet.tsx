@@ -262,7 +262,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
               </div>
 
               {/* Tab Content */}
-              <div className="mt-6 flex-1 overflow-y-auto px-4 min-h-0">
+              <div className="mt-6 flex-1 overflow-y-auto px-6 min-h-0">
                 {/* General Tab */}
                 <TabsContent value="general" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
                   <div className="space-y-4">
