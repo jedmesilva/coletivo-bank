@@ -336,7 +336,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
           </div>
         </div>
 
-        {/* Footer com botões */}
+        {/* Footer com botões - só aparece quando há mudanças e está editando */}
         {hasChanges && isEditing && (
           <div className="bg-white border-t p-4 flex gap-3">
             <Button 
