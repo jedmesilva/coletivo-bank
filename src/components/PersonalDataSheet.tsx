@@ -39,14 +39,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
   const [userAddress, setUserAddress] = useState('');
   const [userImage, setUserImage] = useState('');
 
-  const images = [
-    'https://images.unsplash.com/photo-1494790108755-2616b332c96c?q=80&w=150&h=150&fit=crop&crop=face',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&h=150&fit=crop&crop=face',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&h=150&fit=crop&crop=face',
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&h=150&fit=crop&crop=face',
-    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&fit=crop&crop=face',
-    'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=150&h=150&fit=crop&crop=face'
-  ];
+  
 
   useEffect(() => {
     if (isOpen && user) {
@@ -65,10 +58,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
     setHasChanges(true);
   };
 
-  const selectImage = (imageUrl: string) => {
-    setUserImage(imageUrl);
-    trackChanges();
-  };
+  
 
   const formatCpf = (value: string) => {
     const numbers = value.replace(/\D/g, '');
@@ -175,7 +165,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
               {isEditing && (
                 <div className="space-y-4">
                   {/* Upload de imagem */}
-                  <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 hover:border-primary/50 transition-colors">
+                  <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 hover:border-primary/50 transition-colors">
                     <label className="flex flex-col items-center justify-center cursor-pointer">
                       <input
                         type="file"
@@ -191,34 +181,11 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
                         }}
                       />
                       <div className="flex flex-col items-center">
-                        <Plus size={24} className="text-gray-400 mb-2" />
-                        <span className="text-sm font-medium text-gray-600 mb-1">Fazer upload</span>
-                        <span className="text-xs text-gray-500">JPG, PNG até 5MB</span>
+                        <Plus size={32} className="text-gray-400 mb-3" />
+                        <span className="text-base font-medium text-gray-700 mb-2">Fazer upload da sua foto</span>
+                        <span className="text-sm text-gray-500">JPG, PNG até 5MB</span>
                       </div>
                     </label>
-                  </div>
-
-                  <div className="text-center">
-                    <span className="text-sm text-gray-500">ou escolha uma das opções</span>
-                  </div>
-
-                  {/* Grade de imagens predefinidas */}
-                  <div className="grid grid-cols-3 gap-3">
-                    {images.map((image, index) => (
-                      <div 
-                        key={index}
-                        className={`cursor-pointer rounded-full overflow-hidden w-16 h-16 mx-auto border-2 transition-all ${
-                          userImage === image ? 'border-primary shadow-lg scale-110' : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                        onClick={() => selectImage(image)}
-                      >
-                        <img 
-                          src={image} 
-                          alt={`Opção ${index + 1}`} 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ))}
                   </div>
                 </div>
               )}
