@@ -264,7 +264,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
               {/* Tab Content */}
               <div className="mt-6 flex-1 overflow-y-auto px-6 min-h-0">
                 {/* General Tab */}
-                <TabsContent value="general" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
+                <TabsContent value="general" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto px-2">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium flex items-center gap-2">
                       <FileText className="w-5 h-5" />
@@ -303,7 +303,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Rates Tab with Sub-tabs */}
-                <TabsContent value="rates" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
+                <TabsContent value="rates" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto px-2">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium flex items-center gap-2">
                       <Calculator className="w-5 h-5" />
@@ -509,7 +509,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Approval Tab */}
-                <TabsContent value="approval" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
+                <TabsContent value="approval" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto px-2">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium flex items-center gap-2">
                       <Vote className="w-5 h-5" />
@@ -590,7 +590,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Members Tab with Sub-tabs */}
-                <TabsContent value="members" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
+                <TabsContent value="members" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto px-2">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium flex items-center gap-2">
                       <Users className="w-5 h-5" />
@@ -682,7 +682,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                 </TabsContent>
 
                 {/* Danger Zone Tab */}
-                <TabsContent value="danger" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto">
+                <TabsContent value="danger" className="space-y-6 data-[state=active]:flex data-[state=active]:flex-col data-[state=active]:flex-1 data-[state=active]:overflow-y-auto px-2">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium text-red-600 flex items-center gap-2">
                       <AlertTriangle className="w-5 h-5" />
