@@ -293,12 +293,19 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                         id="fund-name"
                         value={fundName}
                         onChange={(e) => {
-                          setFundName(e.target.value);
-                          trackChanges();
+                          const value = e.target.value;
+                          if (value.length <= 20) {
+                            setFundName(value);
+                            trackChanges();
+                          }
                         }}
+                        maxLength={20}
                         placeholder="Digite o nome do fundo"
                         className="mt-2"
                       />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Máximo 20 caracteres ({fundName.length}/20)
+                      </p>
                     </div>
                     
                     <div>

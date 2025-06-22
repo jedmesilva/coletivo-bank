@@ -211,12 +211,18 @@ const FundCreationModal: React.FC = () => {
                     id="fund-name"
                     placeholder="Ex: Amigos do futebol" 
                     value={fundData.name}
-                    onChange={(e) => setFundData({...fundData, name: e.target.value})}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 20) {
+                        setFundData({...fundData, name: value});
+                      }
+                    }}
+                    maxLength={20}
                     className="rounded-xl border-gray-200 focus:border-primary text-lg h-12"
                     autoFocus
                   />
                   <p className="text-xs text-gray-500">
-                    Escolha um nome que identifique claramente seu fundo
+                    Máximo 20 caracteres ({fundData.name.length}/20)
                   </p>
                 </div>
               </div>

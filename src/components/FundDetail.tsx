@@ -11,6 +11,7 @@ import HeaderSection from './HeaderSection';
 import FundSettingsSheet from './FundSettingsSheet';
 
 import { formatCurrency } from '@/utils/formatCurrency';
+import { truncateFundName } from '@/utils/truncateText';
 
 const FundDetail: React.FC = () => {
   const { fundId } = useParams<{ fundId: string }>();
@@ -84,7 +85,7 @@ const FundDetail: React.FC = () => {
                 className="w-16 h-16 rounded-2xl object-cover mr-4 shadow-sm border-2 border-white/20"
               />
               <div className="flex-1">
-                <h2 className="text-xl font-bold text-white">{selectedFund.name}</h2>
+                <h2 className="text-xl font-bold text-white">{truncateFundName(selectedFund.name)}</h2>
                 <p className="text-white/70">{selectedFund.description}</p>
               </div>
             </div>
