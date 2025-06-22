@@ -56,6 +56,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
 
   const trackChanges = () => {
     setHasChanges(true);
+    setIsEditing(true);
   };
 
   
