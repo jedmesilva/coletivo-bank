@@ -9,6 +9,7 @@ import FundCreationModal from "./components/FundCreationModal";
 import DepositModal from "./components/DepositModal";
 import CapitalRequestSheet from "./components/CapitalRequestSheet";
 import DebtPaymentSheet from "./components/DebtPaymentSheet";
+import PersonalDataManager from "./components/PersonalDataManager";
 import { Toaster } from "@/components/ui/sonner";
 import BottomNavigation from "./components/BottomNavigation";
 import SidebarMenu from "./components/MainMenu";
@@ -41,6 +42,7 @@ const App = () => {
             <DepositModal />
             <CapitalRequestSheet />
             <DebtPaymentSheet />
+            <PersonalDataManager />
             <SidebarMenu />
             <Toaster />
           </div>

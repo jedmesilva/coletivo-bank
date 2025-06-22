@@ -29,7 +29,14 @@ const SidebarMenu = () => {
 
   const menuItems = [
     { icon: Home, label: 'Início', active: true, onClick: () => {} },
-    { icon: User, label: 'Conta', onClick: () => {} },
+    { icon: User, label: 'Dados pessoais', onClick: () => {
+      setIsSidebarMenuOpen(false);
+      // Abrir dados pessoais
+      setTimeout(() => {
+        const event = new CustomEvent('openPersonalData');
+        window.dispatchEvent(event);
+      }, 300);
+    }},
     { icon: Bell, label: 'Notificações', badge: '3', onClick: handleNotificationClick },
     { icon: Settings, label: 'Configurações', onClick: () => {} },
     { icon: HelpCircle, label: 'Suporte', onClick: () => {} },

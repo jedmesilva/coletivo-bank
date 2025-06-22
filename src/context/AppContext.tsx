@@ -5,6 +5,10 @@ import { Fund, Screen, FundTab, AccountTab, DebtItem, HistoryItem, ApprovalItem 
 const currentUser = {
   id: '1',
   name: 'Lucas',
+  email: 'lucas@example.com',
+  phone: '(11) 99999-9999',
+  cpf: '123.456.789-00',
+  address: 'Rua das Flores, 123, Centro, São Paulo - SP',
   profileImage: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=200&h=200',
   accountLevel: 'gold' as 'bronze' | 'silver' | 'gold' | 'platinum'
 };
@@ -582,6 +586,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     handleMovementClick,
     handleDebtDetailClick,
     handleApprovalClick,
+
+    // Notification panel features
+    isNotificationPanelOpen,
+    setIsNotificationPanelOpen,
+    handleNotificationClick: () => setIsNotificationPanelOpen(true),
 
     // Sidebar menu features
     isSidebarMenuOpen,
