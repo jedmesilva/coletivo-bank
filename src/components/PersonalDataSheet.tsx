@@ -56,7 +56,6 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
 
   const trackChanges = () => {
     setHasChanges(true);
-    setIsEditing(true);
   };
 
   
@@ -116,7 +115,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
         aria-describedby="personal-data-description"
       >
         <div className={`flex-1 overflow-y-auto overscroll-contain ${
-          hasChanges && isEditing ? 'pb-20' : 'pb-4'
+          isEditing ? 'pb-20' : 'pb-4'
         }`} style={{ height: '100dvh' }}>
           {/* Header com gradiente seguindo o padrão do app */}
           <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
@@ -306,8 +305,8 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
           </div>
         </div>
 
-        {/* Footer com botões - só aparece quando há mudanças e está editando */}
-        {hasChanges && isEditing && (
+        {/* Footer com botões - sempre visível no modo de edição */}
+        {isEditing && (
           <div className="bg-white border-t p-4 flex gap-3">
             <Button 
               variant="outline" 
@@ -330,7 +329,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
             <Button 
               className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
               onClick={handleSave}
-              disabled={isLoading}
+              disabled={isLoading || !hasChanges}
             >
               <Save className="w-4 h-4 mr-2" />
               {isLoading ? 'Salvando...' : 'Salvar'}
