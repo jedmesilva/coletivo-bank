@@ -296,7 +296,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                         }}
                         placeholder="Descreva o objetivo do fundo"
                         rows={3}
-                        className="mt-2"
+                        className="mt-2 mb-4"
                       />
                     </div>
                   </div>
