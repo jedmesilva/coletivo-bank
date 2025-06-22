@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Phone, Mail, MapPin, CreditCard, Save, Edit, Plus } from 'lucide-react';
+import { ArrowLeft, User, Phone, Mail, MapPin, CreditCard, Save, Edit, Plus } from 'lucide-react';
 import { 
   Sheet, 
   SheetContent, 
@@ -135,7 +135,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
                   className="h-8 w-8 mr-3 text-white hover:bg-white/10" 
                   onClick={handleClose}
                 >
-                  <X className="h-5 w-5" />
+                  <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <div>
                   <SheetTitle className="text-xl text-white font-semibold">
