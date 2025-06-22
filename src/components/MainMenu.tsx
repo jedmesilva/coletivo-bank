@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X, Home, CreditCard, PieChart, Settings, HelpCircle, LogOut, User, Wallet, Bell } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import GeometricStatusBadge from '@/components/GeometricStatusBadge';
@@ -8,6 +9,8 @@ import NotificationPanel from '@/components/NotificationPanel';
 const SidebarMenu = () => {
   const { currentUser, isSidebarMenuOpen, setIsSidebarMenuOpen } = useApp();
   const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   
   // Prevenir scroll do body quando o menu estiver aberto
   useEffect(() => {
@@ -22,30 +25,58 @@ const SidebarMenu = () => {
       document.body.style.overflow = 'unset';
     };
   }, [isSidebarMenuOpen]);
+  
   const handleNotificationClick = () => {
     setIsNotificationPanelOpen(true);
     setIsSidebarMenuOpen(false); // Fechar o menu lateral
   };
 
+  const handleNavigation = (path: string) => {
+    setIsSidebarMenuOpen(false);
+    setTimeout(() => {
+      navigate(path);
+    }, 300);
+  };
+
   const menuItems = [
-    { icon: Home, label: 'Início', active: true, onClick: () => {} },
-    { icon: User, label: 'Dados pessoais', onClick: () => {
-      setIsSidebarMenuOpen(false);
-      // Abrir dados pessoais
-      setTimeout(() => {
-        const event = new CustomEvent('openPersonalData');
-        window.dispatchEvent(event);
-      }, 300);
-    }},
-    { icon: Bell, label: 'Notificações', badge: '3', onClick: handleNotificationClick },
-    { icon: Settings, label: 'Configurações', onClick: () => {} },
-    { icon: HelpCircle, label: 'Ajuda e suporte', onClick: () => {
-      setIsSidebarMenuOpen(false);
-      // Navegar para página de suporte
-      setTimeout(() => {
-        window.location.href = '/support';
-      }, 300);
-    }},
+    { 
+      icon: Home, 
+      label: 'Início', 
+      path: '/',
+      onClick: () => handleNavigation('/')
+    },
+    { 
+      icon: User, 
+      label: 'Dados pessoais', 
+      path: null,
+      onClick: () => {
+        setIsSidebarMenuOpen(false);
+        // Abrir dados pessoais
+        setTimeout(() => {
+          const event = new CustomEvent('openPersonalData');
+          window.dispatchEvent(event);
+        }, 300);
+      }
+    },
+    { 
+      icon: Bell, 
+      label: 'Notificações', 
+      path: null,
+      badge: '3', 
+      onClick: handleNotificationClick 
+    },
+    { 
+      icon: Settings, 
+      label: 'Configurações', 
+      path: null,
+      onClick: () => {} 
+    },
+    { 
+      icon: HelpCircle, 
+      label: 'Ajuda e suporte', 
+      path: '/support',
+      onClick: () => handleNavigation('/support')
+    },
   ];
 
   return (
@@ -89,18 +120,20 @@ const SidebarMenu = () => {
           <nav className="space-y-2">
             {menuItems.map((item, index) => {
               const IconComponent = item.icon;
+              const isActive = item.path === location.pathname;
+              
               return (
                 <button
                   key={index}
                   onClick={item.onClick}
                   className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group ${
-                    item.active 
+                    isActive 
                       ? 'bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 text-blue-700' 
                       : 'hover:bg-gray-50 text-gray-700 hover:text-gray-900'
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${
-                    item.active 
+                    isActive 
                       ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg' 
                       : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200 group-hover:scale-105'
                   }`}>
@@ -109,7 +142,7 @@ const SidebarMenu = () => {
                   <span className="font-medium flex-1 text-left">{item.label}</span>
                   {item.badge && (
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      item.active 
+                      isActive 
                         ? 'bg-blue-200 text-blue-700' 
                         : 'bg-gray-200 text-gray-600'
                     }`}>
