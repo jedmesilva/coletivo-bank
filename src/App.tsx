@@ -13,6 +13,7 @@ import PersonalDataManager from "./components/PersonalDataManager";
 import { Toaster } from "@/components/ui/sonner";
 import BottomNavigation from "./components/BottomNavigation";
 import SidebarMenu from "./components/MainMenu";
+import SupportPage from '@/pages/SupportPage';
 
 
 const queryClient = new QueryClient();

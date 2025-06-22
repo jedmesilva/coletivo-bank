@@ -39,7 +39,13 @@ const SidebarMenu = () => {
     }},
     { icon: Bell, label: 'Notificações', badge: '3', onClick: handleNotificationClick },
     { icon: Settings, label: 'Configurações', onClick: () => {} },
-    { icon: HelpCircle, label: 'Suporte', onClick: () => {} },
+    { icon: HelpCircle, label: 'Ajuda e suporte', onClick: () => {
+      setIsSidebarMenuOpen(false);
+      // Navegar para página de suporte
+      setTimeout(() => {
+        window.location.href = '/support';
+      }, 300);
+    }},
   ];
 
   return (
