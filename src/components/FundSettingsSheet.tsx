@@ -430,7 +430,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                                 o membro precisa ter contribuído pelo menos {formatCurrency(getContributionExample().requiredContribution)}.
                               </p>
                             </div>
-                          )}</p>
+                          )}
 
                           <div className="grid grid-cols-2 gap-3">
                             <button
