@@ -128,38 +128,20 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
           <div className="flex-1 overflow-y-auto overscroll-contain">
             {/* Header com gradiente seguindo o padrão do app */}
             <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
-              <div className="px-6 flex items-center justify-between mb-4">
-                <div className="flex items-center">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-8 w-8 mr-3 text-white hover:bg-white/10" 
-                    onClick={handleClose}
-                  >
-                    <ArrowLeft className="h-5 w-5" />
-                  </Button>
-                  <div>
-                    <SheetTitle className="text-xl text-white font-semibold">
-                      Dados Pessoais
-                    </SheetTitle>
-                  </div>
-                </div>
-                
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-white hover:bg-white/10 px-3 py-2"
-                  onClick={() => {
-                    if (isEditing) {
-                      handleCancel();
-                    } else {
-                      setIsEditing(true);
-                    }
-                  }}
+              <div className="px-6 flex items-center mb-4">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 mr-3 text-white hover:bg-white/10" 
+                  onClick={handleClose}
                 >
-                  <Edit className="w-4 h-4 mr-2" />
-                  {isEditing ? 'Cancelar' : 'Editar'}
+                  <ArrowLeft className="h-5 w-5" />
                 </Button>
+                <div>
+                  <SheetTitle className="text-xl text-white font-semibold">
+                    Dados Pessoais
+                  </SheetTitle>
+                </div>
               </div>
               
               <div className="px-6">
@@ -318,8 +300,17 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
                 </div>
               </div>
 
-              {/* Espaçamento extra no final quando há footer para evitar sobreposição */}
-              {isEditing && <div className="h-4" />}
+              {/* Botão Atualizar dados no final da página */}
+              <div className="pt-6 pb-8">
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                  onClick={() => setIsEditing(true)}
+                  disabled={isEditing}
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Atualizar dados
+                </Button>
+              </div>
             </div>
           </div>
 
