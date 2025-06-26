@@ -190,9 +190,9 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
 
   const getContributionExample = () => {
     const rate = parseFloat(contributionRate) || 0;
-    const contributed = 1000;
-    const maxRequest = (contributed * rate) / 100;
-    return { contributed, maxRequest };
+    const requestAmount = 1000;
+    const requiredContribution = (requestAmount * rate) / 100;
+    return { requestAmount, requiredContribution };
   };
 
   const getInterestExample = () => {
@@ -418,7 +418,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                               className="mt-2"
                             />
                             <p className="text-sm text-gray-600 mt-1">
-                              Define o percentual máximo que membros podem solicitar (0% - 1000%)
+                              Percentual que o membro deve ter contribuído em relação ao valor solicitado (0% - 1000%)
                             </p>
                           </div>
 
@@ -426,13 +426,28 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                             <div className="p-4 bg-blue-50 rounded-xl">
                               <h4 className="font-medium text-gray-900 mb-2">Exemplo:</h4>
                               <p className="text-sm text-gray-600">
-                                Se um membro contribuiu {formatCurrency(getContributionExample().contributed)}, 
-                                ele pode solicitar até {formatCurrency(getContributionExample().maxRequest)} em capital.
+                                Para solicitar {formatCurrency(getContributionExample().requestAmount)}, 
+                                o membro precisa ter contribuído pelo menos {formatCurrency(getContributionExample().requiredContribution)}.
                               </p>
                             </div>
-                          )}
+                          )}</p>
 
-                          <div className="grid grid-cols-3 gap-3">
+                          <div className="grid grid-cols-2 gap-3">
+                            <button
+                              type="button"
+                              className={`text-center p-3 rounded-xl transition-all duration-200 ${
+                                contributionRate === '0'
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700'
+                                  : 'bg-white border border-gray-200 hover:border-primary hover:bg-primary/5 shadow-sm hover:shadow-md'
+                              }`}
+                              onClick={() => {
+                                setContributionRate('0');
+                                trackChanges();
+                              }}
+                            >
+                              <div className={`font-medium ${contributionRate === '0' ? 'text-white' : 'text-gray-900'}`}>0%</div>
+                              <div className={`text-xs ${contributionRate === '0' ? 'opacity-90' : 'text-gray-600'}`}>Livre</div>
+                            </button>
                             <button
                               type="button"
                               className={`text-center p-3 rounded-xl transition-all duration-200 ${
@@ -446,7 +461,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                               }}
                             >
                               <div className={`font-medium ${contributionRate === '50' ? 'text-white' : 'text-gray-900'}`}>50%</div>
-                              <div className={`text-xs ${contributionRate === '50' ? 'opacity-90' : 'text-gray-600'}`}>Conservador</div>
+                              <div className={`text-xs ${contributionRate === '50' ? 'opacity-90' : 'text-gray-600'}`}>Moderado</div>
                             </button>
                             <button
                               type="button"
@@ -461,7 +476,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                               }}
                             >
                               <div className={`font-medium ${contributionRate === '100' ? 'text-white' : 'text-gray-900'}`}>100%</div>
-                              <div className={`text-xs ${contributionRate === '100' ? 'opacity-90' : 'text-gray-600'}`}>Equilibrado</div>
+                              <div className={`text-xs ${contributionRate === '100' ? 'opacity-90' : 'text-gray-600'}`}>Conservador</div>
                             </button>
                             <button
                               type="button"
@@ -476,7 +491,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                               }}
                             >
                               <div className={`font-medium ${contributionRate === '200' ? 'text-white' : 'text-gray-900'}`}>200%</div>
-                              <div className={`text-xs ${contributionRate === '200' ? 'opacity-90' : 'text-gray-600'}`}>Agressivo</div>
+                              <div className={`text-xs ${contributionRate === '200' ? 'opacity-90' : 'text-gray-600'}`}>Restritivo</div>
                             </button>
                           </div>
                         </TabsContent>
