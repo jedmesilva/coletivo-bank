@@ -313,17 +313,13 @@ const CapitalRequestSheet = () => {
             
             {/* Indicador de progresso */}
             <div className="px-4 mt-4">
-              <div className="flex space-x-1">
-                {['amount', 'payment-terms', 'purpose', 'summary'].map((stepName, index) => (
-                  <div 
-                    key={stepName}
-                    className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                      ['amount', 'payment-terms', 'purpose', 'summary'].indexOf(step) >= index 
-                        ? 'bg-white' 
-                        : 'bg-white/30'
-                    }`}
-                  />
-                ))}
+              <div className="w-full bg-white/30 rounded-full h-1 overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-blue-400 to-purple-400 rounded-full transition-all duration-500 ease-out"
+                  style={{ 
+                    width: `${(['amount', 'payment-terms', 'purpose', 'summary'].indexOf(step) + 1) * 25}%` 
+                  }}
+                />
               </div>
             </div>
           </header>
