@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { X, Calculator, Percent, Vote, FileText, Users, Share2, Trash2, Settings, CreditCard, AlertTriangle, Plus } from 'lucide-react';
 import { 
@@ -39,7 +38,7 @@ interface FundSettingsSheetProps {
     }>;
     contributionRate?: number;
     interestRate?: number;
-    approvalType?: 'quorum' | 'unanimous';
+    approvalType?: 'quorum' | 'unanimous' | 'administrators';
     minimumQuorum?: number;
   };
 }
@@ -64,7 +63,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
     'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=200&h=200',
     'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=200&h=200'
   ];
-  
+
   // Settings states
   const [contributionRate, setContributionRate] = useState<string>('');
   const [interestRate, setInterestRate] = useState<string>('');
@@ -134,6 +133,10 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
         throw new Error('A taxa de juros deve estar entre 0% e 12% ao ano');
       }
 
+      if (!['quorum', 'unanimous', 'administrators'].includes(approvalType)) {
+        throw new Error('Tipo de aprovação inválido');
+      }
+
       if (approvalType === 'quorum') {
         const quorum = parseInt(minimumQuorum);
         if (isNaN(quorum) || quorum < 1 || quorum > 100) {
@@ -161,12 +164,12 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
       if (!response.ok) {
         throw new Error(data.error || 'Erro ao salvar configurações');
       }
-      
+
       toast({
         title: "Configurações salvas!",
         description: "As configurações do fundo foram atualizadas com sucesso."
       });
-      
+
       setHasChanges(false);
       handleClose();
     } catch (error) {
@@ -235,7 +238,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                   </SheetDescription>
                 </div>
               </div>
-              
+
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -286,7 +289,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                       <FileText className="w-5 h-5" />
                       Informações Gerais
                     </h3>
-                    
+
                     <div>
                       <Label htmlFor="fund-name">Nome do Fundo</Label>
                       <Input
@@ -307,7 +310,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                         Máximo 20 caracteres ({fundName.length}/20)
                       </p>
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="fund-description">Propósito do fundo</Label>
                       <Textarea
@@ -325,7 +328,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
 
                     <div className="space-y-4">
                       <Label>Imagem do fundo</Label>
-                      
+
                       {/* Upload de imagem */}
                       <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 hover:border-primary/50 transition-colors">
                         <label className="flex flex-col items-center justify-center cursor-pointer">
@@ -383,7 +386,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                       <Calculator className="w-5 h-5" />
                       Configuração de Taxas
                     </h3>
-                    
+
                     <Tabs value={activeRatesTab} onValueChange={(value) => setActiveRatesTab(value as RatesSubTab)} className="flex-1 flex flex-col">
                       <TabsList className="flex h-auto p-1 bg-gray-100 rounded-2xl w-fit">
                         <div className="flex gap-1">
@@ -604,7 +607,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                       <Vote className="w-5 h-5" />
                       Sistema de Aprovações
                     </h3>
-                    
+
                     <div>
                       <Label>Tipo de Aprovação</Label>
                       <RadioGroup 
@@ -632,7 +635,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                             </p>
                           </div>
                         </div>
-                        
+
                         <div 
                           className="flex items-center space-x-3 p-4 border rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
                           onClick={() => {
@@ -647,6 +650,24 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                             </label>
                             <p className="text-sm text-gray-600 mt-1">
                               Todas as decisões precisam ser aprovadas por 100% dos votantes
+                            </p>
+                          </div>
+                        </div>
+
+                        <div 
+                          className="flex items-center space-x-3 p-4 border rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
+                          onClick={() => {
+                            setApprovalType('administrators');
+                            trackChanges();
+                          }}
+                        >
+                          <RadioGroupItem value="administrators" id="administrators" />
+                          <div className="flex-1">
+                            <label htmlFor="administrators" className="font-medium text-gray-900 cursor-pointer">
+                              Administradores
+                            </label>
+                            <p className="text-sm text-gray-600 mt-1">
+                              Apenas administradores podem votar nas decisões
                             </p>
                           </div>
                         </div>
@@ -685,7 +706,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                       <Users className="w-5 h-5" />
                       Gestão de Membros
                     </h3>
-                    
+
                     <Tabs value={activeMembersTab} onValueChange={(value) => setActiveMembersTab(value as MembersSubTab)} className="flex-1 flex flex-col">
                       <TabsList className="flex h-auto p-1 bg-gray-100 rounded-2xl w-fit">
                         <div className="flex gap-1">
@@ -707,7 +728,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                             <h4 className="font-medium">Lista de Membros</h4>
                             <Badge variant="secondary">{fund.members?.length || 0} membros</Badge>
                           </div>
-                          
+
                           <div className="space-y-3">
                             {fund.members && fund.members.length > 0 ? (
                               fund.members.map((member) => (
@@ -739,7 +760,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                         {/* Invites Sub-tab */}
                         <TabsContent value="invites" className="space-y-4">
                           <h4 className="font-medium">Link de Convite</h4>
-                          
+
                           <div className="p-4 border rounded-xl">
                             <div className="flex gap-2">
                               <Input
@@ -777,7 +798,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                       <AlertTriangle className="w-5 h-5" />
                       Zona de Perigo
                     </h3>
-                    
+
                     <div className="p-4 border border-red-200 rounded-xl bg-red-50">
                       <h4 className="font-medium text-red-900 mb-2">Excluir Fundo</h4>
                       <p className="text-sm text-red-700 mb-4">

@@ -25,7 +25,7 @@ export const updateFundSettings = async (req: Request, res: Response) => {
       });
     }
 
-    if (!['quorum', 'unanimous'].includes(approvalType)) {
+    if (!['quorum', 'unanimous', 'administrators'].includes(approvalType)) {
       return res.status(400).json({ 
         error: 'Tipo de aprovação inválido' 
       });
