@@ -154,38 +154,42 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
             <div className="px-6 py-6 space-y-6">
               {/* Profile Image Section */}
               <div className="text-center space-y-4">
-                <Avatar className="w-24 h-24 mx-auto border-4 border-white shadow-lg">
-                  <AvatarImage src={userImage} alt={userName} />
-                  <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+                <Avatar className="w-24 h-24 mx-auto border-4 border-white shadow-lg rounded-full">
+                  <AvatarImage src={userImage} alt={userName} className="rounded-full" />
+                  <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full">
                     {userName.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 
                 {isEditing && (
-                  <div className="space-y-4">
-                    {/* Upload de imagem */}
-                    <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 hover:border-primary/50 transition-colors">
-                      <label className="flex flex-col items-center justify-center cursor-pointer">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              const imageUrl = URL.createObjectURL(file);
-                              setUserImage(imageUrl);
-                              trackChanges();
-                            }
-                          }}
-                        />
-                        <div className="flex flex-col items-center">
-                          <Plus size={32} className="text-gray-400 mb-3" />
-                          <span className="text-base font-medium text-gray-700 mb-2">Fazer upload da sua foto</span>
-                          <span className="text-sm text-gray-500">JPG, PNG até 5MB</span>
-                        </div>
-                      </label>
-                    </div>
+                  <div>
+                    {/* Botão Atualizar foto */}
+                    <label className="cursor-pointer">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const imageUrl = URL.createObjectURL(file);
+                            setUserImage(imageUrl);
+                            trackChanges();
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                        asChild
+                      >
+                        <span>
+                          <Edit className="w-4 h-4 mr-2" />
+                          Atualizar foto
+                        </span>
+                      </Button>
+                    </label>
                   </div>
                 )}
               </div>
