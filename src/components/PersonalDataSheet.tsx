@@ -151,7 +151,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
               </div>
             </header>
             {/* Conteúdo dos formulários */}
-            <div className="px-6 py-6 space-y-6">
+            <div className="px-6 py-8 space-y-8">
               {/* Profile Image Section */}
               <div className="text-center space-y-4">
                 <Avatar className="w-24 h-24 mx-auto border-4 border-white shadow-lg rounded-3xl">
@@ -195,9 +195,8 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
               </div>
 
               {/* Personal Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium flex items-center gap-2">
-                  <User className="w-5 h-5" />
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-2">
                   Informações Pessoais
                 </h3>
                 
@@ -238,10 +237,9 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
               </div>
 
               {/* Contact Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium flex items-center gap-2">
-                  <Phone className="w-5 h-5" />
-                  Informações de Contato
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-2">
+                  Contato
                 </h3>
                 
                 <div className="space-y-4">
@@ -282,9 +280,8 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
               </div>
 
               {/* Address Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-900 border-b border-gray-100 pb-2">
                   Endereço
                 </h3>
                 
@@ -305,7 +302,7 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
               </div>
 
               {/* Botão Atualizar dados no final da página */}
-              <div className="pt-6 pb-8">
+              <div className="pt-8 pb-8">
                 <Button 
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
                   onClick={() => setIsEditing(true)}
