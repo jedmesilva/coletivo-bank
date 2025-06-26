@@ -96,7 +96,7 @@ const FundBalanceCard: React.FC<FundBalanceCardProps> = ({
                   <p className="text-2xl font-bold text-white">
                     {hideValues ? "***%" : `${fundPercentage.toFixed(1)}%`}
                   </p>
-                  <p className="text-xs text-white/60 uppercase tracking-wide">do total</p>
+                  <p className="text-xs text-white/60 uppercase tracking-wide">da carteira</p>
                 </div>
               </div>
             </div>
