@@ -154,9 +154,9 @@ export default function PersonalDataSheet({ isOpen, onClose, user }: PersonalDat
             <div className="px-6 py-6 space-y-6">
               {/* Profile Image Section */}
               <div className="text-center space-y-4">
-                <Avatar className="w-24 h-24 mx-auto border-4 border-white shadow-lg rounded-full">
-                  <AvatarImage src={userImage} alt={userName} className="rounded-full" />
-                  <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full">
+                <Avatar className="w-24 h-24 mx-auto border-4 border-white shadow-lg rounded-2xl">
+                  <AvatarImage src={userImage} alt={userName} className="rounded-2xl" />
+                  <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-2xl">
                     {userName.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
