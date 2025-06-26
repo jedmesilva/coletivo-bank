@@ -524,7 +524,7 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
                             </div>
                           )}
 
-                          <div className="grid grid-cols-4 gap-2">
+                          <div className="grid grid-cols-2 gap-3">
                             <button
                               type="button"
                               className={`text-center p-3 rounded-xl transition-all duration-200 ${
