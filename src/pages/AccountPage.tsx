@@ -28,6 +28,7 @@ const AccountPage: React.FC = () => {
     setSelectedDebtId,
     setIsDebtPaymentOpen,
     handleDebtPaymentClick,
+    handleDepositClick,
     // Sidebar menu
     setIsSidebarMenuOpen,
     // Detail sheets
@@ -131,7 +132,7 @@ const AccountPage: React.FC = () => {
       id: 'aporte',
       label: 'Fazer Aporte',
       icon: ArrowUp,
-      onClick: () => console.log('Fazer aporte clicado')
+      onClick: () => handleDepositClick()
     },
     {
       id: 'receber',
