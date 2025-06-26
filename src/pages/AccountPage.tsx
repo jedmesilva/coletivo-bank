@@ -265,30 +265,11 @@ const AccountPage: React.FC = () => {
           <div className="mb-6 flex flex-wrap gap-3">
             {actionButtons.map((button) => {
               const IconComponent = button.icon;
-              const isPressed = pressedButton === button.id;
               return (
                 <button 
                   key={button.id}
-                  className={`bg-white border border-gray-200 text-gray-700 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm transition-all duration-200 flex-1 min-h-[80px] select-none hover:shadow-md hover:border-gray-300 ${
-                    isPressed 
-                      ? 'bg-gray-100 scale-95 shadow-lg border-gray-400' 
-                      : ''
-                  }`}
-                  onClick={(e) => {
-                    if (!contextMenu.show) {
-                      button.onClick();
-                    }
-                  }}
-                  onTouchStart={(e) => handleLongPressStart(e, button.id, button)}
-                  onTouchEnd={handleLongPressEnd}
-                  onTouchCancel={handleLongPressEnd}
-                  onMouseDown={(e) => handleLongPressStart(e, button.id, button)}
-                  onMouseUp={handleLongPressEnd}
-                  onMouseLeave={handleLongPressEnd}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    handleLongPressStart(e, button.id, button);
-                  }}
+                  className="bg-white border border-gray-200 text-gray-700 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm transition-all duration-200 flex-1 min-h-[80px] select-none hover:shadow-md hover:border-gray-300"
+                  onClick={button.onClick}
                 >
                   <IconComponent size={18} className="mb-1" />
                   <span className="font-medium text-xs text-center leading-tight">{button.label}</span>
