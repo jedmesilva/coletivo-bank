@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calculator, Percent, Vote, FileText, Users, Share2, Trash2, Settings, CreditCard, AlertTriangle, Plus } from 'lucide-react';
+import { ArrowLeft, Calculator, Percent, Vote, FileText, Users, Share2, Trash2, Settings, CreditCard, AlertTriangle, Plus } from 'lucide-react';
 import { 
   Sheet, 
   SheetContent, 
@@ -217,36 +217,28 @@ export default function FundSettingsSheet({ isOpen, onClose, fund }: FundSetting
         aria-describedby="fund-settings-description"
       >
         <div className="flex-1 overflow-y-auto overscroll-contain" style={{ height: 'calc(100dvh - 100px)' }}>
-          {/* Header with Fund Info */}
-          <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-4">
-            <div className="px-4 flex items-center justify-between">
-              <div className="flex items-center flex-1">
-                <img 
-                  src={fund.image} 
-                  alt={fund.name} 
-                  className="w-12 h-12 rounded-xl object-cover mr-3 shadow-sm border-2 border-white/20"
-                />
-                <div className="flex-1">
-                  <SheetTitle className="text-xl text-white font-semibold">
-                    Configurações do Fundo
-                  </SheetTitle>
-                  <SheetDescription 
-                    id="fund-settings-description"
-                    className="text-white/70 text-sm mt-1"
-                  >
-                    {fund.name}
-                  </SheetDescription>
-                </div>
-              </div>
-
+          {/* Header with Back Button */}
+          <header className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-4 pb-6">
+            <div className="px-4 flex items-center mb-4">
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 text-white hover:bg-white/10" 
+                className="h-8 w-8 mr-2 text-white hover:bg-white/10" 
                 onClick={handleClose}
               >
-                <X className="h-5 w-5" />
+                <ArrowLeft className="h-5 w-5" />
               </Button>
+              <SheetTitle className="text-xl text-white font-semibold">
+                Configurações do Fundo
+              </SheetTitle>
+            </div>
+            <div className="px-4">
+              <SheetDescription 
+                id="fund-settings-description"
+                className="text-white/70"
+              >
+                {fund.name}
+              </SheetDescription>
             </div>
           </header>
 
