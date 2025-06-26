@@ -217,44 +217,7 @@ const AccountPage: React.FC = () => {
           )}
         </div>
 
-        {/* Ações Section */}
-        <div className="mt-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 shadow-lg">
-          <h3 className="text-lg font-semibold text-white mb-4">Ações</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {actionButtons.map((button) => {
-              const IconComponent = button.icon;
-              const isPressed = pressedButton === button.id;
-              return (
-                <button 
-                  key={button.id}
-                  className={`backdrop-blur-sm text-white border border-white/30 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm transition-all duration-200 flex-1 min-h-[80px] select-none ${
-                    isPressed 
-                      ? 'bg-white/40 scale-95 shadow-lg' 
-                      : 'bg-white/20 hover:bg-white/30 hover:shadow-md'
-                  }`}
-                  onClick={(e) => {
-                    if (!contextMenu.show) {
-                      button.onClick();
-                    }
-                  }}
-                  onTouchStart={(e) => handleLongPressStart(e, button.id, button)}
-                  onTouchEnd={handleLongPressEnd}
-                  onTouchCancel={handleLongPressEnd}
-                  onMouseDown={(e) => handleLongPressStart(e, button.id, button)}
-                  onMouseUp={handleLongPressEnd}
-                  onMouseLeave={handleLongPressEnd}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    handleLongPressStart(e, button.id, button);
-                  }}
-                >
-                  <IconComponent size={18} className="mb-1" />
-                  <span className="font-medium text-xs text-center leading-tight">{button.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+
       </HeaderSection>
 
       {/* Menu Contextual Flutuante */}
@@ -297,6 +260,45 @@ const AccountPage: React.FC = () => {
       {/* Seção de Conteúdo - Fundo Branco */}
       <div className="bg-white min-h-screen">
         <div className="max-w-md mx-auto px-4 pt-8 pb-28">
+
+          {/* Ações Section - Novo local */}
+          <div className="mb-6 bg-gray-50 rounded-2xl p-5 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {actionButtons.map((button) => {
+                const IconComponent = button.icon;
+                const isPressed = pressedButton === button.id;
+                return (
+                  <button 
+                    key={button.id}
+                    className={`bg-white border border-gray-200 text-gray-700 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm transition-all duration-200 flex-1 min-h-[80px] select-none hover:shadow-md hover:border-gray-300 ${
+                      isPressed 
+                        ? 'bg-gray-100 scale-95 shadow-lg border-gray-400' 
+                        : ''
+                    }`}
+                    onClick={(e) => {
+                      if (!contextMenu.show) {
+                        button.onClick();
+                      }
+                    }}
+                    onTouchStart={(e) => handleLongPressStart(e, button.id, button)}
+                    onTouchEnd={handleLongPressEnd}
+                    onTouchCancel={handleLongPressEnd}
+                    onMouseDown={(e) => handleLongPressStart(e, button.id, button)}
+                    onMouseUp={handleLongPressEnd}
+                    onMouseLeave={handleLongPressEnd}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      handleLongPressStart(e, button.id, button);
+                    }}
+                  >
+                    <IconComponent size={18} className="mb-1" />
+                    <span className="font-medium text-xs text-center leading-tight">{button.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Tabs */}
           <TabNavigation 
