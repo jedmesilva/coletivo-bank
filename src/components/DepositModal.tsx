@@ -576,7 +576,7 @@ const DepositModal: React.FC = () => {
                 ) : paymentMethod === 'pix' && !showPixCode ? (
                   <Button
                     onClick={generatePixCode}
-                    className="w-full h-12 text-base font-medium bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
                   >
                     <QrCode className="mr-3 h-5 w-5" />
                     Gerar código PIX
