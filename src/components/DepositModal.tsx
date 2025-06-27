@@ -169,10 +169,7 @@ const DepositModal: React.FC = () => {
 
   const selectedFundData = selectedFund ? funds.find(f => f.id === selectedFund) : null;
 
-  const getStepNumber = () => {
-    const steps = ['select-fund', 'amount', 'payment-method', 'description'];
-    return steps.indexOf(step) + 1;
-  };
+  
 
   return (
     <Sheet open={isDepositModalOpen} onOpenChange={setIsDepositModalOpen}>
@@ -199,9 +196,6 @@ const DepositModal: React.FC = () => {
                 <SheetTitle className="text-xl text-white font-semibold">
                   {stepTitles[step]}
                 </SheetTitle>
-                <div className="flex items-center mt-1">
-                  <span className="text-white/70 text-sm">Etapa {getStepNumber()} de 4</span>
-                </div>
               </div>
             </div>
             <div className="px-4">

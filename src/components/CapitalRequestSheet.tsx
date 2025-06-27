@@ -263,10 +263,7 @@ const CapitalRequestSheet = () => {
     }
   };
 
-  const getStepNumber = () => {
-    const steps = ['amount', 'payment-terms', 'purpose', 'summary'];
-    return steps.indexOf(step) + 1;
-  };
+  
 
   const selectedPaymentOptionData = paymentOptions.find(o => o.id === selectedPaymentOption);
   const calculations = calculateTotal();
@@ -300,9 +297,6 @@ const CapitalRequestSheet = () => {
                 <SheetTitle className="text-xl text-white font-semibold">
                   {stepTitles[step]}
                 </SheetTitle>
-                <div className="flex items-center mt-1">
-                  <span className="text-white/70 text-sm">Etapa {getStepNumber()} de 4</span>
-                </div>
               </div>
             </div>
             <div className="px-4">

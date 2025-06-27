@@ -142,10 +142,7 @@ const FundCreationModal: React.FC = () => {
     setFundData({...fundData, image});
   };
 
-  const getStepNumber = () => {
-    const steps = ['name', 'purpose', 'image', 'members'];
-    return steps.indexOf(step) + 1;
-  };
+  
 
   return (
     <Sheet open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
@@ -172,9 +169,6 @@ const FundCreationModal: React.FC = () => {
                 <SheetTitle className="text-xl text-white font-semibold">
                   {stepTitles[step]}
                 </SheetTitle>
-                <div className="flex items-center mt-1">
-                  <span className="text-white/70 text-sm">Etapa {getStepNumber()} de 4</span>
-                </div>
               </div>
             </div>
             <div className="px-4">
