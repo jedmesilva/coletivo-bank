@@ -3,26 +3,22 @@ name: Build Android APK
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
     
     steps:
-    - name: Checkout repository
+    - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
+    - name: Setup Node.js 
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
-        cache: 'npm'
+        node-version: '18'
 
-    - name: Setup Java JDK
+    - name: Setup Java
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
@@ -31,45 +27,38 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Create Expo App Structure
+    - name: Create Basic React Native App
       run: |
-        # Create minimal React Native structure
+        # Create simple package.json
         cat > package.json << 'EOF'
         {
           "name": "coletivo-bank",
           "version": "1.0.0",
-          "main": "App.js",
+          "main": "index.js",
           "scripts": {
-            "start": "expo start",
-            "android": "expo start --android"
+            "start": "expo start"
           },
           "dependencies": {
-            "expo": "~50.0.0",
+            "expo": "~49.0.0",
             "react": "18.2.0",
-            "react-native": "0.73.6",
-            "@react-navigation/native": "^6.1.9",
-            "@react-navigation/native-stack": "^6.9.17",
-            "@react-navigation/bottom-tabs": "^6.5.11",
-            "react-native-screens": "~3.29.0",
-            "react-native-safe-area-context": "4.8.2",
-            "react-native-gesture-handler": "~2.14.0",
-            "@expo/vector-icons": "^14.0.0",
-            "expo-constants": "~15.4.0",
-            "expo-status-bar": "~1.11.0"
+            "react-native": "0.72.6"
           },
           "devDependencies": {
             "@babel/core": "^7.20.0"
-          },
-          "private": true
+          }
         }
         EOF
 
-        # Convert App.tsx to App.js for simplicity
-        if [ -f "App.tsx" ]; then
-          cp App.tsx App.js
-        else
-          cat > App.js << 'EOF'
-        import { StatusBar } from 'expo-status-bar';
+        # Create simple index.js
+        cat > index.js << 'EOF'
+        import { registerRootComponent } from 'expo';
+        import App from './App';
+        registerRootComponent(App);
+        EOF
+
+        # Create simple App.js
+        cat > App.js << 'EOF'
+        import React from 'react';
         import { StyleSheet, Text, View } from 'react-native';
 
         export default function App() {
@@ -77,7 +66,6 @@ jobs:
             <View style={styles.container}>
               <Text style={styles.title}>Coletivo Bank</Text>
               <Text style={styles.subtitle}>Sistema de Crédito Coletivo</Text>
-              <StatusBar style="auto" />
             </View>
           );
         }
@@ -90,10 +78,10 @@ jobs:
             justifyContent: 'center',
           },
           title: {
-            fontSize: 32,
+            fontSize: 28,
             fontWeight: 'bold',
             color: '#10b981',
-            marginBottom: 10,
+            marginBottom: 8,
           },
           subtitle: {
             fontSize: 16,
@@ -101,116 +89,60 @@ jobs:
           },
         });
         EOF
-        fi
 
-    - name: Install Expo CLI
-      run: |
-        npm install -g @expo/cli@latest
-        expo --version
-
-    - name: Install Dependencies
-      run: |
-        npm install
-
-    - name: Create App Assets
-      run: |
-        mkdir -p assets
-        
-        # Create a simple 1024x1024 icon using Node.js (no ImageMagick dependency)
-        node -e "
-        const fs = require('fs');
-        
-        // Create a simple SVG icon
-        const svgIcon = \`<svg width='1024' height='1024' xmlns='http://www.w3.org/2000/svg'>
-          <rect width='1024' height='1024' fill='#10b981' rx='180'/>
-          <circle cx='512' cy='400' r='120' fill='white'/>
-          <rect x='350' y='580' width='324' height='100' rx='50' fill='white'/>
-          <text x='512' y='430' text-anchor='middle' fill='#10b981' font-family='Arial' font-size='60' font-weight='bold'>CB</text>
-        </svg>\`;
-        
-        fs.writeFileSync('assets/icon.svg', svgIcon);
-        console.log('Icon created successfully');
-        "
-        
-        # For PNG fallback, create a minimal 1x1 pixel image
-        echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/4+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==" | base64 -d > assets/icon.png
-        cp assets/icon.png assets/adaptive-icon.png
-        cp assets/icon.png assets/splash.png
-
-    - name: Create App Config
-      run: |
+        # Create app config
         cat > app.json << 'EOF'
         {
           "expo": {
             "name": "Coletivo Bank",
             "slug": "coletivo-bank",
             "version": "1.0.0",
-            "orientation": "portrait",
-            "icon": "./assets/icon.png",
-            "userInterfaceStyle": "light",
-            "splash": {
-              "image": "./assets/splash.png",
-              "resizeMode": "contain",
-              "backgroundColor": "#10b981"
-            },
-            "assetBundlePatterns": ["**/*"],
+            "platforms": ["android"],
             "android": {
-              "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#10b981"
-              },
-              "package": "com.coletivobank.app"
+              "package": "com.coletivobank.app",
+              "versionCode": 1
             }
           }
         }
         EOF
 
-    - name: Prebuild Android
+        # Create babel config
+        cat > babel.config.js << 'EOF'
+        module.exports = function(api) {
+          api.cache(true);
+          return {
+            presets: ['babel-preset-expo'],
+          };
+        };
+        EOF
+
+    - name: Install Dependencies
       run: |
-        npx expo prebuild --platform android --clear --no-install
-        
-    - name: Setup Android Environment
+        npm install -g expo-cli@6.3.10
+        npm ci
+
+    - name: Expo Prebuild
       run: |
-        echo "sdk.dir=$ANDROID_HOME" > android/local.properties
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x android/gradlew
-        
+        expo prebuild --platform android --clear
+
     - name: Build APK
-      working-directory: android
       run: |
-        ./gradlew assembleRelease --no-daemon --stacktrace
-        
+        cd android
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        chmod +x ./gradlew
+        ./gradlew assembleRelease
+
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: android-apk
+        name: coletivo-bank-apk
         path: android/app/build/outputs/apk/release/app-release.apk
-        retention-days: 30
 
     - name: Create Release
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: v1.0.${{ github.run_number }}
-        name: Coletivo Bank v1.0.${{ github.run_number }}
-        body: |
-          📱 **Coletivo Bank - React Native**
-          
-          **App Features:**
-          - Sistema de fundos colaborativos
-          - Interface React Native nativa
-          - Gerenciamento de crédito coletivo
-          
-          **Instalação:**
-          1. Baixe o APK abaixo
-          2. Habilite "Fontes desconhecidas" no Android
-          3. Instale o arquivo baixado
-          
-          **Build Info:**
-          - React Native 0.73
-          - Expo 50
-          - Android Target: API 34
+        tag_name: build-${{ github.run_number }}
+        name: Coletivo Bank Build ${{ github.run_number }}
+        body: APK Android gerado automaticamente
         files: android/app/build/outputs/apk/release/app-release.apk
-        draft: false
-        prerelease: false
