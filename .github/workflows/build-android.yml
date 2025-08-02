@@ -6,42 +6,46 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-apk:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup Node.js 
+    - name: Setup Expo
+      uses: expo/expo-github-action@v8
+      with:
+        expo-version: latest
+        token: ${{ secrets.EXPO_TOKEN }}
+
+    - name: Setup Node
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: 18.x
+        cache: npm
 
-    - name: Setup Java
-      uses: actions/setup-java@v4
+    - name: Setup EAS
+      uses: expo/expo-github-action@v8
       with:
-        distribution: 'temurin'
-        java-version: '17'
+        eas-version: latest
+        token: ${{ secrets.EXPO_TOKEN }}
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-
-    - name: Create Basic React Native App
+    - name: Create minimal Expo app
       run: |
-        # Create simple package.json
         cat > package.json << 'EOF'
         {
           "name": "coletivo-bank",
           "version": "1.0.0",
-          "main": "index.js",
+          "main": "node_modules/expo/AppEntry.js",
           "scripts": {
-            "start": "expo start"
+            "start": "expo start",
+            "android": "expo start --android"
           },
           "dependencies": {
             "expo": "~49.0.0",
             "react": "18.2.0",
-            "react-native": "0.72.6"
+            "react-native": "0.72.6",
+            "expo-status-bar": "~1.6.0"
           },
           "devDependencies": {
             "@babel/core": "^7.20.0"
@@ -49,16 +53,8 @@ jobs:
         }
         EOF
 
-        # Create simple index.js
-        cat > index.js << 'EOF'
-        import { registerRootComponent } from 'expo';
-        import App from './App';
-        registerRootComponent(App);
-        EOF
-
-        # Create simple App.js
         cat > App.js << 'EOF'
-        import React from 'react';
+        import { StatusBar } from 'expo-status-bar';
         import { StyleSheet, Text, View } from 'react-native';
 
         export default function App() {
@@ -66,6 +62,7 @@ jobs:
             <View style={styles.container}>
               <Text style={styles.title}>Coletivo Bank</Text>
               <Text style={styles.subtitle}>Sistema de Crédito Coletivo</Text>
+              <StatusBar style="auto" />
             </View>
           );
         }
@@ -78,10 +75,10 @@ jobs:
             justifyContent: 'center',
           },
           title: {
-            fontSize: 28,
+            fontSize: 32,
             fontWeight: 'bold',
             color: '#10b981',
-            marginBottom: 8,
+            marginBottom: 10,
           },
           subtitle: {
             fontSize: 16,
@@ -90,59 +87,73 @@ jobs:
         });
         EOF
 
-        # Create app config
         cat > app.json << 'EOF'
         {
           "expo": {
             "name": "Coletivo Bank",
             "slug": "coletivo-bank",
             "version": "1.0.0",
-            "platforms": ["android"],
+            "orientation": "portrait",
+            "userInterfaceStyle": "light",
+            "splash": {
+              "backgroundColor": "#10b981"
+            },
             "android": {
               "package": "com.coletivobank.app",
-              "versionCode": 1
+              "versionCode": 1,
+              "adaptiveIcon": {
+                "backgroundColor": "#10b981"
+              }
             }
           }
         }
         EOF
 
-        # Create babel config
-        cat > babel.config.js << 'EOF'
-        module.exports = function(api) {
-          api.cache(true);
-          return {
-            presets: ['babel-preset-expo'],
-          };
-        };
+        cat > eas.json << 'EOF'
+        {
+          "cli": {
+            "version": ">= 5.2.0"
+          },
+          "build": {
+            "development": {
+              "developmentClient": true,
+              "distribution": "internal"
+            },
+            "preview": {
+              "android": {
+                "buildType": "apk"
+              }
+            },
+            "production": {}
+          }
+        }
         EOF
 
-    - name: Install Dependencies
-      run: |
-        npm install -g expo-cli@6.3.10
-        npm ci
-
-    - name: Expo Prebuild
-      run: |
-        expo prebuild --platform android --clear
+    - name: Install dependencies
+      run: npm install
 
     - name: Build APK
-      run: |
-        cd android
-        echo "sdk.dir=$ANDROID_HOME" > local.properties
-        chmod +x ./gradlew
-        ./gradlew assembleRelease
+      run: eas build --platform android --profile preview --local --output coletivo-bank.apk --non-interactive
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: coletivo-bank-apk
-        path: android/app/build/outputs/apk/release/app-release.apk
+        path: coletivo-bank.apk
 
     - name: Create Release
       if: github.ref == 'refs/heads/main'
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: build-${{ github.run_number }}
-        name: Coletivo Bank Build ${{ github.run_number }}
-        body: APK Android gerado automaticamente
-        files: android/app/build/outputs/apk/release/app-release.apk
+        tag_name: v1.0.${{ github.run_number }}
+        name: Coletivo Bank v1.0.${{ github.run_number }}
+        body: |
+          📱 Coletivo Bank - APK Android
+          
+          Sistema de crédito coletivo em React Native.
+          
+          Instalação:
+          1. Baixe o APK
+          2. Habilite fontes desconhecidas
+          3. Instale no Android
+        files: coletivo-bank.apk
