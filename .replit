@@ -1,11 +1,13 @@
-modules = ["nodejs-20", "web"]
+modules = ["nodejs-20", "web", "bash", "python-3.11"]
 run = "npm run dev"
 
 [nix]
-channel = "stable-24_05"
+channel = "stable-25_05"
+packages = ["openssl", "postgresql"]
 
 [deployment]
-run = ["sh", "-c", "npm run dev"]
+run = ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+deploymentTarget = "autoscale"
 
 [[ports]]
 localPort = 5000
@@ -31,6 +33,10 @@ author = "agent"
 task = "workflow.run"
 args = "Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
 [[workflows.workflow]]
 name = "Server"
 author = "agent"
@@ -38,4 +44,13 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run dev -- --port 5000"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
 waitForPort = 5000

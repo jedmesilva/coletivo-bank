@@ -263,10 +263,7 @@ const CapitalRequestSheet = () => {
     }
   };
 
-  const getStepNumber = () => {
-    const steps = ['amount', 'payment-terms', 'purpose', 'summary'];
-    return steps.indexOf(step) + 1;
-  };
+  
 
   const selectedPaymentOptionData = paymentOptions.find(o => o.id === selectedPaymentOption);
   const calculations = calculateTotal();
@@ -300,9 +297,6 @@ const CapitalRequestSheet = () => {
                 <SheetTitle className="text-xl text-white font-semibold">
                   {stepTitles[step]}
                 </SheetTitle>
-                <div className="flex items-center mt-1">
-                  <span className="text-white/70 text-sm">Etapa {getStepNumber()} de 4</span>
-                </div>
               </div>
             </div>
             <div className="px-4">
@@ -313,17 +307,13 @@ const CapitalRequestSheet = () => {
             
             {/* Indicador de progresso */}
             <div className="px-4 mt-4">
-              <div className="flex space-x-1">
-                {['amount', 'payment-terms', 'purpose', 'summary'].map((stepName, index) => (
-                  <div 
-                    key={stepName}
-                    className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                      ['amount', 'payment-terms', 'purpose', 'summary'].indexOf(step) >= index 
-                        ? 'bg-white' 
-                        : 'bg-white/30'
-                    }`}
-                  />
-                ))}
+              <div className="w-full bg-white/30 rounded-full h-1 overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-blue-400 to-purple-400 rounded-full transition-all duration-500 ease-out"
+                  style={{ 
+                    width: `${(['amount', 'payment-terms', 'purpose', 'summary'].indexOf(step) + 1) * 25}%` 
+                  }}
+                />
               </div>
             </div>
           </header>
@@ -778,7 +768,7 @@ const CapitalRequestSheet = () => {
               <div className="space-y-3">
                 <Button 
                   onClick={handleSubmit}
-                  className="w-full h-12 text-base font-medium bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   Enviar solicitação
                 </Button>

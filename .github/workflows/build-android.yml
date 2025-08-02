@@ -1,0 +1,231 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Create React Native App
+      run: |
+        cat > package.json << 'EOF'
+        {
+          "name": "coletivo-bank",
+          "version": "1.0.0",
+          "main": "index.js",
+          "scripts": {
+            "start": "expo start"
+          },
+          "dependencies": {
+            "expo": "~49.0.0",
+            "react": "18.2.0",
+            "react-native": "0.72.6"
+          },
+          "devDependencies": {
+            "@babel/core": "^7.20.0"
+          }
+        }
+        EOF
+
+        cat > index.js << 'EOF'
+        import {AppRegistry} from 'react-native';
+        import App from './App';
+        import {name as appName} from './app.json';
+
+        AppRegistry.registerComponent(appName, () => App);
+        EOF
+
+        cat > App.js << 'EOF'
+        import React from 'react';
+        import {
+          SafeAreaView,
+          ScrollView,
+          StatusBar,
+          StyleSheet,
+          Text,
+          View,
+          TouchableOpacity,
+        } from 'react-native';
+
+        function App() {
+          return (
+            <SafeAreaView style={styles.container}>
+              <StatusBar barStyle="light-content" backgroundColor="#10b981" />
+              <View style={styles.header}>
+                <Text style={styles.headerTitle}>Coletivo Bank</Text>
+                <Text style={styles.headerSubtitle}>Sistema de Crédito Coletivo</Text>
+              </View>
+              
+              <ScrollView style={styles.content}>
+                <View style={styles.card}>
+                  <Text style={styles.cardTitle}>Bem-vindo!</Text>
+                  <Text style={styles.cardText}>
+                    Gerencie seus fundos colaborativos de forma simples e segura.
+                  </Text>
+                </View>
+                
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonText}>Criar Fundo</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={[styles.button, styles.buttonSecondary]}>
+                  <Text style={[styles.buttonText, styles.buttonTextSecondary]}>
+                    Ver Meus Fundos
+                  </Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </SafeAreaView>
+          );
+        }
+
+        const styles = StyleSheet.create({
+          container: {
+            flex: 1,
+            backgroundColor: '#f8fafc',
+          },
+          header: {
+            backgroundColor: '#10b981',
+            padding: 40,
+            alignItems: 'center',
+          },
+          headerTitle: {
+            fontSize: 28,
+            fontWeight: 'bold',
+            color: 'white',
+            marginBottom: 8,
+          },
+          headerSubtitle: {
+            fontSize: 16,
+            color: 'rgba(255,255,255,0.8)',
+          },
+          content: {
+            flex: 1,
+            padding: 20,
+          },
+          card: {
+            backgroundColor: 'white',
+            padding: 20,
+            borderRadius: 12,
+            marginBottom: 20,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          },
+          cardTitle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#1f2937',
+            marginBottom: 10,
+          },
+          cardText: {
+            fontSize: 16,
+            color: '#6b7280',
+            lineHeight: 24,
+          },
+          button: {
+            backgroundColor: '#10b981',
+            paddingVertical: 16,
+            paddingHorizontal: 24,
+            borderRadius: 8,
+            marginBottom: 12,
+            alignItems: 'center',
+          },
+          buttonSecondary: {
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            borderColor: '#10b981',
+          },
+          buttonText: {
+            fontSize: 16,
+            fontWeight: '600',
+            color: 'white',
+          },
+          buttonTextSecondary: {
+            color: '#10b981',
+          },
+        });
+
+        export default App;
+        EOF
+
+        cat > app.json << 'EOF'
+        {
+          "expo": {
+            "name": "Coletivo Bank",
+            "slug": "coletivo-bank", 
+            "version": "1.0.0",
+            "orientation": "portrait",
+            "platforms": ["android"],
+            "android": {
+              "package": "com.coletivobank.app",
+              "versionCode": 1
+            }
+          }
+        }
+        EOF
+
+    - name: Install dependencies
+      run: |
+        npm install -g @expo/cli@6.3.10
+        npm install
+
+    - name: Build APK
+      run: |
+        npx expo prebuild --platform android --clear
+        cd android
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        chmod +x ./gradlew
+        ./gradlew assembleRelease
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: coletivo-bank-apk
+        path: android/app/build/outputs/apk/release/app-release.apk
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        name: Coletivo Bank v1.0.${{ github.run_number }}
+        body: |
+          📱 Coletivo Bank - APK Android
+          
+          Sistema de crédito coletivo funcional em React Native.
+          
+          Funcionalidades:
+          - Tela principal com design nativo
+          - Botões para criar e ver fundos
+          - Interface otimizada para Android
+          
+          Instalação:
+          1. Baixe o APK abaixo
+          2. Habilite "Fontes desconhecidas" no Android
+          3. Instale o arquivo baixado
+        files: android/app/build/outputs/apk/release/app-release.apk

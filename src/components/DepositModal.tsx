@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
-import { ArrowLeft, ChevronRight, Copy, QrCode } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Copy, QrCode, CreditCard, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
-type DepositStep = 'select-fund' | 'amount' | 'description';
+type DepositStep = 'select-fund' | 'amount' | 'payment-method' | 'description';
 
 const DepositModal: React.FC = () => {
   const { 
@@ -21,6 +21,7 @@ const DepositModal: React.FC = () => {
   const [step, setStep] = useState<DepositStep>('select-fund');
   const [selectedFund, setSelectedFund] = useState<string | null>(selectedFundIdForDeposit);
   const [amount, setAmount] = useState<string>('');
+  const [paymentMethod, setPaymentMethod] = useState<'pix' | 'balance' | null>(null);
   const [description, setDescription] = useState<string>('');
   const [pixCode, setPixCode] = useState<string>('');
   const [showPixCode, setShowPixCode] = useState<boolean>(false);
@@ -28,13 +29,15 @@ const DepositModal: React.FC = () => {
   const stepTitles = {
     'select-fund': 'Escolha um fundo',
     'amount': 'Valor do aporte',
+    'payment-method': 'Forma de pagamento',
     'description': 'Finalizar aporte'
   };
 
   const stepDescriptions = {
     'select-fund': 'Selecione o fundo para realizar o aporte',
     'amount': 'Informe o valor que deseja aportar',
-    'description': 'Adicione uma descrição e gere o código PIX'
+    'payment-method': 'Escolha como deseja realizar o aporte',
+    'description': 'Adicione uma descrição e confirme o aporte'
   };
 
   useEffect(() => {
@@ -52,6 +55,7 @@ const DepositModal: React.FC = () => {
     setStep('select-fund');
     setSelectedFund(null);
     setAmount('');
+    setPaymentMethod(null);
     setDescription('');
     setPixCode('');
     setShowPixCode(false);
@@ -75,6 +79,17 @@ const DepositModal: React.FC = () => {
         return;
       }
       
+      setStep('payment-method');
+    } else if (step === 'payment-method') {
+      if (!paymentMethod) {
+        toast({
+          title: "Forma de pagamento não selecionada",
+          description: "Por favor, escolha como deseja realizar o aporte.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
       setStep('description');
     }
   };
@@ -82,8 +97,10 @@ const DepositModal: React.FC = () => {
   const handlePreviousStep = () => {
     if (step === 'amount') {
       setStep('select-fund');
-    } else if (step === 'description') {
+    } else if (step === 'payment-method') {
       setStep('amount');
+    } else if (step === 'description') {
+      setStep('payment-method');
     }
   };
 
@@ -121,16 +138,21 @@ const DepositModal: React.FC = () => {
   };
 
   const confirmPayment = () => {
-    if (!selectedFund) return;
+    if (!selectedFund || !paymentMethod) return;
 
     const amountValue = parseFloat(amount.replace(',', '.'));
-    const finalDescription = description.trim() || 'Aporte via PIX';
+    const paymentMethodText = paymentMethod === 'pix' ? 'PIX' : 'saldo livre';
+    const finalDescription = description.trim() || `Aporte via ${paymentMethodText}`;
 
     depositToFund(selectedFund, amountValue, finalDescription);
 
+    const toastMessage = paymentMethod === 'balance' 
+      ? 'O valor foi debitado do seu saldo e creditado no fundo instantaneamente.'
+      : 'Após a confirmação do PIX, o valor será creditado no fundo.';
+
     toast({
       title: "Aporte registrado!",
-      description: `Após a confirmação do PIX, o valor será creditado no fundo.`
+      description: toastMessage
     });
 
     handleClose();
@@ -147,10 +169,7 @@ const DepositModal: React.FC = () => {
 
   const selectedFundData = selectedFund ? funds.find(f => f.id === selectedFund) : null;
 
-  const getStepNumber = () => {
-    const steps = ['select-fund', 'amount', 'description'];
-    return steps.indexOf(step) + 1;
-  };
+  
 
   return (
     <Sheet open={isDepositModalOpen} onOpenChange={setIsDepositModalOpen}>
@@ -177,9 +196,6 @@ const DepositModal: React.FC = () => {
                 <SheetTitle className="text-xl text-white font-semibold">
                   {stepTitles[step]}
                 </SheetTitle>
-                <div className="flex items-center mt-1">
-                  <span className="text-white/70 text-sm">Etapa {getStepNumber()} de 3</span>
-                </div>
               </div>
             </div>
             <div className="px-4">
@@ -190,17 +206,13 @@ const DepositModal: React.FC = () => {
             
             {/* Indicador de progresso */}
             <div className="px-4 mt-4">
-              <div className="flex space-x-1">
-                {['select-fund', 'amount', 'description'].map((stepName, index) => (
-                  <div 
-                    key={stepName}
-                    className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                      ['select-fund', 'amount', 'description'].indexOf(step) >= index 
-                        ? 'bg-white' 
-                        : 'bg-white/30'
-                    }`}
-                  />
-                ))}
+              <div className="w-full bg-white/30 rounded-full h-1 overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-blue-400 to-purple-400 rounded-full transition-all duration-500 ease-out"
+                  style={{ 
+                    width: `${(['select-fund', 'amount', 'payment-method', 'description'].indexOf(step) + 1) * 25}%` 
+                  }}
+                />
               </div>
             </div>
           </header>
@@ -301,6 +313,126 @@ const DepositModal: React.FC = () => {
               </div>
             )}
 
+            {step === 'payment-method' && (
+              <div className="space-y-6">
+                {selectedFundData && (
+                  <div className="bg-primary/5 p-4 rounded-xl border border-primary/20">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-gray-500 uppercase font-medium tracking-wide">Fundo selecionado</p>
+                        <p className="font-bold text-primary text-lg">{selectedFundData.name}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-gray-500">Valor</p>
+                        <p className="text-2xl font-bold text-green-600">{formatCurrency(amount)}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-semibold text-gray-900 block mb-4">
+                      Como você quer realizar o aporte?
+                    </label>
+                    
+                    <div className="space-y-3">
+                      {/* Opção PIX */}
+                      <div 
+                        className={`p-4 border rounded-xl cursor-pointer transition-all duration-200 ${
+                          paymentMethod === 'pix' 
+                            ? 'border-primary bg-primary/5 shadow-md' 
+                            : 'border-gray-200 hover:border-primary/30 hover:bg-primary/5'
+                        }`}
+                        onClick={() => setPaymentMethod('pix')}
+                      >
+                        <div className="flex items-center">
+                          <div className={`p-2 rounded-lg mr-3 ${
+                            paymentMethod === 'pix' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            <QrCode className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-gray-900">Gerar código PIX</h3>
+                            <p className="text-sm text-gray-600">
+                              Transfira direto do seu banco usando PIX
+                            </p>
+                          </div>
+                          <div className={`w-5 h-5 rounded-full border-2 ${
+                            paymentMethod === 'pix' 
+                              ? 'border-primary bg-primary' 
+                              : 'border-gray-300'
+                          }`}>
+                            {paymentMethod === 'pix' && (
+                              <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Opção Saldo Livre */}
+                      <div 
+                        className={`p-4 border rounded-xl cursor-pointer transition-all duration-200 ${
+                          paymentMethod === 'balance' 
+                            ? 'border-primary bg-primary/5 shadow-md' 
+                            : 'border-gray-200 hover:border-primary/30 hover:bg-primary/5'
+                        }`}
+                        onClick={() => setPaymentMethod('balance')}
+                      >
+                        <div className="flex items-center">
+                          <div className={`p-2 rounded-lg mr-3 ${
+                            paymentMethod === 'balance' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            <Wallet className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-gray-900">Usar saldo livre</h3>
+                            <p className="text-sm text-gray-600">
+                              Use o saldo disponível da sua conta
+                            </p>
+                            <p className="text-xs text-green-600 font-medium mt-1">
+                              Saldo disponível: R$ 1.250,00
+                            </p>
+                          </div>
+                          <div className={`w-5 h-5 rounded-full border-2 ${
+                            paymentMethod === 'balance' 
+                              ? 'border-primary bg-primary' 
+                              : 'border-gray-300'
+                          }`}>
+                            {paymentMethod === 'balance' && (
+                              <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {paymentMethod === 'balance' && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                      <h4 className="font-medium text-blue-800 mb-2">Informações importantes:</h4>
+                      <ul className="text-sm text-blue-700 space-y-1">
+                        <li>• O valor será debitado instantaneamente do seu saldo</li>
+                        <li>• Não há taxas para aportes usando saldo livre</li>
+                        <li>• O aporte será creditado imediatamente no fundo</li>
+                      </ul>
+                    </div>
+                  )}
+
+                  {paymentMethod === 'pix' && (
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                      <h4 className="font-medium text-green-800 mb-2">Próximos passos:</h4>
+                      <ul className="text-sm text-green-700 space-y-1">
+                        <li>• Iremos gerar um código PIX para você</li>
+                        <li>• Use o código no seu app de banco</li>
+                        <li>• O aporte será creditado após confirmação do pagamento</li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {step === 'description' && (
               <div className="space-y-6">
                 {selectedFundData && (
@@ -334,17 +466,9 @@ const DepositModal: React.FC = () => {
                     </p>
                   </div>
 
-                  {!showPixCode ? (
-                    <div className="text-center py-6">
-                      <Button
-                        onClick={generatePixCode}
-                        className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
-                      >
-                        <QrCode className="mr-3 h-6 w-6" />
-                        Gerar código PIX
-                      </Button>
-                    </div>
-                  ) : (
+
+
+                  {paymentMethod === 'pix' && showPixCode && (
                     <div className="space-y-4">
                       <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                         <div className="flex items-center justify-between mb-3">
@@ -377,13 +501,6 @@ const DepositModal: React.FC = () => {
                           <li>5. Clique em "Confirmar pagamento" abaixo após realizar o PIX</li>
                         </ol>
                       </div>
-
-                      <Button
-                        onClick={confirmPayment}
-                        className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
-                      >
-                        Confirmar pagamento
-                      </Button>
                     </div>
                   )}
                 </div>
@@ -413,6 +530,58 @@ const DepositModal: React.FC = () => {
                   <span>Continuar</span>
                   <ChevronRight className="ml-2 h-5 w-5" />
                 </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full h-12 rounded-2xl border-gray-300 hover:bg-gray-50 transition-all duration-200" 
+                  onClick={handleClose}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            ) : step === 'payment-method' ? (
+              <div className="space-y-3">
+                <Button 
+                  onClick={handleNextStep}
+                  disabled={!paymentMethod}
+                  className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+                >
+                  <span>Continuar</span>
+                  <ChevronRight className="ml-2 h-5 w-5" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full h-12 rounded-2xl border-gray-300 hover:bg-gray-50 transition-all duration-200" 
+                  onClick={handleClose}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            ) : step === 'description' ? (
+              <div className="space-y-3">
+                {paymentMethod === 'balance' ? (
+                  <Button
+                    onClick={confirmPayment}
+                    className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+                  >
+                    <Wallet className="mr-3 h-5 w-5" />
+                    Confirmar aporte com saldo
+                  </Button>
+                ) : paymentMethod === 'pix' && !showPixCode ? (
+                  <Button
+                    onClick={generatePixCode}
+                    className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+                  >
+                    <QrCode className="mr-3 h-5 w-5" />
+                    Gerar código PIX
+                  </Button>
+                ) : paymentMethod === 'pix' && showPixCode ? (
+                  <Button
+                    onClick={confirmPayment}
+                    className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+                  >
+                    Confirmar pagamento
+                  </Button>
+                ) : null}
                 <Button 
                   variant="outline" 
                   className="w-full h-12 rounded-2xl border-gray-300 hover:bg-gray-50 transition-all duration-200" 

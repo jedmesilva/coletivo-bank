@@ -3,13 +3,17 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/context/AppContext";
 import Index from "./pages/Index";
 import AccountPage from "./pages/AccountPage";
+import AuthPage from "./pages/AuthPage";
 import FundDetail from "./components/FundDetail";
 import FundCreationModal from "./components/FundCreationModal";
 import DepositModal from "./components/DepositModal";
 import CapitalRequestSheet from "./components/CapitalRequestSheet";
 import DebtPaymentSheet from "./components/DebtPaymentSheet";
+import PersonalDataManager from "./components/PersonalDataManager";
 import { Toaster } from "@/components/ui/sonner";
 import BottomNavigation from "./components/BottomNavigation";
+import SidebarMenu from "./components/MainMenu";
+import SupportPage from '@/pages/SupportPage';
 
 
 const queryClient = new QueryClient();
@@ -20,18 +24,28 @@ const App = () => {
       <AppProvider>
         <BrowserRouter>
           <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
-            <main className="flex-1 w-full max-w-[1200px] mx-auto">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/account" element={<AccountPage />} />
-                <Route path="/fund/:fundId" element={<FundDetail />} />
-              </Routes>
-            </main>
-            <BottomNavigation />
+            <Routes>
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/*" element={
+                <>
+                  <main className="flex-1 w-full max-w-[1200px] mx-auto">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/account" element={<AccountPage />} />
+                      <Route path="/fund/:fundId" element={<FundDetail />} />
+                      <Route path="/support" element={<SupportPage />} />
+                    </Routes>
+                  </main>
+                  <BottomNavigation />
+                </>
+              } />
+            </Routes>
             <FundCreationModal />
             <DepositModal />
             <CapitalRequestSheet />
             <DebtPaymentSheet />
+            <PersonalDataManager />
+            <SidebarMenu />
             <Toaster />
           </div>
         </BrowserRouter>

@@ -65,7 +65,7 @@ const FundCard: React.FC<FundCardProps> = ({ fund, onClick }) => {
             <div className="flex items-center gap-1 text-gray-500">
               <PieChart size={12} />
               <span className="text-xs">
-                {hideValues ? "***%" : `${fundPercentage.toFixed(1)}%`} do total
+                {hideValues ? "***%" : `${fundPercentage.toFixed(1)}%`} da carteira
               </span>
             </div>
             <span className="text-gray-500 text-xs">Desde {fund.date}</span>

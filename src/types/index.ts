@@ -46,6 +46,10 @@ export interface Fund {
   image: string;
   history: HistoryItem[];
   approvals: ApprovalItem[];
+  contributionRate?: number; // Taxa de contribuição (0-1000%)
+  interestRate?: number; // Taxa de juros anual (0-12%)
+  approvalType?: 'quorum' | 'unanimous'; // Tipo de aprovação
+  minimumQuorum?: number; // Percentual mínimo para quórum (1-100%)
 }
 
 export type Screen = 'home' | 'fund-detail' | 'account';

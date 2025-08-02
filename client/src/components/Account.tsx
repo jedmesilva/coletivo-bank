@@ -1,9 +1,7 @@
-
 import React from 'react';
-import { CreditCard, Check, X } from 'lucide-react';
-import { useApp } from '@/context/AppContext';
 import SummaryCard from './SummaryCard';
 import TabNavigation from './TabNavigation';
+import { useApp } from '@/context/AppContext';
 import { formatCurrency } from '@/utils/formatCurrency';
 
 const Account: React.FC = () => {
@@ -14,7 +12,8 @@ const Account: React.FC = () => {
     accountTab, 
     setAccountTab,
     hideValues,
-    getTotalUserDeposits
+    getTotalUserDeposits,
+    getUserAppliedBalance
   } = useApp();
 
   const tabs = [
@@ -35,6 +34,8 @@ const Account: React.FC = () => {
         balance={getTotalUserDeposits()}
         leftLabel="Fundos ativos"
         leftValue={2}
+        centerLabel="Saldo aplicado"
+        centerValue={formatCurrency(getUserAppliedBalance(), hideValues)}
         rightLabel="Dívidas ativas"
         rightValue={userDebts.length}
       />

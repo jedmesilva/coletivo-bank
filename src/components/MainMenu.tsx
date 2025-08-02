@@ -1,14 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, Home, CreditCard, PieChart, Settings, HelpCircle, LogOut, User, Wallet, Bell } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import GeometricStatusBadge from '@/components/GeometricStatusBadge';
+import NotificationPanel from '@/components/NotificationPanel';
 
-const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMenu: () => void }) => {
-  const { currentUser } = useApp();
+const SidebarMenu = () => {
+  const { currentUser, isSidebarMenuOpen, setIsSidebarMenuOpen } = useApp();
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   // Prevenir scroll do body quando o menu estiver aberto
   useEffect(() => {
-    if (isMenuOpen) {
+    if (isSidebarMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -18,30 +24,76 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isMenuOpen]);
+  }, [isSidebarMenuOpen]);
+  
+  const handleNotificationClick = () => {
+    setIsNotificationPanelOpen(true);
+    setIsSidebarMenuOpen(false); // Fechar o menu lateral
+  };
+
+  const handleNavigation = (path: string) => {
+    setIsSidebarMenuOpen(false);
+    setTimeout(() => {
+      navigate(path);
+    }, 300);
+  };
+
   const menuItems = [
-    { icon: Home, label: 'Início', active: true },
-    { icon: User, label: 'Conta' },
-    { icon: Bell, label: 'Notificações', badge: '3' },
-    { icon: Settings, label: 'Configurações' },
-    { icon: HelpCircle, label: 'Suporte' },
+    { 
+      icon: Home, 
+      label: 'Início', 
+      path: '/',
+      onClick: () => handleNavigation('/')
+    },
+    { 
+      icon: User, 
+      label: 'Dados pessoais', 
+      path: null,
+      onClick: () => {
+        setIsSidebarMenuOpen(false);
+        // Abrir dados pessoais
+        setTimeout(() => {
+          const event = new CustomEvent('openPersonalData');
+          window.dispatchEvent(event);
+        }, 300);
+      }
+    },
+    { 
+      icon: Bell, 
+      label: 'Notificações', 
+      path: null,
+      badge: '3', 
+      onClick: handleNotificationClick 
+    },
+    { 
+      icon: Settings, 
+      label: 'Configurações', 
+      path: null,
+      onClick: () => {} 
+    },
+    { 
+      icon: HelpCircle, 
+      label: 'Ajuda e suporte', 
+      path: '/support',
+      onClick: () => handleNavigation('/support')
+    },
   ];
 
   return (
     <div className={`fixed inset-0 z-[99999] transition-all duration-300 ease-in-out ${
-      isMenuOpen ? 'visible' : 'invisible'
+      isSidebarMenuOpen ? 'visible' : 'invisible'
     }`}>
       {/* Overlay */}
       <div 
         className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-          isMenuOpen ? 'opacity-100' : 'opacity-0'
+          isSidebarMenuOpen ? 'opacity-100' : 'opacity-0'
         }`}
-        onClick={toggleMenu}
+        onClick={() => setIsSidebarMenuOpen(false)}
       />
       
       {/* Menu Panel */}
       <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${
-        isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        isSidebarMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         {/* Header do Menu */}
         <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-6 flex-shrink-0">
@@ -68,17 +120,20 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
           <nav className="space-y-2">
             {menuItems.map((item, index) => {
               const IconComponent = item.icon;
+              const isActive = item.path === location.pathname;
+              
               return (
                 <button
                   key={index}
+                  onClick={item.onClick}
                   className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group ${
-                    item.active 
+                    isActive 
                       ? 'bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 text-blue-700' 
                       : 'hover:bg-gray-50 text-gray-700 hover:text-gray-900'
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${
-                    item.active 
+                    isActive 
                       ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg' 
                       : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200 group-hover:scale-105'
                   }`}>
@@ -87,7 +142,7 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
                   <span className="font-medium flex-1 text-left">{item.label}</span>
                   {item.badge && (
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      item.active 
+                      isActive 
                         ? 'bg-blue-200 text-blue-700' 
                         : 'bg-gray-200 text-gray-600'
                     }`}>
@@ -110,6 +165,12 @@ const SidebarMenu = ({ isMenuOpen, toggleMenu }: { isMenuOpen: boolean; toggleMe
           </div>
         </div>
       </div>
+
+      {/* Notification Panel */}
+      <NotificationPanel 
+        isOpen={isNotificationPanelOpen}
+        onClose={() => setIsNotificationPanelOpen(false)}
+      />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreditCard, Check, X, User, ArrowUp, ArrowDown, Send } from 'lucide-react';
+import { CreditCard, Check, X, User, ArrowUp, ArrowDown, Send, Copy, Pin, QrCode } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useApp } from '@/context/AppContext';
 import SummaryCard from '@/components/SummaryCard';
@@ -7,11 +7,12 @@ import TabNavigation from '@/components/TabNavigation';
 import { formatCurrency } from '@/utils/formatCurrency';
 import TopNavbar from '@/components/TopNavbar';
 import HeaderSection from '@/components/HeaderSection';
-import SidebarMenu from '@/components/MainMenu';
+
 import GeometricStatusBadge from '@/components/GeometricStatusBadge';
 import MovementDetailSheet from '@/components/MovementDetailSheet';
 import DebtDetailSheet from '@/components/DebtDetailSheet';
 import ApprovalDetailSheet from '@/components/ApprovalDetailSheet';
+import AppliedBalanceCard from '@/components/AppliedBalanceCard';
 
 const AccountPage: React.FC = () => {
   const { 
@@ -22,10 +23,14 @@ const AccountPage: React.FC = () => {
     accountTab, 
     setAccountTab,
     hideValues,
-    getTotalUserDeposits,
+    getUserFreeBalance,
+    funds,
     setSelectedDebtId,
     setIsDebtPaymentOpen,
     handleDebtPaymentClick,
+    handleDepositClick,
+    // Sidebar menu
+    setIsSidebarMenuOpen,
     // Detail sheets
     isMovementDetailOpen,
     setIsMovementDetailOpen,
@@ -43,6 +48,111 @@ const AccountPage: React.FC = () => {
 
   // Estado para controlar a abertura/fechamento do menu lateral
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Estado para controlar a cópia da chave
+  const [isCopied, setIsCopied] = useState(false);
+  
+  // Estados para o menu contextual
+  const [contextMenu, setContextMenu] = useState<{
+    show: boolean;
+    x: number;
+    y: number;
+    buttonId: string;
+    buttonData: any;
+  }>({
+    show: false,
+    x: 0,
+    y: 0,
+    buttonId: '',
+    buttonData: null
+  });
+  
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+  const [pressedButton, setPressedButton] = useState<string | null>(null);
+
+  // Gerar a chave única do usuário
+  const userKey = `${currentUser.name.toLowerCase().replace(/\s+/g, '')}@ColetivoBank.app`;
+
+  // Função para copiar a chave
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(userKey);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error('Erro ao copiar:', err);
+    }
+  };
+
+  // Funções para o menu contextual
+  const handleLongPressStart = (e: React.TouchEvent | React.MouseEvent, buttonId: string, buttonData: any) => {
+    e.preventDefault();
+    
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    
+    setPressedButton(buttonId);
+    
+    const timer = setTimeout(() => {
+      setContextMenu({
+        show: true,
+        x: clientX,
+        y: clientY - 80, // Posicionar acima do dedo
+        buttonId,
+        buttonData
+      });
+    }, 500); // 500ms para ativar o long press
+    
+    setLongPressTimer(timer);
+  };
+
+  const handleLongPressEnd = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+    setPressedButton(null);
+  };
+
+  const handleContextMenuClose = () => {
+    setContextMenu(prev => ({ ...prev, show: false }));
+    handleLongPressEnd();
+  };
+
+  const handlePinButton = (buttonData: any) => {
+    // Aqui você pode implementar a lógica para fixar o botão na navegação inferior
+    console.log('Fixar botão:', buttonData);
+    // TODO: Implementar integração com BottomNavigation
+    handleContextMenuClose();
+  };
+
+  // Dados dos botões
+  const actionButtons = [
+    {
+      id: 'aporte',
+      label: 'Fazer Aporte',
+      icon: ArrowUp,
+      onClick: () => handleDepositClick()
+    },
+    {
+      id: 'receber',
+      label: 'Receber Pix',
+      icon: ArrowDown,
+      onClick: () => console.log('Receber Pix clicado')
+    },
+    {
+      id: 'enviar',
+      label: 'Enviar Pix',
+      icon: Send,
+      onClick: () => console.log('Enviar Pix clicado')
+    },
+    {
+      id: 'qrcode',
+      label: 'QR Code Pix',
+      icon: QrCode,
+      onClick: () => console.log('QR Code Pix clicado')
+    }
+  ];
 
   const tabs = [
     { id: 'approvals', label: 'Aprovações' },
@@ -55,16 +165,17 @@ const AccountPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans w-full overflow-x-hidden">
-      {/* Top Navbar */}
-      <TopNavbar 
-        onMenuClick={() => setIsMenuOpen(true)}
-        onNotificationClick={() => console.log('Notificações')}
-        notificationCount={3}
-      />
+    <div className="fixed inset-0 bg-gray-50 font-sans overflow-hidden">
+      <div className="h-full overflow-y-auto">
+        {/* Top Navbar */}
+        <TopNavbar 
+          onMenuClick={() => setIsSidebarMenuOpen(true)}
+          onNotificationClick={() => console.log('Notificações')}
+          notificationCount={3}
+        />
 
-      {/* Header Section com cor de destaque */}
-      <HeaderSection className="pt-20">
+        {/* Header Section com cor de destaque */}
+        <HeaderSection className="pt-20">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -80,53 +191,94 @@ const AccountPage: React.FC = () => {
             <GeometricStatusBadge level={currentUser.accountLevel} />
           </div>
         </div>
-        
-        {/* Account Summary Card dentro do header */}
-        <SummaryCard 
-          title="Meus Aportes" 
-          balance={getTotalUserDeposits()}
-          leftLabel="Fundos ativos"
-          leftValue={2}
-          rightLabel="Dívidas ativas"
-          rightValue={userDebts.length}
-        />
+
+        {/* Chave ColetivoBank */}
+        <div className="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 shadow-lg">
+          <h4 className="text-sm font-semibold text-white mb-3">Sua chave ColetivoBank</h4>
+          <div className="flex items-center justify-between bg-white/10 rounded-xl p-3 border border-white/20">
+            <span className="text-white text-sm font-mono break-all flex-1 mr-3">
+              {userKey}
+            </span>
+            <button
+              onClick={copyToClipboard}
+              className="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-all duration-200 flex-shrink-0"
+              title="Copiar chave"
+            >
+              {isCopied ? (
+                <Check size={16} className="text-green-300" />
+              ) : (
+                <Copy size={16} />
+              )}
+            </button>
+          </div>
+          {isCopied && (
+            <p className="text-green-300 text-xs mt-2 text-center">
+              Chave copiada com sucesso!
+            </p>
+          )}
+        </div>
+
+
       </HeaderSection>
+
+      {/* Menu Contextual Flutuante */}
+      {contextMenu.show && (
+        <>
+          {/* Overlay para fechar o menu */}
+          <div 
+            className="fixed inset-0 z-40"
+            onTouchStart={handleContextMenuClose}
+            onMouseDown={handleContextMenuClose}
+          />
+          
+          {/* Menu contextual */}
+          <div 
+            className="fixed z-50 bg-white rounded-2xl shadow-2xl border border-gray-200 p-2 min-w-[120px]"
+            style={{ 
+              left: Math.max(10, Math.min(contextMenu.x - 60, window.innerWidth - 130)),
+              top: Math.max(10, contextMenu.y),
+              transform: 'translateY(-100%)'
+            }}
+          >
+            <button
+              className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                handlePinButton(contextMenu.buttonData);
+              }}
+              onMouseUp={(e) => {
+                e.stopPropagation();
+                handlePinButton(contextMenu.buttonData);
+              }}
+            >
+              <Pin size={16} className="text-blue-600" />
+              <span className="text-sm font-medium">Fixar</span>
+            </button>
+          </div>
+        </>
+      )}
 
       {/* Seção de Conteúdo - Fundo Branco */}
       <div className="bg-white min-h-screen">
         <div className="max-w-md mx-auto px-4 pt-8 pb-28">
-          
-          {/* Menu Lateral */}
-          <SidebarMenu 
-            isMenuOpen={isMenuOpen} 
-            toggleMenu={() => setIsMenuOpen(false)} 
-          />
 
-          {/* Action Buttons */}
-          <div className="flex justify-between mb-6">
-            <button 
-              className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 mr-2 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-              onClick={() => console.log('Pagar clicado')}
-            >
-              <CreditCard size={20} className="mb-1" />
-              <span className="font-medium">Pagar</span>
-            </button>
-            <button 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-xl flex flex-col items-center flex-1 mx-2 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
-              onClick={() => console.log('Enviar clicado')}
-            >
-              <Send size={20} className="mb-1" />
-              <span className="font-medium">Enviar</span>
-            </button>
-            <button 
-              className="bg-white text-gray-900 border border-gray-300 px-4 py-3 rounded-xl flex flex-col items-center flex-1 ml-2 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-              onClick={() => console.log('Receber clicado')}
-            >
-              <ArrowDown size={20} className="mb-1" />
-              <span className="font-medium">Receber</span>
-            </button>
+          {/* Botões de Ação - Layout flexível */}
+          <div className="mb-6 flex flex-wrap gap-3">
+            {actionButtons.map((button) => {
+              const IconComponent = button.icon;
+              return (
+                <button 
+                  key={button.id}
+                  className="bg-white border border-gray-200 text-gray-700 px-3 py-3 rounded-xl flex flex-col items-center shadow-sm transition-all duration-200 flex-1 min-h-[80px] select-none hover:shadow-md hover:border-gray-300"
+                  onClick={button.onClick}
+                >
+                  <IconComponent size={18} className="mb-1" />
+                  <span className="font-medium text-xs text-center leading-tight">{button.label}</span>
+                </button>
+              );
+            })}
           </div>
-          
+
           {/* Tabs */}
           <TabNavigation 
             tabs={tabs}
@@ -264,24 +416,25 @@ const AccountPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Detail Sheets */}
-      <MovementDetailSheet
-        isOpen={isMovementDetailOpen}
-        onClose={() => setIsMovementDetailOpen(false)}
-        movement={selectedMovement}
-      />
+        {/* Detail Sheets */}
+        <MovementDetailSheet
+          isOpen={isMovementDetailOpen}
+          onClose={() => setIsMovementDetailOpen(false)}
+          movement={selectedMovement}
+        />
 
-      <DebtDetailSheet
-        isOpen={isDebtDetailOpen}
-        onClose={() => setIsDebtDetailOpen(false)}
-        debt={selectedDebtForDetail}
-      />
+        <DebtDetailSheet
+          isOpen={isDebtDetailOpen}
+          onClose={() => setIsDebtDetailOpen(false)}
+          debt={selectedDebtForDetail}
+        />
 
-      <ApprovalDetailSheet
-        isOpen={isApprovalDetailOpen}
-        onClose={() => setIsApprovalDetailOpen(false)}
-        approval={selectedApproval}
-      />
+        <ApprovalDetailSheet
+          isOpen={isApprovalDetailOpen}
+          onClose={() => setIsApprovalDetailOpen(false)}
+          approval={selectedApproval}
+        />
+      </div>
     </div>
   );
 };

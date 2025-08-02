@@ -5,6 +5,10 @@ import { Fund, Screen, FundTab, AccountTab, DebtItem, HistoryItem, ApprovalItem 
 const currentUser = {
   id: '1',
   name: 'Lucas',
+  email: 'lucas@example.com',
+  phone: '(11) 99999-9999',
+  cpf: '123.456.789-00',
+  address: 'Rua das Flores, 123, Centro, São Paulo - SP',
   profileImage: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=200&h=200',
   accountLevel: 'gold' as 'bronze' | 'silver' | 'gold' | 'platinum'
 };
@@ -130,6 +134,8 @@ interface AppContextType {
   getTotalBalance: () => number;
   getTotalMembers: () => number;
   getTotalUserDeposits: () => number;
+  getUserFreeBalance: () => number;
+  getUserAppliedBalance: () => number;
   getFundPercentageOfTotal: (fundBalance: number) => number;
   getFundDebtCount: (fundId: string) => number;
 
@@ -178,6 +184,15 @@ interface AppContextType {
   handleMovementClick: (movement: UserHistoryItem) => void;
   handleDebtDetailClick: (debt: DebtItem) => void;
   handleApprovalClick: (approval: UserApprovalItem) => void;
+
+  // Notification panel features
+  isNotificationPanelOpen: boolean;
+  setIsNotificationPanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleNotificationClick: () => void;
+
+  // Sidebar menu features
+  isSidebarMenuOpen: boolean;
+  setIsSidebarMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -188,8 +203,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [hideValues, setHideValues] = useState<boolean>(false);
   const [activeScreen, setActiveScreen] = useState<Screen>('home');
   const [selectedFund, setSelectedFund] = useState<Fund | null>(null);
-  const [fundTab, setFundTab] = useState<FundTab>('history');
-  const [accountTab, setAccountTab] = useState<AccountTab>('debts');
+  const [fundTab, setFundTab] = useState<FundTab>('approvals');
+  const [accountTab, setAccountTab] = useState<AccountTab>('approvals');
 
   // Fund creation and deposit features
   const [isFundCreationOpen, setIsFundCreationOpen] = useState<boolean>(false);
@@ -213,11 +228,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [isApprovalDetailOpen, setIsApprovalDetailOpen] = useState<boolean>(false);
   const [selectedApproval, setSelectedApproval] = useState<UserApprovalItem | null>(null);
 
+  // Notification panel state
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState<boolean>(false);
+
+  // Sidebar menu state
+  const [isSidebarMenuOpen, setIsSidebarMenuOpen] = useState<boolean>(false);
+
   const handleFundClick = (fundId: string) => {
     const fund = funds.find(f => f.id === fundId);
     if (fund) {
       setSelectedFund(fund);
-      setFundTab('history'); // Reset to default tab
+      setFundTab('approvals'); // Reset to default tab (first tab)
       setActiveScreen('fund-detail');
     }
   };
@@ -447,6 +468,41 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       .reduce((sum, movement) => sum + movement.value, 0);
   };
 
+  // Saldo livre do usuário (valor total depositado menos o que está aplicado em fundos)
+  const getUserFreeBalance = (): number => {
+    const totalDeposits = getTotalUserDeposits();
+    const appliedBalance = getUserAppliedBalance();
+    return totalDeposits - appliedBalance;
+  };
+
+  // Saldo aplicado em fundos (baseado na participação proporcional do usuário em cada fundo)
+  const getUserAppliedBalance = (): number => {
+    let appliedBalance = 0;
+    
+    funds.forEach(fund => {
+      // Calcular a participação do usuário no fundo baseado nos seus depósitos
+      const userDepositsInFund = userMovements
+        .filter(movement => 
+          movement.fundName === fund.name && 
+          movement.type === 'deposit'
+        )
+        .reduce((sum, movement) => sum + movement.value, 0);
+
+      // Calcular o total de depósitos no fundo
+      const totalFundDeposits = fund.history
+        .filter(item => item.type === 'deposit')
+        .reduce((sum, item) => sum + item.value, 0);
+
+      // Se há depósitos no fundo, calcular a participação proporcional
+      if (totalFundDeposits > 0) {
+        const participationRatio = userDepositsInFund / totalFundDeposits;
+        appliedBalance += fund.balance * participationRatio;
+      }
+    });
+
+    return Math.max(0, appliedBalance); // Garantir que não seja negativo
+  };
+
   const getFundPercentageOfTotal = (fundBalance: number): number => {
     const total = getTotalBalance();
     if (total === 0) return 0;
@@ -480,6 +536,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     getTotalBalance,
     getTotalMembers,
     getTotalUserDeposits,
+    getUserFreeBalance,
+    getUserAppliedBalance,
     getFundPercentageOfTotal,
     getFundDebtCount,
 
@@ -527,7 +585,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setSelectedApproval,
     handleMovementClick,
     handleDebtDetailClick,
-    handleApprovalClick
+    handleApprovalClick,
+
+    // Notification panel features
+    isNotificationPanelOpen,
+    setIsNotificationPanelOpen,
+    handleNotificationClick: () => setIsNotificationPanelOpen(true),
+
+    // Sidebar menu features
+    isSidebarMenuOpen,
+    setIsSidebarMenuOpen
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

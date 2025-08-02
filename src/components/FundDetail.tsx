@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUp, ArrowDown, CreditCard, Check, X } from 'lucide-react';
+import { ArrowUp, ArrowDown, CreditCard, Check, X, MoreVertical } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useApp } from '@/context/AppContext';
@@ -8,13 +8,16 @@ import FundBalanceCard from './FundBalanceCard';
 import TabNavigation from './TabNavigation';
 import TopNavbar from './TopNavbar';
 import HeaderSection from './HeaderSection';
-import SidebarMenu from './MainMenu';
+import FundSettingsSheet from './FundSettingsSheet';
+
 import { formatCurrency } from '@/utils/formatCurrency';
+import { truncateFundName } from '@/utils/truncateText';
 
 const FundDetail: React.FC = () => {
   const { fundId } = useParams<{ fundId: string }>();
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isFundSettingsOpen, setIsFundSettingsOpen] = useState(false);
+
   const { 
     funds,
     fundTab, 
@@ -23,7 +26,8 @@ const FundDetail: React.FC = () => {
     userDebts,
     handleDepositClick,
     handleCapitalRequestClick,
-    handleDebtPaymentClick
+    handleDebtPaymentClick,
+    setIsSidebarMenuOpen
   } = useApp();
 
   const selectedFund = funds.find(fund => fund.id === fundId);
@@ -61,27 +65,38 @@ const FundDetail: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans w-full overflow-x-hidden">
-      {/* Top Navbar */}
-      <TopNavbar 
-        onMenuClick={() => setIsMenuOpen(true)}
-        onNotificationClick={() => console.log('Notificações')}
-      />
+    <div className="fixed inset-0 bg-gray-50 font-sans overflow-hidden">
+      <div className="h-full overflow-y-auto">
+        {/* Top Navbar */}
+        <TopNavbar 
+          onMenuClick={() => setIsSidebarMenuOpen(true)}
+          onNotificationClick={() => console.log('Notificações')}
+        />
 
-      {/* Header Section */}
-      <HeaderSection className="pt-20">
+        {/* Header Section */}
+        <HeaderSection className="pt-20">
         <div className="mb-6">
           {/* Fund info header */}
-          <div className="flex items-center mb-6">
-            <img 
-              src={selectedFund.image} 
-              alt={selectedFund.name} 
-              className="w-16 h-16 rounded-2xl object-cover mr-4 shadow-sm border-2 border-white/20"
-            />
-            <div>
-              <h2 className="text-xl font-bold text-white">{selectedFund.name}</h2>
-              <p className="text-white/70">{selectedFund.description}</p>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center flex-1">
+              <img 
+                src={selectedFund.image} 
+                alt={selectedFund.name} 
+                className="w-16 h-16 rounded-2xl object-cover mr-4 shadow-sm border-2 border-white/20"
+              />
+              <div className="flex-1">
+                <h2 className="text-xl font-bold text-white">{truncateFundName(selectedFund.name)}</h2>
+                <p className="text-white/70">{selectedFund.description}</p>
+              </div>
             </div>
+            
+            {/* Settings Button */}
+            <button 
+              onClick={() => setIsFundSettingsOpen(true)}
+              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-sm"
+            >
+              <MoreVertical size={20} className="text-white" />
+            </button>
           </div>
         </div>
 
@@ -101,12 +116,6 @@ const FundDetail: React.FC = () => {
       <div className="bg-white min-h-screen">
         <div className="max-w-md mx-auto px-4 pt-8 pb-28">
           
-          {/* Menu Lateral */}
-          <SidebarMenu 
-            isMenuOpen={isMenuOpen} 
-            toggleMenu={() => setIsMenuOpen(false)} 
-          />
-
           {/* Action Buttons */}
           <div className="flex justify-between mb-6">
             <button 
@@ -265,6 +274,24 @@ const FundDetail: React.FC = () => {
           </div>
         </div>
       </div>
+      </div>
+
+      {/* Fund Settings Sheet */}
+      <FundSettingsSheet
+        isOpen={isFundSettingsOpen}
+        onClose={() => setIsFundSettingsOpen(false)}
+        fund={{
+          id: selectedFund.id,
+          name: selectedFund.name,
+          description: selectedFund.description || '',
+          image: selectedFund.image,
+          members: selectedFund.members || [],
+          contributionRate: selectedFund.contributionRate || 100,
+          interestRate: selectedFund.interestRate || 0,
+          approvalType: selectedFund.approvalType || 'quorum',
+          minimumQuorum: selectedFund.minimumQuorum || 50
+        }}
+      />
     </div>
   );
 };

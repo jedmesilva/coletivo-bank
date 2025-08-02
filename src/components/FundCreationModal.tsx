@@ -142,10 +142,7 @@ const FundCreationModal: React.FC = () => {
     setFundData({...fundData, image});
   };
 
-  const getStepNumber = () => {
-    const steps = ['name', 'purpose', 'image', 'members'];
-    return steps.indexOf(step) + 1;
-  };
+  
 
   return (
     <Sheet open={isFundCreationOpen} onOpenChange={setIsFundCreationOpen}>
@@ -172,9 +169,6 @@ const FundCreationModal: React.FC = () => {
                 <SheetTitle className="text-xl text-white font-semibold">
                   {stepTitles[step]}
                 </SheetTitle>
-                <div className="flex items-center mt-1">
-                  <span className="text-white/70 text-sm">Etapa {getStepNumber()} de 4</span>
-                </div>
               </div>
             </div>
             <div className="px-4">
@@ -185,17 +179,13 @@ const FundCreationModal: React.FC = () => {
             
             {/* Indicador de progresso */}
             <div className="px-4 mt-4">
-              <div className="flex space-x-1">
-                {['name', 'purpose', 'image', 'members'].map((stepName, index) => (
-                  <div 
-                    key={stepName}
-                    className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                      ['name', 'purpose', 'image', 'members'].indexOf(step) >= index 
-                        ? 'bg-white' 
-                        : 'bg-white/30'
-                    }`}
-                  />
-                ))}
+              <div className="w-full bg-white/30 rounded-full h-1 overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-blue-400 to-purple-400 rounded-full transition-all duration-500 ease-out"
+                  style={{ 
+                    width: `${(['name', 'purpose', 'image', 'members'].indexOf(step) + 1) * 25}%` 
+                  }}
+                />
               </div>
             </div>
           </header>
@@ -211,12 +201,18 @@ const FundCreationModal: React.FC = () => {
                     id="fund-name"
                     placeholder="Ex: Amigos do futebol" 
                     value={fundData.name}
-                    onChange={(e) => setFundData({...fundData, name: e.target.value})}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 20) {
+                        setFundData({...fundData, name: value});
+                      }
+                    }}
+                    maxLength={20}
                     className="rounded-xl border-gray-200 focus:border-primary text-lg h-12"
                     autoFocus
                   />
                   <p className="text-xs text-gray-500">
-                    Escolha um nome que identifique claramente seu fundo
+                    Máximo 20 caracteres ({fundData.name.length}/20)
                   </p>
                 </div>
               </div>
