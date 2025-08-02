@@ -1,0 +1,152 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Install dependencies
+      run: |
+        npm install -g @expo/cli@latest eas-cli@latest
+        npm install --package-lock-only
+        npm ci
+
+    - name: Setup Expo and EAS
+      run: |
+        npx expo install --fix
+        
+    - name: Create app config
+      run: |
+        cat > app.json << 'EOF'
+        {
+          "expo": {
+            "name": "Coletivo Bank",
+            "slug": "coletivo-bank",
+            "version": "1.0.0",
+            "orientation": "portrait",
+            "icon": "./assets/icon.png",
+            "userInterfaceStyle": "light",
+            "splash": {
+              "image": "./assets/splash.png",
+              "resizeMode": "contain",
+              "backgroundColor": "#ffffff"
+            },
+            "assetBundlePatterns": [
+              "**/*"
+            ],
+            "ios": {
+              "supportsTablet": true,
+              "bundleIdentifier": "com.coletivobank.app"
+            },
+            "android": {
+              "adaptiveIcon": {
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#ffffff"
+              },
+              "package": "com.coletivobank.app",
+              "versionCode": ${{ github.run_number }}
+            },
+            "web": {
+              "favicon": "./assets/favicon.png"
+            }
+          }
+        }
+        EOF
+
+    - name: Create assets directory
+      run: |
+        mkdir -p assets
+        # Create placeholder icons (você deve substituir por seus próprios assets)
+        convert -size 1024x1024 xc:"#10b981" -gravity center -pointsize 200 -fill white -annotate +0+0 "CB" assets/icon.png || echo "ImageMagick not available, using placeholder"
+        cp assets/icon.png assets/adaptive-icon.png || echo "Using placeholder icon"
+        cp assets/icon.png assets/splash.png || echo "Using placeholder splash"
+        cp assets/icon.png assets/favicon.png || echo "Using placeholder favicon"
+
+    - name: Generate Standalone APK (without EAS)
+      run: |
+        # Install expo prebuild dependencies
+        npx expo install expo-dev-client
+        
+        # Prebuild native code
+        npx expo prebuild --platform android --clear
+        
+        # Create local.properties for Android SDK
+        echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+        
+        # Build APK using Gradle
+        cd android
+        chmod +x ./gradlew
+        ./gradlew assembleRelease
+        
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-apk
+        path: android/app/build/outputs/apk/release/app-release.apk
+        retention-days: 30
+
+    - name: Create Release
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        release_name: Release v1.0.${{ github.run_number }}
+        body: |
+          📱 **Coletivo Bank - Build Automático**
+          
+          **Alterações nesta versão:**
+          - Build automático via GitHub Actions
+          - APK gerado para Android
+          - Sistema de fundos colaborativos
+          - Autenticação de usuários
+          - Interface React Native otimizada
+          
+          **Download:**
+          Baixe o APK em anexo para instalar no seu dispositivo Android.
+          
+          **Instalação:**
+          1. Baixe o arquivo APK
+          2. Habilite "Fontes desconhecidas" nas configurações do Android
+          3. Instale o APK baixado
+          
+          ⚠️ **Importante:** Esta é uma versão de desenvolvimento. Use por sua conta e risco.
+        draft: false
+        prerelease: false
+
+    - name: Upload APK to Release
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: android/app/build/outputs/apk/release/app-release.apk
+        asset_name: coletivo-bank-v1.0.${{ github.run_number }}.apk
+        asset_content_type: application/vnd.android.package-archive

@@ -6,20 +6,20 @@ This is a collaborative credit circle application built with React and TypeScrip
 
 ## System Architecture
 
-### Frontend Architecture
-- **Framework**: React 18 with TypeScript
-- **Build Tool**: Vite for fast development and optimized builds
-- **Styling**: Tailwind CSS with custom design system
-- **UI Components**: Radix UI components with shadcn/ui design system
-- **State Management**: React Context API for global application state
-- **Routing**: React Router DOM for client-side navigation
-- **Data Fetching**: TanStack React Query for server state management
+### Mobile App Architecture (React Native)
+- **Framework**: React Native with Expo
+- **Navigation**: React Navigation (Stack & Tab Navigator)
+- **State Management**: React Context API for authentication
+- **UI Components**: React Native Paper and custom components
+- **Storage**: AsyncStorage for local data persistence
+- **Build**: Expo EAS Build with GitHub Actions automation
+- **Icons**: React Native Vector Icons (Material Icons)
 
 ### Backend Architecture
-- **Framework**: Express.js with TypeScript (mentioned in README_BACKEND.md)
-- **Database**: PostgreSQL with Drizzle ORM
-- **Authentication**: Replit Auth integration
-- **Payment Processing**: Asaas API integration
+- **Framework**: Flask with Python (migrated from Express.js)
+- **Database**: PostgreSQL with SQLAlchemy ORM
+- **Authentication**: Flask-Login with session management
+- **Payment Processing**: Asaas API integration (to be implemented)
 - **Security**: Helmet, CORS, and rate limiting middleware
 
 ## Key Components
@@ -95,7 +95,14 @@ This is a collaborative credit circle application built with React and TypeScrip
 - June 20, 2025. Moved actions section from body to header: replaced SummaryCard with actions buttons in header, adapted styling for colored background with transparency effects
 - June 20, 2025. Added ColetivoBank key component: displays unique user key ({username}@ColetivoBank.app) below action buttons with copy functionality and visual feedback
 - June 20, 2025. Implemented long press context menu: added Pinterest-style long press functionality with floating pin option for action buttons, supporting both mobile touch and desktop mouse interactions
+- August 2, 2025. **MAJOR MIGRATION**: Migrated from React web + Express.js to React Native + Flask
+- August 2, 2025. Created complete React Native app with Expo framework
+- August 2, 2025. Implemented Flask backend with SQLAlchemy ORM replacing Express.js + Drizzle
+- August 2, 2025. Added GitHub Actions workflow for automatic Android APK builds
+- August 2, 2025. Created comprehensive authentication system with AsyncStorage persistence
+- August 2, 2025. Built native mobile UI with Material Design components
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Language preference: Portuguese (Brazil).
