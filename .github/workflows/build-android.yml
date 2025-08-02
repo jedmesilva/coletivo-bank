@@ -30,18 +30,81 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
+    - name: Switch to React Native package.json
+      run: |
+        if [ -f "package-react-native.json" ]; then
+          cp package.json package-web.json
+          cp package-react-native.json package.json
+          echo "Switched to React Native dependencies"
+        else
+          echo "React Native package.json not found, creating one..."
+          cat > package.json << 'EOF'
+        {
+          "name": "coletivo-bank",
+          "version": "1.0.0",
+          "main": "App.tsx",
+          "scripts": {
+            "start": "expo start",
+            "android": "expo start --android",
+            "ios": "expo start --ios",
+            "web": "expo start --web"
+          },
+          "dependencies": {
+            "@expo/vector-icons": "^14.0.0",
+            "@react-navigation/bottom-tabs": "^6.5.11",
+            "@react-navigation/native": "^6.1.9",
+            "@react-navigation/native-stack": "^6.9.17",
+            "expo": "~50.0.0",
+            "expo-constants": "~15.4.0",
+            "expo-font": "~11.10.0",
+            "expo-splash-screen": "~0.26.0",
+            "expo-status-bar": "~1.11.0",
+            "react": "18.2.0",
+            "react-native": "0.73.0",
+            "react-native-gesture-handler": "~2.14.0",
+            "react-native-reanimated": "~3.6.0",
+            "react-native-safe-area-context": "4.8.2",
+            "react-native-screens": "~3.29.0",
+            "react-native-vector-icons": "^10.0.3",
+            "axios": "^1.6.0",
+            "@react-native-async-storage/async-storage": "1.21.0",
+            "react-native-paper": "^5.11.6"
+          },
+          "devDependencies": {
+            "@babel/core": "^7.20.0",
+            "@types/react": "~18.2.45",
+            "typescript": "^5.1.3"
+          },
+          "private": true
+        }
+        EOF
+        fi
+
     - name: Install dependencies
       run: |
-        npm install -g @expo/cli@latest eas-cli@latest
-        npm install --package-lock-only
-        npm ci
+        npm install -g @expo/cli@latest
+        npm install
 
-    - name: Setup Expo and EAS
+    - name: Create simple assets
       run: |
-        npx expo install --fix
-        
-    - name: Create app config
+        mkdir -p assets
+        # Create simple colored squares as placeholders
+        # Icon (1024x1024)
+        convert -size 1024x1024 xc:"#10b981" -gravity center -pointsize 200 -fill white -annotate +0+0 "CB" assets/icon.png 2>/dev/null || {
+          # Fallback: create a simple colored square
+          echo "Creating fallback icon..."
+          convert -size 1024x1024 xc:"#10b981" assets/icon.png 2>/dev/null || {
+            # If ImageMagick not available, create minimal placeholder
+            echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" | base64 -d > assets/icon.png
+          }
+        }
+        cp assets/icon.png assets/adaptive-icon.png
+        cp assets/icon.png assets/splash.png
+        cp assets/icon.png assets/favicon.png
+
+    - name: Generate Standalone APK
       run: |
+        # Create bare app.json for expo prebuild
         cat > app.json << 'EOF'
         {
           "expo": {
@@ -54,56 +117,33 @@ jobs:
             "splash": {
               "image": "./assets/splash.png",
               "resizeMode": "contain",
-              "backgroundColor": "#ffffff"
+              "backgroundColor": "#10b981"
             },
-            "assetBundlePatterns": [
-              "**/*"
-            ],
-            "ios": {
-              "supportsTablet": true,
-              "bundleIdentifier": "com.coletivobank.app"
-            },
+            "assetBundlePatterns": ["**/*"],
             "android": {
               "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
+                "backgroundColor": "#10b981"
               },
-              "package": "com.coletivobank.app",
-              "versionCode": ${{ github.run_number }}
-            },
-            "web": {
-              "favicon": "./assets/favicon.png"
+              "package": "com.coletivobank.app"
             }
           }
         }
         EOF
-
-    - name: Create assets directory
-      run: |
-        mkdir -p assets
-        # Create placeholder icons (você deve substituir por seus próprios assets)
-        convert -size 1024x1024 xc:"#10b981" -gravity center -pointsize 200 -fill white -annotate +0+0 "CB" assets/icon.png || echo "ImageMagick not available, using placeholder"
-        cp assets/icon.png assets/adaptive-icon.png || echo "Using placeholder icon"
-        cp assets/icon.png assets/splash.png || echo "Using placeholder splash"
-        cp assets/icon.png assets/favicon.png || echo "Using placeholder favicon"
-
-    - name: Generate Standalone APK (without EAS)
-      run: |
-        # Install expo prebuild dependencies
-        npx expo install expo-dev-client
         
-        # Prebuild native code
-        npx expo prebuild --platform android --clear
+        # Install required expo packages
+        npx expo install expo-dev-client @expo/metro-config
         
-        # Create local.properties for Android SDK
+        # Prebuild for Android
+        npx expo prebuild --platform android --clear --no-install
+        
+        # Create local.properties
         echo "sdk.dir=$ANDROID_HOME" > android/local.properties
         
-        # Build APK using Gradle
-        cd android
-        chmod +x ./gradlew
-        ./gradlew assembleRelease
+        # Build APK
+        cd android && chmod +x ./gradlew && ./gradlew assembleRelease
         
-    - name: Upload APK
+    - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: android-apk
@@ -112,41 +152,26 @@ jobs:
 
     - name: Create Release
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      id: create-release
+      uses: softprops/action-gh-release@v1
       with:
         tag_name: v1.0.${{ github.run_number }}
-        release_name: Release v1.0.${{ github.run_number }}
+        name: Coletivo Bank v1.0.${{ github.run_number }}
         body: |
-          📱 **Coletivo Bank - Build Automático**
+          📱 **Coletivo Bank - React Native**
           
-          **Alterações nesta versão:**
-          - Build automático via GitHub Actions
-          - APK gerado para Android
+          **Novidades desta versão:**
+          - App React Native completo
           - Sistema de fundos colaborativos
           - Autenticação de usuários
-          - Interface React Native otimizada
+          - Interface nativa otimizada
           
-          **Download:**
-          Baixe o APK em anexo para instalar no seu dispositivo Android.
+          **Como instalar:**
+          1. Baixe o APK abaixo
+          2. Habilite "Fontes desconhecidas" no Android
+          3. Instale o arquivo baixado
           
-          **Instalação:**
-          1. Baixe o arquivo APK
-          2. Habilite "Fontes desconhecidas" nas configurações do Android
-          3. Instale o APK baixado
-          
-          ⚠️ **Importante:** Esta é uma versão de desenvolvimento. Use por sua conta e risco.
+          🚀 **Primeira versão mobile do Coletivo Bank!**
+        files: android/app/build/outputs/apk/release/app-release.apk
         draft: false
         prerelease: false
-
-    - name: Upload APK to Release
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: android/app/build/outputs/apk/release/app-release.apk
-        asset_name: coletivo-bank-v1.0.${{ github.run_number }}.apk
-        asset_content_type: application/vnd.android.package-archive
